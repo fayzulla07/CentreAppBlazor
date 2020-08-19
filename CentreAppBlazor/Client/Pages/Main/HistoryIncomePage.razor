@@ -1,0 +1,175 @@
+﻿@page "/HistoryIncomePage"
+
+@inherits BaseCrud<ProductIncoms>
+@attribute [Authorize(Roles = "admin, manager")]
+
+<div class="d-flex">
+    <div class="">
+        <div class="h5">История Прихода </div>
+    </div>
+    <div class="">
+        <RadzenCheckBox @bind-Value="IsResponsive" TriState="false" Name="CheckBox1" />
+        <RadzenLabel Text="Режим поиска" Component="CheckBox1" Style="margin-left: 5px;margin-bottom: 20px" />
+
+    </div>
+</div>
+
+
+<RadzenGrid @ref="Grid" AllowFiltering="true" Count="Count" AllowPaging="true" PageSize="10" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+            AllowSorting="true" Data="@DataSource" LoadData="LoadData" TItem="ProductIncoms" ColumnWidth="200px" RowUpdate="@OnUpdateRow">
+    <Columns>
+        <RadzenGridColumn TItem="ProductIncoms" Property="@nameof(ProductIncoms.Id)" Visible="false" />
+
+        <RadzenGridColumn Width="230px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.Product.Name)" Title="Имя">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Product.Name</span>
+            </Template>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="80px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.Amount)" Title="Количество" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Amount</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenNumeric Min="0" @bind-Value="vdata.Amount" Style="width:100%" />
+            </EditTemplate>
+
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="110px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.IncomeCost)" Title="Цена Прихода" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.IncomeCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenNumeric Min="0" @bind-Value="vdata.IncomeCost" Style="width:100%" />
+            </EditTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="110px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.SaleCost)" Title="Розн цена" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.SaleCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenNumeric Min="0" @bind-Value="vdata.SaleCost" Style="width:100%" />
+            </EditTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="110px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.OptCost)" Title="Оптовая цена" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.OptCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenNumeric Min="0" @bind-Value="vdata.OptCost" Style="width:100%" />
+            </EditTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="120px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.RegDt)" Title="Дата рег" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.RegDt</span>
+            </Template>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="150px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.SupplierId)" Title="Поставщик" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@(supplier.FirstOrDefault(x=>x.Id == vdata.SupplierId)?.Name)</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenDropDown @bind-Value="vdata.SupplierId" Data="supplier" Placeholder="Выберите Поставщика" AllowFiltering="true" AllowClear="true" TextProperty="@nameof(Suppliers.Name)" ValueProperty="@nameof(Suppliers.Id)" Style="width:100%" />
+            </EditTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="150px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.Comments)" Title="Комменты">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Comments</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenTextBox @bind-Value="vdata.Comments" Style="width:100%" />
+            </EditTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn TItem="ProductIncoms" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+            <Template Context="dsource">
+                <RadzenButton Icon="edit" Size="ButtonSize.Medium" Click="@(args => EditRow(dsource))">
+                </RadzenButton>
+            </Template>
+            <EditTemplate Context="dsource">
+                <RadzenButton Icon="save" Size="ButtonSize.Medium" Click="@((args) => SaveRow(dsource))">
+                </RadzenButton>
+                <RadzenButton Icon="cancel" Size="ButtonSize.Medium" ButtonStyle="ButtonStyle.Secondary" Click="@((args) => CancelEdit(dsource))">
+                </RadzenButton>
+            </EditTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn TItem="ProductIncoms" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
+            <Template Context="dsource">
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
+                </RadzenButton>
+            </Template>
+            <EditTemplate Context="dsource">
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
+                </RadzenButton>
+            </EditTemplate>
+        </RadzenGridColumn>
+    </Columns>
+
+</RadzenGrid>
+
+
+@code {
+    protected override string ApiUrl { get; set; } = "api/ProductIncoms";
+    int Count;
+    IEnumerable<Products> product = new List<Products>();
+    IEnumerable<Suppliers> supplier = new List<Suppliers>();
+    IEnumerable<ProductIncoms> DataSource;
+    protected async override Task GetForDropDown()
+    {
+        product = await serv.GetAsync<IEnumerable<Products>>("api/DropDown/GetPoducts");
+        supplier = await serv.GetAsync<IEnumerable<Suppliers>>("api/DropDown/Suppliers");
+    }
+
+    async Task DeleteConfirmation(ProductIncoms dat) => await DialogService.OpenAsync("Подтверждение", ds =>
+    @<RadzenCard Style="padding: 20px;">
+        <p Style="margin-bottom: 10px;">Вы действительно хотите удалить "@product.FirstOrDefault(x => x.Id == dat.ProductId)?.Name"?</p>
+        <div class="row">
+            <div class="col-md-8">
+                <RadzenButton Text="Да" Click="args=>OkDialog(dat)" Style="margin-bottom: 10px; width: 150px" />
+                <RadzenButton Text="Отмена" Click="CancelDialog" ButtonStyle="ButtonStyle.Secondary" Style="margin-bottom: 10px; width: 150px" />
+            </div>
+        </div>
+    </RadzenCard>);
+
+    async Task LoadData(LoadDataArgs args)
+    {
+        try
+        {
+            args.Filter = args.Filter.Replace("Name", "Product.Name");
+            loading.Visible = true;
+            var result = await serv.GetAsync<ResponseMessage<List<ProductIncoms>>>($"api/ProductIncoms?Filter={args.Filter}&OrderBy={args.OrderBy}&Skip={args.Skip}&Top={args.Top}");
+            Count = result.TCount.Value;
+            DataSource = result.entity;
+
+        }
+        catch (Exception)
+        {
+            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при получении данных", Duration = 2500 });
+        }
+        finally
+        {
+            loading.Visible = false;
+        }
+    }
+
+    protected override Task GetData()
+    {
+        return Task.CompletedTask;
+    }
+
+    protected async override Task DeleteData(int Id)
+    {
+        await serv.DeleteAsync(Id, ApiUrl);
+        DataSource = DataSource.Where(x => x.Id != Id).ToList();
+
+    }
+}
+
+

@@ -1,0 +1,24 @@
+﻿@page "/ReportPage"
+@attribute [Authorize]
+@using CentreAppBlazor.Client.Pages.ReportComponents
+<RadzenTabs>
+    <Tabs>
+        <RadzenTabsItem Text="Остаток">
+            <RemainReport></RemainReport>
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="Продажа">
+            <SaleReturnReport></SaleReturnReport>
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="Приход">
+            <AuthorizeView Roles="admin, manager">
+                <Authorized>
+                 <IncomeReport></IncomeReport>
+                </Authorized>
+            </AuthorizeView>
+        </RadzenTabsItem>
+    </Tabs>
+</RadzenTabs>
+
+@code {
+
+}

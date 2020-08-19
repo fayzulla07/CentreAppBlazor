@@ -1,0 +1,52 @@
+﻿@using System.Globalization
+@using CentreAppBlazor.Shared.Charts 
+<h3>Доход по месяцам</h3>
+
+        <RadzenChart>
+            <RadzenAreaSeries Smooth="true" Data="@DataItems" Title="Доход" CategoryProperty="RegDt" LineType="LineType.Dashed" ValueProperty="Revenue" />
+            <RadzenColumnOptions Radius="5" />
+            <RadzenValueAxis Formatter="@FormatAsKZ">
+                <RadzenGridLines Visible="true" />
+                <RadzenAxisTitle Text="Доходы" />
+            </RadzenValueAxis>
+            <RadzenCategoryAxis Formatter="FormatToDate">
+
+            </RadzenCategoryAxis>
+        </RadzenChart>
+
+@code {
+    [Inject]
+    protected LoadingService loading { get; set; }
+    [Inject]
+    public IAppService _client { get; set; }
+
+    IEnumerable<ProfitDto> DataItems = new List<ProfitDto>();
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            loading.Visible = true;
+            DataItems = await _client.GetAsync<List<ProfitDto>>("api/ProfitCharts");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("In Chart: " + ex.Message);
+
+        }
+        finally
+        {
+            loading.Visible = false;
+        }
+
+    }
+    string FormatAsKZ(object value)
+    {
+        return ((double)value).ToString("C0", CultureInfo.CreateSpecificCulture("kk-KZ"));
+    }
+    string FormatToDate(object value)
+    {
+        DateTime? date = value as DateTime?;
+        return date?.ToString("y");
+    }
+}

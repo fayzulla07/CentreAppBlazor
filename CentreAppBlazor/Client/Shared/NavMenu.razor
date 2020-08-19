@@ -1,0 +1,97 @@
+﻿
+<!-- Sidebar menu-->
+<div class="app-sidebar__overlay" @onclick="Kaka" data-toggle="sidebar"></div>
+<aside class="app-sidebar" style="z-index: 1000;">
+    <AuthorizeView>
+        <Authorized>
+            <div class="app-sidebar__user" style="padding: 4px;">
+                <div class="app-sidebar__user-avatar"><i class="fas fa-user-tie fa-3x"></i></div>
+                <div>
+                    <p class="app-sidebar__user-name">@context.User.Identity.Name</p>
+                    <p class="app-sidebar__user-designation">@context.User.FindFirst(System.Security.Claims.ClaimTypes.Role).Value</p>
+                </div>
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            <div class="app-sidebar__user">
+                <div class="app-sidebar__user-avatar"><i class="fas fa-user-tie fa-3x"></i></div>
+                <div>
+                    <p class="app-sidebar__user-name text-danger">Вы не авторизованы!</p>
+                </div>
+            </div>
+        </NotAuthorized>
+    </AuthorizeView>
+
+    <div >
+        <ul class="app-menu">
+
+            <li><a class="app-menu__item" href="ProductSalePage"><i class="app-menu__icon fas fa-arrow-circle-up"></i><span class="app-menu__label">Продажа</span></a></li>
+            <li><a class="app-menu__item" href="HistorySalePage"><i class="app-menu__icon fas fa-money-check-alt"></i><span class="app-menu__label">История продажи</span></a></li>
+
+
+            <AuthorizeView Roles="admin, manager">
+                <Authorized>
+                    <li><a class="app-menu__item" href="ProductIncomePage"><i class="app-menu__icon fas fa-arrow-circle-down"></i><span class="app-menu__label">Приход</span></a></li>
+                    <li><a class="app-menu__item" href="HistoryIncomePage"><i class="app-menu__icon fas far fa-clipboard"></i><span class="app-menu__label">История Прихода</span></a></li>
+                </Authorized>
+            </AuthorizeView>
+
+            <li><a class="app-menu__item" href="HistoryReturnPage"><i class="app-menu__icon fas fa-history"></i><span class="app-menu__label">История Возврата</span></a></li>
+            <li><a class="app-menu__item" href="CustomerPage"><i class="app-menu__icon fas fa-users"></i><span class="app-menu__label">Покупатели</span></a></li>
+            <li><a class="app-menu__item" href="ReportPage"><i class="app-menu__icon fas far fa-list-alt"></i><span class="app-menu__label">Отчеты</span></a></li>
+
+            <AuthorizeView Roles="admin, manager">
+                <Authorized>
+                    <li class="treeview @IsExpanded">
+                        <a class="app-menu__item fayzulla"  @onclick:preventDefault @onclick="ToggleTree" href="" data-toggle="treeview"><i class="app-menu__icon fa fa-laptop"></i><span class="app-menu__label">Настройки</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            @if (context.User.IsInRole("admin"))
+                            {
+                                <li><a class="treeview-item" href="UserPage"><i class="icon fa fa-circle-o"></i> Пользователи</a></li>
+                            }
+
+                            <li><a class="treeview-item" href="UnitPage"><i class="icon fa fa-circle-o"></i> Единицы</a></li>
+                            <li><a class="treeview-item" href="ProductPage"><i class="icon fa fa-circle-o"></i> Продукты</a></li>
+                            <li><a class="treeview-item" href="SupplierPage"><i class="icon fa fa-circle-o"></i> Поставщики</a></li>
+                            <li><a class="treeview-item" href="ProductTypePage"><i class="icon fa fa-circle-o"></i> Тип продукта</a></li>
+                            <li><a class="treeview-item" href="CustomerTypePage"><i class="icon fa fa-circle-o"></i> Тип покупателя</a></li>
+                        </ul>
+                    </li>
+                </Authorized>
+            </AuthorizeView>
+
+
+        </ul>
+    </div>
+   
+</aside>
+
+@code {
+    [Inject]
+    public IJSRuntime JS { get; set; }
+
+    [Parameter]
+    public MainLayout mainLayoutRef { get; set; }
+
+    [Parameter] public EventCallback<bool> OnClickOnMobile { get; set; }
+    private async void Kaka()
+    {
+        await OnClickOnMobile.InvokeAsync(false);
+    }
+
+    private string IsExpanded = string.Empty;
+    private void ToggleTree()
+    {
+        IsExpanded = IsExpanded == "is-expanded" ? "" : "is-expanded";
+    }
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var dotNetObjectReference = DotNetObjectReference.Create(mainLayoutRef);
+            await JS.InvokeVoidAsync("RunSidebar", dotNetObjectReference);
+        }
+    }
+
+}

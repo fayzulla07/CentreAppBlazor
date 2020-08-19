@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Xan Kopir</title>
+    <link href="manifest.json" rel="manifest" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+    <base href="/" />
+    <link rel="stylesheet" type="text/css" href="vali/css/main.css">
+    <!-- Font-icon css-->
+    <!-- Font-icon css-->
+    <link href="fontawesome/css/fontawesome.min.css" rel="stylesheet" />
+    <link href="fontawesome/css/solid.min.css" rel="stylesheet" />
+
+    <style>
+        .invalid {
+            border-color: #dc3545;
+        }
+
+        .valid {
+            border-color: #28a745;
+        }
+
+        .validation-message {
+            width: 100%;
+            margin-top: .25rem;
+            font-size: 80%;
+            color: #dc3545;
+        }
+    </style>
+    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="_content/Radzen.Blazor/css/default-base.css">
+    <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+
+    <link rel="stylesheet" href="https://npmcdn.com/leaflet@1.0.0-rc.2/dist/leaflet.css" />
+    <script src="https://npmcdn.com/leaflet@1.0.0-rc.2/dist/leaflet.js"></script>
+    <script src="myscript.js"></script>
+    <style>
+        @media (max-width: 768px) {
+            .sidetoggle {
+                position: absolute;
+                z-index: 15;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <app>
+        <div class="loading">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <style>
+            :root {
+                background: #2a2a3c;
+            }
+
+            .loading {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                height: 40px;
+                width: 40px;
+                transform: translate(-50%, -50%) rotate(45deg) translate3d(0,0,0);
+                animation: animate 1.2s ease-in-out infinite;
+            }
+
+            @keyframes animate {
+                0%, 10%, 100% {
+                    height: 40px;
+                    width: 40px;
+                }
+
+                65% {
+                    height: 70px;
+                    width: 70px;
+                }
+            }
+
+            span {
+                position: absolute;
+                display: block;
+                width: 20px;
+                height: 20px;
+                animation: rotate 1.2s linear both infinite;
+            }
+
+            @keyframes rotate {
+                0%, 30% {
+                    transform: rotate(0);
+                }
+
+                65% {
+                    transform: rotate(-40deg);
+                }
+            }
+
+            span:nth-child(1) {
+                top: 0;
+                left: 0;
+                background: #1ac9ff;
+            }
+
+            span:nth-child(2) {
+                top: 0;
+                right: 0;
+                background: #fcb603;
+            }
+
+            span:nth-child(3) {
+                bottom: 0;
+                left: 0;
+                background: #af49b6;
+            }
+
+            span:nth-child(4) {
+                bottom: 0;
+                right: 0;
+                background: #e03870;
+            }
+        </style>
+
+    </app>
+    <script src="_framework/blazor.webassembly.js"></script>
+    <script>navigator.serviceWorker.register('service-worker.js');</script>
+
+
+</body>
+
+</html>

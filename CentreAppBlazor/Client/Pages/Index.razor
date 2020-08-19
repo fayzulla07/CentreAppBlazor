@@ -1,0 +1,192 @@
+﻿@page "/"
+@attribute [Authorize]
+
+    <div class="container">
+        <RadzenLabel Component="datepicker" Text="Выберите дату: " />
+        <br />
+        <RadzenDatePicker Change="Changed" Name="datepicker" TValue="DateTime" />
+        <br /> <br />
+        <div class="row">
+            <AuthorizeView Roles="admin">
+                <Authorized>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="widget-small primary coloured-icon">
+                            <i class="icon fas fa-arrow-circle-down fa-3x"></i>
+                            <div class="info" style="box-shadow: 5px 5px 20px 5px #a6a6a6;height:80px;">
+                                <div class="h6">Приход</div>
+                                <h5>@Values.RegDt.ToString("dd/MM/yyyy")</h5>
+                                <p><b>@Values.IncomeCost.ToString("C0", new CultureInfo("kk-KZ"))</b></p>
+                            </div>
+                        </div>
+                    </div>
+                </Authorized>
+            </AuthorizeView>
+
+
+
+
+            <div class="col-md-6 col-lg-3">
+                <div class="widget-small primary coloured-icon">
+                    <i class="icon fas fa-arrow-circle-up fa-3x"></i>
+                    <div class="info" style="box-shadow: 5px 5px 20px 5px #a6a6a6;height:80px;">
+                        <div class="h6">Продажа</div>
+                        <h5>@Values.RegDt.ToString("dd/MM/yyyy")</h5>
+                        <p><b>@Values.SaleTotal.ToString("C0", new CultureInfo("kk-KZ"))</b></p>
+                    </div>
+                </div>
+            </div>
+
+            <AuthorizeView Roles="admin">
+                <Authorized>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="widget-small primary coloured-icon">
+                            <i class="icon fas fa-dollar-sign fa-3x"></i>
+                            <div class="info" style="box-shadow: 5px 5px 20px 5px #a6a6a6; height:80px;">
+                                <div class="h6">Прибыль</div>
+                                <h5>@Values.RegDt.ToString("dd/MM/yyyy")</h5>
+                                <p><b>@Values.Profit.ToString("C0", new CultureInfo("kk-KZ"))</b></p>
+                            </div>
+                        </div>
+                    </div>
+                </Authorized>
+            </AuthorizeView>
+
+
+
+            <div class="col-md-6 col-lg-3">
+                <div class="widget-small warning coloured-icon">
+                    <i class="icon fas fa-undo-alt fa-3x"></i>
+                    <div class="info" style="box-shadow: 5px 5px 20px 5px #a6a6a6; height:80px;">
+                        <div class="h6">Возврат</div>
+                        <h5>@Values.RegDt.ToString("dd/MM/yyyy")</h5>
+                        <p><b>@Values.ReturnCost.ToString("C0", new CultureInfo("kk-KZ"))</b></p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        @*///////////////////////////////////////////////////////////////////////////////////*@
+        <AuthorizeView Roles="admin">
+            <Authorized>
+                <div class="row">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="widget-small info coloured-icon">
+                            <i class="icon fas fa-poo fa-3x"></i>
+                            <div class="info" style="box-shadow: 5px 5px 20px 5px #a6a6a6; height:80px;">
+                                <div class="h6">Всего-приход</div>
+
+                                <p><b>@Values.AvProfit?.TotalIncome.ToString("C0", new CultureInfo("kk-KZ"))</b></p>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-6 col-lg-3">
+                        <div class="widget-small info coloured-icon">
+                            <i class="icon fas fa-grin-tongue-wink fa-3x"></i>
+                            <div class="info" style="box-shadow: 5px 5px 20px 5px #a6a6a6; height:80px;">
+                                <div class="h6">Всего-Розничная</div>
+
+                                <p><b>@Values.AvProfit?.TotalSale.ToString("C0", new CultureInfo("kk-KZ"))</b></p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-6 col-lg-3">
+                        <div class="widget-small info coloured-icon">
+                            <i class="icon fas fa-grin-tongue-squint fa-3x"></i>
+                            <div class="info" style="box-shadow: 5px 5px 20px 5px #a6a6a6; height:80px;">
+                                <div class="h6">Всего-Оптовая</div>
+
+                                <p><b>@Values.AvProfit?.TotalOpt.ToString("C0", new CultureInfo("kk-KZ")) </b></p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-6 col-lg-3">
+                        <div class="widget-small info coloured-icon">
+                            <i class="icon fas fa-tenge fa-3x"></i>
+                            <div class="info" style="box-shadow: 5px 5px 20px 5px #a6a6a6; height:80px;padding-left: 5px;">
+                                <div class="h6">Прибыль(тг)</div>
+                                <div class="h6"><b>Р:@Values.AvProfit?.TotalSaleProfit.ToString("C0", new CultureInfo("kk-KZ"))</b></div>
+                                <div class="h6"><b>О:@Values.AvProfit?.TotalOptProfit.ToString("C0", new CultureInfo("kk-KZ"))</b></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </Authorized>
+        </AuthorizeView>
+
+        @*///////////////////////////////////////////////////////////////////////////////////*@
+        <AuthorizeView Roles="admin">
+            <Authorized>
+                <ChartByMonthComponent></ChartByMonthComponent>
+            </Authorized>
+        </AuthorizeView>
+
+    </div>
+
+
+
+@code{
+    [Inject]
+    protected LoadingService loading { get; set; }
+    [Inject]
+    public IAppService _client { get; set; }
+
+    [Inject]
+    private NotificationService notificationService { get; set; }
+
+    private CentreAppBlazor.Shared.Dto.SalesReturnsbyDayDto Values = new SalesReturnsbyDayDto();
+    protected async override void OnInitialized()
+    {
+        try
+        {
+            loading.Visible = true;
+            Values = await _client.GetAsync<CentreAppBlazor.Shared.Dto.SalesReturnsbyDayDto>("api/GetTotals");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при получении данных", Duration = 2500 });
+        }
+        finally
+        {
+            loading.Visible = false;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+    protected async Task ShowNotification(NotificationMessage message)
+    {
+        notificationService.Notify(message);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    async void Changed(DateTime? time)
+    {
+        try
+        {
+            loading.Visible = true;
+            var result = await _client.PostAsync<CentreAppBlazor.Shared.Dto.SalesReturnsbyDayDto>(time, $"api/GetTotals/GetSalesbyDay");
+            Values.IncomeCost = result.IncomeCost;
+            Values.RegDt = time.Value;
+            Values.ReturnCost = result.ReturnCost;
+            Values.SaleTotal = result.SaleTotal;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при получении данных", Duration = 2500 });
+        }
+        finally
+        {
+            loading.Visible = false;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+}

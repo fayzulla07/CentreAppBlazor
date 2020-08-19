@@ -1,0 +1,177 @@
+﻿@page "/SupplierPage"
+@inherits BaseCrud<Suppliers>
+@attribute [Authorize]
+
+<div class="d-flex">
+    <div class="">
+        <div class="h5">Поставщики </div>
+    </div>
+    <div class="">
+        <RadzenCheckBox @bind-Value="IsResponsive" TriState="false" Name="CheckBox1" />
+        <RadzenLabel Text="Режим поиска" Component="CheckBox1" Style="margin-left: 5px;margin-bottom: 20px" />
+
+    </div>
+</div>
+<RadzenPanel AllowCollapse="true" Collapsed="true">
+    <ChildContent>
+        <RadzenTemplateForm TItem="Suppliers" Data="dataform" Submit="@OnSubmit" InvalidSubmit="@OnInvalidSubmit">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Имя" />
+                        <br />
+                        <RadzenTextBox Style="width:100%" Name="Name" @bind-Value="dataform.Name" />
+                        <br />
+                        <RadzenRequiredValidator Component="Name" Popup="false" Text="Значение должно быть заполнено!" />
+                        <RadzenRegexValidator Component="Name" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
+                    </div>
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Описание" />
+                        <br />
+                        <RadzenTextBox Name="@nameof(Suppliers.Description)" Style="width:100%" @bind-Value="dataform.Description" />
+                        <br />
+                    </div>
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Почта" />
+                        <br />
+                        <RadzenTextBox Name="@nameof(Suppliers.Email)" Style="width:100%" @bind-Value="dataform.Email" />
+                        <br />
+                    </div>
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Номер" />
+                        <br />
+                        <RadzenTextBox Name="@nameof(Suppliers.PhoneNumber)" Style="width:100%" @bind-Value="dataform.PhoneNumber" />
+                        <br />
+                    </div>
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Его долг" />
+                        <br />
+                        <RadzenNumeric Name="@nameof(Suppliers.HisDebt)" Style="width:100%" @bind-Value="dataform.HisDebt" />
+                        <br />
+                    </div>
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Мой долг" />
+                        <br />
+                        <RadzenNumeric Name="@nameof(Suppliers.MyDebt)" Style="width:100%" @bind-Value="dataform.MyDebt" />
+                        <br />
+                    </div>
+                </div>
+                <div class="m-3 float-right">
+                    <RadzenButton ButtonType="ButtonType.Submit" Text="Добавить"></RadzenButton>
+                </div>
+            </div>
+        </RadzenTemplateForm>
+    </ChildContent>
+</RadzenPanel>
+
+
+<RadzenGrid @ref="Grid" AllowFiltering="true" AllowPaging="true" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+            AllowSorting="true" Data="@dsource" TItem="Suppliers" ColumnWidth="200px" RowUpdate="@OnUpdateRow">
+    <Columns>
+        <RadzenGridColumn TItem="Suppliers" Property="@nameof(Suppliers.Id)" Visible="false" />
+        <RadzenGridColumn TItem="Suppliers" Property="@nameof(Suppliers.Name)" Title="Имя">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Name</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenTextBox @bind-Value="vdata.Name" Name="Name" Style="width:100%" />
+                <br />
+                <RadzenRequiredValidator Component="Name" Text="Заполните поле" />
+                <RadzenRegexValidator Component="Name" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
+            </EditTemplate>
+
+        </RadzenGridColumn>
+
+        <RadzenGridColumn TItem="Suppliers" Property="@nameof(Suppliers.Description)" Title="Описание">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Description</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenTextBox @bind-Value="vdata.Description" Style="width:100%" />
+            </EditTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn TItem="Suppliers" Property="@nameof(Suppliers.PhoneNumber)" Title="Номер">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.PhoneNumber</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenTextBox @bind-Value="vdata.PhoneNumber" Style="width:100%" />
+            </EditTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn TItem="Suppliers" Property="@nameof(Suppliers.Email)" Title="Почта">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Email</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenTextBox @bind-Value="vdata.Email" Style="width:100%" />
+            </EditTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn TItem="Suppliers" Property="@nameof(Suppliers.MyDebt)" Title="Мой долг">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.MyDebt</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenNumeric @bind-Value="vdata.MyDebt" Style="width:100%" />
+            </EditTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn TItem="Suppliers" Property="@nameof(Suppliers.MyDebt)" Title="Его долг">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.HisDebt</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenNumeric @bind-Value="vdata.HisDebt" Style="width:100%" />
+            </EditTemplate>
+        </RadzenGridColumn>
+
+
+        <RadzenGridColumn TItem="Suppliers" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+            <Template Context="dsource">
+                <RadzenButton Icon="edit" Size="ButtonSize.Medium" Click="@(args => EditRow(dsource))">
+                </RadzenButton>
+            </Template>
+            <EditTemplate Context="dsource">
+                <RadzenButton Icon="save" Size="ButtonSize.Medium" Click="@((args) => SaveRow(dsource))">
+                </RadzenButton>
+                <RadzenButton Icon="cancel" Size="ButtonSize.Medium" ButtonStyle="ButtonStyle.Secondary" Click="@((args) => CancelEdit(dsource))">
+                </RadzenButton>
+            </EditTemplate>
+        </RadzenGridColumn>
+        <RadzenGridColumn TItem="Suppliers" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
+            <Template Context="dsource">
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
+                </RadzenButton>
+            </Template>
+            <EditTemplate Context="dsource">
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
+                </RadzenButton>
+            </EditTemplate>
+        </RadzenGridColumn>
+    </Columns>
+
+</RadzenGrid>
+
+
+@code {
+    protected override string ApiUrl { get; set; } = "api/Suppliers";
+
+
+
+    async Task DeleteConfirmation(Suppliers dat) => await DialogService.OpenAsync("Подтверждение", ds =>
+    @<RadzenCard Style="padding: 20px;">
+        <p Style="margin-bottom: 10px;">Вы действительно хотите удалить "@dat.Name"?</p>
+        <div class="row">
+            <div class="col-md-8">
+                <RadzenButton Text="Да" Click="args=>OkDialog(dat)" Style="margin-bottom: 10px; width: 150px" />
+                <RadzenButton Text="Отмена" Click="CancelDialog" ButtonStyle="ButtonStyle.Secondary" Style="margin-bottom: 10px; width: 150px" />
+            </div>
+        </div>
+    </RadzenCard>);
+
+}
+
+
+

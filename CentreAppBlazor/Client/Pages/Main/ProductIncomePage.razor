@@ -1,0 +1,341 @@
+﻿@page "/ProductIncomePage"
+@inherits BaseCrud<ProductIncoms>
+@attribute [Authorize(Roles = "admin, manager")]
+
+<div class="d-flex">
+    <div class="">
+        <div class="h5">Приход </div>
+    </div>
+    <div class="">
+        <RadzenCheckBox @bind-Value="IsResponsive" TriState="false" Name="CheckBox1" />
+        <RadzenLabel Text="Режим поиска" Component="CheckBox1" Style="margin-left: 5px;margin-bottom: 20px" />
+
+    </div>
+</div>
+<RadzenPanel AllowCollapse="true" Collapsed="true">
+    <ChildContent>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-4">
+                    <RadzenLabel Text="Тип Продукта" />
+                    <br />
+                    <RadzenDropDown TValue="int" Change="SelectedProductType" Data="prtype" Placeholder="Выберите Тип Продукта" AllowFiltering="true" AllowClear="true" TextProperty="@nameof(ProductTypes.Name)" ValueProperty="@nameof(ProductTypes.Id)" Style="width:100%" />
+                    <br />
+                </div>
+                <div class="col-md-4">
+                    <RadzenLabel Text="Продукт" />
+                    <br />
+                    <RadzenDropDown Disabled="ProductTypeDisable" TValue="int" Change="SelectedProduct" @bind-Value="dataform.ProductId" Data="product" Placeholder="Выберите Продукт" AllowFiltering="true" AllowClear="true" TextProperty="@nameof(Products.Name)" ValueProperty="@nameof(Products.Id)" Style="width:100%" />
+
+                    <br />
+                </div>
+                <div class="col-md-4">
+                    <RadzenLabel Text="Поставщик" />
+                    <br />
+                    <RadzenDropDown @bind-Value="CustomerId" Data="supplier" Placeholder="Поставщик" AllowFiltering="true" AllowClear="false" TextProperty="@nameof(Suppliers.Name)" ValueProperty="@nameof(Suppliers.Id)" Style="width:100%" />
+                    <br />
+                </div>
+                <div class="col-md-4">
+                    <RadzenLabel Text="Цена прихода" />
+                    <br />
+                    <RadzenNumeric Min="0" Style="width:100%" Name="@nameof(ProductIncoms.IncomeCost)" @bind-Value="dataform.IncomeCost" />
+                    <br />
+                </div>
+                <div class="col-md-4">
+                    <RadzenLabel Text="Цена продажи (приход + %)" />
+                    <br />
+                    <RadzenNumeric Min="0" Style="width:100%" Name="@nameof(ProductIncoms.SaleCost)" @bind-Value="dataform.SaleCost" />
+                    <br />
+                </div>
+                <div class="col-md-4">
+                    <RadzenLabel Text="Оптовая цена (приход + %)" />
+                    <br />
+                    <RadzenNumeric Min="0" Style="width:100%" Name="@nameof(ProductIncoms.OptCost)" @bind-Value="dataform.OptCost" />
+                    <br />
+                </div>
+            </div>
+
+        </div>
+    </ChildContent>
+</RadzenPanel>
+
+
+<RadzenGrid @ref="Grid" AllowFiltering="true" AllowPaging="true" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+            AllowSorting="true" Data="@dsource" TItem="ProductIncoms" ColumnWidth="200px" RowUpdate="@OnUpdateRow">
+    <Columns>
+        <RadzenGridColumn TItem="ProductIncoms" Property="@nameof(ProductIncoms.Id)" Visible="false" />
+        <RadzenGridColumn Width="250px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.Product.Name)" Title="Имя">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Product.Name</span>
+            </Template>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="110px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.Amount)" Title="Количество" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Amount</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenNumeric @bind-Value="vdata.Amount" Style="width:100%" />
+            </EditTemplate>
+            <FooterTemplate>
+                <span class="text-wrap">@dsource.Sum(x => x.Amount)</span>
+            </FooterTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="120px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.IncomeCost)" Title="Цена прихода" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.IncomeCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenNumeric Min="0" @bind-Value="vdata.IncomeCost" Style="width:100%" />
+            </EditTemplate>
+            <FooterTemplate>
+                <span class="text-wrap">@dsource.Sum(x => x.IncomeCost).ToString("C0", new CultureInfo("kk-KZ"))</span>
+            </FooterTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="120px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.IncomeCost)" Title="Розн цена" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.SaleCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenNumeric Min="0" @bind-Value="vdata.SaleCost" Style="width:100%" />
+            </EditTemplate>
+            <FooterTemplate>
+                <span class="text-wrap">@dsource.Sum(x => x.SaleCost).ToString("C0", new CultureInfo("kk-KZ"))</span>
+            </FooterTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="120px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.OptCost)" Title="Оптовая цена" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.OptCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenNumeric Min="0" @bind-Value="vdata.OptCost" Style="width:100%" />
+            </EditTemplate>
+            <FooterTemplate>
+                <span class="text-wrap">@dsource.Sum(x => x.OptCost).ToString("C0", new CultureInfo("kk-KZ"))</span>
+            </FooterTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="150px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.SupplierId)" Title="Поставщик" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@supplier.FirstOrDefault(x => x.Id == vdata.SupplierId)?.Name</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenDropDown @bind-Value="vdata.SupplierId" Data="supplier" Placeholder="Выберите Клиент" AllowFiltering="true" AllowClear="true" TextProperty="@nameof(Products.Name)" ValueProperty="@nameof(Products.Id)" Style="width:100%" />
+            </EditTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="200px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.Comments)" Title="Комментарии">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Comments</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenTextBox @bind-Value="vdata.Comments" Style="width:100%" />
+            </EditTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn TItem="ProductIncoms" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+            <Template Context="dsource">
+                <RadzenButton Icon="edit" Size="ButtonSize.Medium" Click="@(args => EditRow(dsource))">
+                </RadzenButton>
+            </Template>
+            <EditTemplate Context="dsource">
+                <RadzenButton Icon="save" Size="ButtonSize.Medium" Click="@((args) => SaveRow(dsource))">
+                </RadzenButton>
+                <RadzenButton Icon="cancel" Size="ButtonSize.Medium" ButtonStyle="ButtonStyle.Secondary" Click="@((args) => CancelEdit(dsource))">
+                </RadzenButton>
+            </EditTemplate>
+        </RadzenGridColumn>
+        <RadzenGridColumn TItem="ProductIncoms" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
+            <Template Context="dsource">
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
+                </RadzenButton>
+            </Template>
+            <EditTemplate Context="dsource">
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
+                </RadzenButton>
+            </EditTemplate>
+        </RadzenGridColumn>
+    </Columns>
+
+</RadzenGrid>
+
+<RadzenButton Style="float:right; margin-top:20px;" Text="Закрыть" ButtonStyle="ButtonStyle.Success" Click="CloseOrder" />
+
+@code {
+    int CustomerId = 1;
+    private bool ProductTypeDisable = true;
+    protected override string ApiUrl { get; set; } = "api/ProductIncoms";
+
+    IEnumerable<ProductTypes> prtype = new List<ProductTypes>();
+    IEnumerable<Products> product = new List<Products>();
+    IEnumerable<Suppliers> supplier = new List<Suppliers>();
+    protected async override Task GetForDropDown()
+    {
+        prtype = await serv.GetAsync<IEnumerable<ProductTypes>>("api/DropDown/ProductTypes");
+        supplier = await serv.GetAsync<IEnumerable<Suppliers>>("api/DropDown/Suppliers");
+    }
+
+    Task DeleteConfirmation(ProductIncoms dat) { OkDialog(dat); return Task.CompletedTask; }
+
+    async void CloseOrder()
+    {
+        try
+        {
+            if(dsource.Count <= 0)
+            {
+                await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Инфо", Detail = "Список пуст!", Duration = 1500 });
+                return;
+            }
+            loading.Visible = true;
+            List<ProductIncoms> sales = new List<ProductIncoms>();
+            foreach (var item in dsource)
+            {
+                sales.Add(new ProductIncoms
+                {
+                    Amount = item.Amount,
+                    IncomeCost = item.IncomeCost,
+                    ProductId = item.Id,
+                    SaleCost = item.SaleCost,
+                    RegDt = DateTime.Now,
+                    Comments = item.Comments,
+                    SupplierId = CustomerId,
+                    OptCost = item.OptCost
+
+                });
+            }
+            ResponseMessage<int> executed = await serv.PostAsync<ResponseMessage<int>>(sales, "api/Main/CloseIncomeOrder");
+            if (executed.IsSuccessCode)
+            {
+                await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Успешно сохранен!", Duration = 1500 });
+                dsource.Clear();
+                Grid.Reload();
+            }
+            else
+            {
+                await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при отправки данных", Duration = 2500 });
+
+            }
+        }
+        catch (Exception)
+        {
+            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при отправки данных", Duration = 2500 });
+        }
+        finally
+        {
+            loading.Visible = false;
+        }
+    }
+
+    async void SelectedProductType(object _Id)
+    {
+        try
+        {
+            loading.Visible = true;
+            int Id = (int)_Id;
+            if (Id != 0)
+            {
+                product = await serv.GetByIdAsync<IEnumerable<Products>>(Id, "api/DropDown/ProductsWithNull");
+                ProductTypeDisable = false;
+                await InvokeAsync(StateHasChanged);
+            }
+            else
+            {
+                ProductTypeDisable = true;
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+        catch (Exception)
+        {
+            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при получении данных", Duration = 2500 });
+        }
+        finally
+        {
+            loading.Visible = false;
+        }
+
+    }
+    async void SelectedProduct(object _Id)
+    {
+        try
+        {
+            loading.Visible = true;
+            int Id = (int)_Id;
+            if (Id != 0)
+            {
+                var result = dsource.FirstOrDefault(x => x.Id == Id);
+                if (result != null)
+                {
+                    result.Amount++;
+                    await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Продукт получен", Duration = 1500 });
+                    return;
+                }
+
+                var ProductFromApi = await serv.GetByIdAsync<ResponseMessage<Products>>(Id, "api/Main/GetJustOneProduct");
+                if (!ProductFromApi.IsSuccessCode)
+                {
+                    await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Инфо", Detail = ProductFromApi.ErrorMessage, Duration = 2000 });
+                }
+                else
+                {
+                    count++;
+                    if (dataform.IncomeCost <= 0)
+                    {
+                        dsource.Insert(0, new ProductIncoms
+                        {
+                            Id = ProductFromApi.entity.Id,
+                            Amount = 1,
+                            IncomeCost = dataform.IncomeCost,
+                            SupplierId = CustomerId,
+                            Product = new Products() { Name = ProductFromApi.entity.Name }
+                        });
+                    }
+                    else
+                    {
+                        dsource.Insert(0, new ProductIncoms
+                        {
+                            Id = ProductFromApi.entity.Id,
+                            Amount = 1,
+                            IncomeCost = dataform.IncomeCost,
+
+                            SaleCost = Math.Round(dataform.IncomeCost + ((dataform.SaleCost / dataform.IncomeCost) * 100), 2),
+                            OptCost =Math.Round(dataform.IncomeCost + ((dataform.OptCost / dataform.IncomeCost) * 100), 2),
+                            SupplierId = CustomerId,
+                            Product = new Products() { Name = ProductFromApi.entity.Name }
+                        });
+                    }
+                    await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Продукт получен", Duration = 1500 });
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при получении данных", Duration = 2500 });
+        }
+        finally
+        {
+            loading.Visible = false;
+        }
+
+    }
+
+
+    protected override Task GetData()
+    {
+        return Task.CompletedTask;
+    }
+    protected override Task UpdateData(ProductIncoms item)
+    {
+        return Task.CompletedTask;
+    }
+    protected override Task DeleteData(int Id)
+    {
+        return Task.CompletedTask;
+    }
+}
+
+
+

@@ -1,0 +1,180 @@
+﻿@page "/CustomerPage"
+@inject NavigationManager navigationManager
+@inherits BaseCrud<Customers>
+@attribute [Authorize]
+
+<div class="d-flex">
+    <div class="">
+        <div class="h5">Клиенты </div>
+    </div>
+    <div class="">
+        <RadzenCheckBox @bind-Value="IsResponsive" TriState="false" Name="CheckBox1" />
+        <RadzenLabel Text="Режим поиска" Component="CheckBox1" Style="margin-left: 5px;margin-bottom: 20px" />
+
+    </div>
+</div>
+
+<RadzenPanel AllowCollapse="true" Collapsed="true">
+    <ChildContent>
+        <RadzenTemplateForm TItem="Customers" Data="@dataform" Submit="@OnSubmit" InvalidSubmit="@OnInvalidSubmit">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Имя" />
+                        <br />
+                        <RadzenTextBox Style="width:100%" Name="Name" @bind-Value="dataform.Name" />
+                        <br />
+                        <RadzenRequiredValidator Component="@nameof(Customers.Name)" Popup="false" Text="Значение должно быть заполнено!" />
+                        <RadzenRegexValidator Component="@nameof(Customers.Name)" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
+                    </div>
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Адрес" />
+                        <br />
+                        <RadzenTextBox Name="@nameof(Customers.Address)" Style="width:100%" @bind-Value="dataform.Address" />
+                        <br />
+                    </div>
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Почта" />
+                        <br />
+                        <RadzenTextBox Name="@nameof(Customers.Email)" Style="width:100%" @bind-Value="dataform.Email" />
+                        <br />
+                    </div>
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Тел номер" />
+                        <br />
+                        <RadzenTextBox Name="@nameof(Customers.PhoneNumber)" Style="width:100%" @bind-Value="dataform.PhoneNumber" />
+                        <br />
+
+                    </div>
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Тел номер" />
+                        <br />
+                        <RadzenDropDown @bind-Value="dataform.CustomerTypeId" Data="customer" Placeholder="Выберите Тип Клиента" AllowFiltering="true" AllowClear="true" TextProperty="@nameof(CustomerTypes.Name)" ValueProperty="@nameof(CustomerTypes.Id)" Name="@nameof(Customers.CustomerTypeId)" Style="width:100%" />
+                        <br />
+                    </div>
+                </div>
+                <div class="m-3 float-right">
+                    <RadzenButton ButtonType="ButtonType.Submit" Text="Добавить"></RadzenButton>
+                </div>
+            </div>
+        </RadzenTemplateForm>
+    </ChildContent>
+</RadzenPanel>
+
+
+<RadzenGrid @ref="Grid" AllowFiltering="true" AllowPaging="true" PageSize="20" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+            RowSelect="RowSelected" RowDoubleClick="RowDoubleClick" AllowSorting="true" Data="@dsource" TItem="Customers" Responsive="@(!IsResponsive)" RowUpdate="@OnUpdateRow">
+    <Columns>
+        <RadzenGridColumn TItem="Customers" Property="@nameof(Customers.Id)" Visible="false" />
+
+        <RadzenGridColumn TItem="Customers" Property="@nameof(Customers.Name)" Title="Имя" Width="200px">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Name</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenTextBox @bind-Value="vdata.Name" Name="@nameof(Customers.Name)" Style="width:100%" />
+                <br />
+                <RadzenRequiredValidator Component="@nameof(Customers.Name)" Text="Заполните поле" />
+                <RadzenRegexValidator Component="@nameof(Customers.Name)" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
+            </EditTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn TItem="Customers" Property="@nameof(Customers.Address)" Title="Адрес" Width="200px">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Address</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenTextBox @bind-Value="vdata.Address" Name="@nameof(Customers.Address)" Style="width:100%" />
+            </EditTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn TItem="Customers" Property="@nameof(Customers.Email)" Title="Почта" Width="200px">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Email</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenTextBox @bind-Value="vdata.Email" Name="@nameof(Customers.Email)" Style="width:100%" />
+            </EditTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn TItem="Customers" Property="@nameof(Customers.PhoneNumber)" Title="Номер" Width="200px">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.PhoneNumber</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenTextBox @bind-Value="vdata.PhoneNumber" Name="@nameof(Customers.PhoneNumber)" Style="width:100%" />
+            </EditTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn TItem="Customers" Property="@nameof(Customers.CustomerTypeId)" Title="Тип клиента" Width="200px">
+
+            <Template Context="vdata">
+                <span class="text-wrap">@customer.FirstOrDefault(x => x.Id == vdata.CustomerTypeId)?.Name</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenDropDown AllowClear="true" Placeholder="Выберите Тип" @bind-Value="vdata.CustomerTypeId" Data="customer" TextProperty="@nameof(CustomerTypes.Name)" ValueProperty="@nameof(CustomerTypes.Id)" Name="@nameof(Customers.CustomerTypeId)" Style="width:100%" />
+            </EditTemplate>
+        </RadzenGridColumn>
+
+
+        <RadzenGridColumn TItem="Customers" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+            <Template Context="dsource">
+                <RadzenButton Icon="edit" Size="ButtonSize.Medium" Click="@(args => EditRow(dsource))">
+                </RadzenButton>
+            </Template>
+            <EditTemplate Context="dsource">
+                <RadzenButton Icon="save" Size="ButtonSize.Medium" Click="@((args) => SaveRow(dsource))">
+                </RadzenButton>
+                <RadzenButton Icon="cancel" Size="ButtonSize.Medium" ButtonStyle="ButtonStyle.Secondary" Click="@((args) => CancelEdit(dsource))">
+                </RadzenButton>
+            </EditTemplate>
+        </RadzenGridColumn>
+        <RadzenGridColumn TItem="Customers" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
+            <Template Context="dsource">
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
+                </RadzenButton>
+            </Template>
+            <EditTemplate Context="dsource">
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
+                </RadzenButton>
+            </EditTemplate>
+        </RadzenGridColumn>
+    </Columns>
+</RadzenGrid>
+
+
+@code {
+    protected override string ApiUrl { get; set; } = "api/Customers";
+    async Task DeleteConfirmation(Customers dat) => await DialogService.OpenAsync("Подтверждение", ds =>
+    @<RadzenCard Style="padding: 20px;">
+        <p Style="margin-bottom: 10px;">Вы действительно хотите удалить "@dat.Name"?</p>
+        <div class="row">
+            <div class="col-md-8">
+                <RadzenButton Text="Да" Click="args=>OkDialog(dat)" Style="margin-bottom: 10px; width: 150px" />
+                <RadzenButton Text="Отмена" Click="CancelDialog" ButtonStyle="ButtonStyle.Secondary" Style="margin-bottom: 10px; width: 150px" />
+            </div>
+        </div>
+    </RadzenCard>);
+
+    IEnumerable<CustomerTypes> customer = new List<CustomerTypes>();
+    protected async override Task GetForDropDown()
+    {
+        customer = await serv.GetAsync<IEnumerable<CustomerTypes>>("api/CustomerTypes");
+    }
+    void RowSelected()
+    {
+
+    }
+
+    void RowDoubleClick(Customers item)
+    {
+        navigationManager.NavigateTo($"/CustomerMap/{item.Id}");
+    }
+    void ChangeDropDown(object obj)
+    {
+
+    }
+}
+
+
+

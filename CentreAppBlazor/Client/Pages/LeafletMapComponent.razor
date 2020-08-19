@@ -1,0 +1,69 @@
+﻿
+@attribute [Authorize]
+@inject IJSRuntime JSRuntime
+<div id="map" style="height: 500px;"></div>
+@if (geo == null)
+{
+    <p>Получение локации</p>
+}
+@code{
+    public Geo geo;
+    [Parameter]
+    public Customers GeoFromDb { get; set; }
+    [Parameter]
+    public EventCallback<Geo> GetCoordinates { get; set; }
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var dotNetReference = DotNetObjectReference.Create(this);
+            if (GeoFromDb.GeoLatitude.HasValue)
+            {
+                await JSRuntime.InvokeVoidAsync("InitializeMyGeo", dotNetReference);
+                await SetNewMarker(GeoFromDb.Name, GeoFromDb.GeoLatitude.Value, GeoFromDb.GeoLongitude.Value);
+                await FlyTo(GeoFromDb.GeoLatitude.Value, GeoFromDb.GeoLongitude.Value);
+                geo = new Geo() { latitude = GeoFromDb.GeoLatitude.Value, longitude = GeoFromDb.GeoLongitude.Value };
+                await GetCoordinates.InvokeAsync(geo);
+            }
+            else
+            {
+                await JSRuntime.InvokeVoidAsync("InitializeMyGeo", dotNetReference);
+                await JSRuntime.InvokeVoidAsync("getLocation", dotNetReference);
+            }
+
+        }
+    }
+    [JSInvokable]
+    public async Task GetGeoJs(string json)
+    {
+        geo = System.Text.Json.JsonSerializer.Deserialize<Geo>(json);
+        if (geo != null)
+        {
+            await SetNewMarker("Ваша текущая местоположения", geo.latitude, geo.longitude);
+            await GetCoordinates.InvokeAsync(geo);
+        }
+        else
+        {
+            Console.WriteLine("geo is null");
+        }
+        if (GeoFromDb.GeoLongitude.HasValue && GeoFromDb.GeoLatitude.HasValue)
+        {
+            await SetNewMarker(GeoFromDb.Name, GeoFromDb.GeoLatitude.Value, GeoFromDb.GeoLongitude.Value);
+            await FlyTo(GeoFromDb.GeoLatitude.Value, GeoFromDb.GeoLongitude.Value);
+        }
+    }
+    [JSInvokable]
+    public async Task MarkerChangedJs(string json)
+    {
+        geo = System.Text.Json.JsonSerializer.Deserialize<Geo>(json);
+        await GetCoordinates.InvokeAsync(geo);
+    }
+    public async Task SetNewMarker(string name, double latitude, double longitude)
+    {
+        await JSRuntime.InvokeVoidAsync("SetLatLong", name, latitude, longitude, true);
+    }
+    public async Task FlyTo(double latitude, double longitude)
+    {
+        await JSRuntime.InvokeVoidAsync("FlyToLocation", latitude, longitude);
+    }
+}

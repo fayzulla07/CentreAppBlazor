@@ -1,0 +1,109 @@
+﻿
+@using CentreAppBlazor.Shared.Report
+
+@attribute [Authorize(Roles="admin, manager")]
+
+<RadzenGrid AllowFiltering="true" AllowPaging="true" Count="Count" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+            AllowSorting="true" Data="@dsource" TItem="SaleReportDto" ColumnWidth="200px">
+    <Columns>
+        <RadzenGridColumn Width="80px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.OrderNumber)" Title="Номер" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.OrderNumber</span>
+            </Template>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="200px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.Name)" Title="Имя">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Name</span>
+            </Template>
+            <FooterTemplate>
+                <AuthorizeView Roles="admin">
+                    <Authorized>
+                        <span class="text-wrap font-weight-bold">Итого: <br /> @dsource.Sum(x => x.TotalSaleCost).ToString("C0", new CultureInfo("kk-KZ"))</span>
+                    </Authorized>
+                </AuthorizeView>
+            </FooterTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="120px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.Client)" Title="Клиент" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Client</span>
+            </Template>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="100px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.Amount)" Title="Кол-во(шт)" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Amount</span>
+            </Template>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="110px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.SaleCost)" Title="Цена продажи" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.SaleCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
+            </Template>
+           
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="110px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.TotalSaleCost)" Title="Сумма" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.TotalSaleCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
+            </Template>
+            <FooterTemplate>
+                <AuthorizeView Roles="admin">
+                    <Authorized>
+                        <span class="text-wrap font-weight-bold">Банк: <br /> @dsource.Where(x => x.IsBank).Sum(x => x.TotalSaleCost).ToString("C0", new CultureInfo("kk-KZ")) </span>
+                    </Authorized>
+                </AuthorizeView>
+            </FooterTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="100px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.OptCost)" Title="Опт?" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.OptCost</span>
+            </Template>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="80px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.IsBank)" Title="Банк?" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <RadzenCheckBox @bind-Value="vdata.IsBank" Disabled="true" />
+            </Template>
+
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="100px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.RegDt)" Title="Дата рег" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.RegDt</span>
+            </Template>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="130px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.Comments)" Title="Дата рег" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Comments</span>
+            </Template>
+            <FooterTemplate>
+                <AuthorizeView Roles="admin">
+                    <Authorized>
+                        <span class="text-wrap font-weight-bold">Наличные: @dsource.Where(x => x.IsBank == false).Sum(x => x.TotalSaleCost).ToString("C0", new CultureInfo("kk-KZ")) </span>
+                    </Authorized>
+                </AuthorizeView>
+            </FooterTemplate>
+        </RadzenGridColumn>
+    </Columns>
+
+</RadzenGrid>
+
+
+@code {
+    int Count => dsource.Count;
+    [Parameter]
+    public bool IsResponsive { get; set; }
+
+    [Parameter]
+    public List<SaleReportDto> dsource { get; set; }
+
+
+
+}
+
+
+

@@ -1,0 +1,91 @@
+﻿@inherits BaseCrud<Customers>
+
+<RadzenPanel AllowCollapse="true" Collapsed="true">
+    <ChildContent>
+        <RadzenTemplateForm TItem="Customers" Data="@dataform" Submit="(args) => { OnSubmit(args); }" InvalidSubmit="@OnInvalidSubmit">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Имя" />
+                        <br />
+                        <RadzenTextBox Style="width:100%" Name="Name" @bind-Value="dataform.Name" />
+                        <br />
+                        <RadzenRequiredValidator Component="@nameof(Customers.Name)" Popup="false" Text="Значение должно быть заполнено!" />
+                        <RadzenRegexValidator Component="@nameof(Customers.Name)" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
+                    </div>
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Адрес" />
+                        <br />
+                        <RadzenTextBox Name="@nameof(Customers.Address)" Style="width:100%" @bind-Value="dataform.Address" />
+                        <br />
+                    </div>
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Почта" />
+                        <br />
+                        <RadzenTextBox Name="@nameof(Customers.Email)" Style="width:100%" @bind-Value="dataform.Email" />
+                        <br />
+                    </div>
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Тел номер" />
+                        <br />
+                        <RadzenTextBox Name="@nameof(Customers.PhoneNumber)" Style="width:100%" @bind-Value="dataform.PhoneNumber" />
+                        <br />
+
+                    </div>
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Тел номер" />
+                        <br />
+                        <RadzenDropDown @bind-Value="dataform.CustomerTypeId" Data="customer" Placeholder="Выберите Тип Клиента" AllowFiltering="true" AllowClear="true" TextProperty="@nameof(CustomerTypes.Name)" ValueProperty="@nameof(CustomerTypes.Id)" Name="@nameof(Customers.CustomerTypeId)" Style="width:100%" />
+                        <br />
+                    </div>
+                </div>
+                <div class="m-3 float-right">
+                    <RadzenButton ButtonType="ButtonType.Submit" Text="Добавить"></RadzenButton>
+                </div>
+            </div>
+        </RadzenTemplateForm>
+    </ChildContent>
+</RadzenPanel>
+
+@code {
+    [Parameter]
+    public EventCallback ClientAddedCallback { get; set; }
+    protected override string ApiUrl { get; set; } = "api/Customers";
+    async Task DeleteConfirmation(Customers dat) => await DialogService.OpenAsync("Подтверждение", ds =>
+    @<RadzenCard Style="padding: 20px;">
+        <p Style="margin-bottom: 10px;">Вы действительно хотите удалить "@dat.Name"?</p>
+        <div class="row">
+            <div class="col-md-8">
+                <RadzenButton Text="Да" Click="args=>OkDialog(dat)" Style="margin-bottom: 10px; width: 150px" />
+                <RadzenButton Text="Отмена" Click="CancelDialog" ButtonStyle="ButtonStyle.Secondary" Style="margin-bottom: 10px; width: 150px" />
+            </div>
+        </div>
+    </RadzenCard>);
+
+    IEnumerable<CustomerTypes> customer = new List<CustomerTypes>();
+    protected async override Task GetForDropDown()
+    {
+        customer = await serv.GetAsync<IEnumerable<CustomerTypes>>("api/CustomerTypes");
+    }
+    protected override async void OnSubmit(Customers model)
+    {
+        try
+        {
+            loading.Visible = true;
+            var result = await serv.InsertAsync<Customers>(model, ApiUrl);
+            await ClientAddedCallback.InvokeAsync(1);
+            dsource.Insert(0, result);
+            dataform = ReflectionExten.GetNewObject<Customers>();
+            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Успешно Добавлено", Duration = 1500 });
+        }
+        catch (Exception ex)
+        {
+            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при получении", Duration = 2500 });
+
+        }
+        finally
+        {
+            loading.Visible = false;
+        }
+    }
+}

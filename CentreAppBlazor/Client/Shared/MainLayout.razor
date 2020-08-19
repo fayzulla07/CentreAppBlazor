@@ -1,0 +1,36 @@
+﻿@inherits LayoutComponentBase
+<RadzenNotification></RadzenNotification>
+<RadzenDialog></RadzenDialog>
+
+<div class="app sidebar-mini pace-done @SideNavMain">
+    <HeadMenu OnClick="NavClick"></HeadMenu>
+    <NavMenu OnClickOnMobile="NavClick" mainLayoutRef="this"></NavMenu>
+    <main class="app-content" style="padding-left:20px;padding-right:20px;padding-top:10px;">
+        <div class="row">
+            <div class="col-md-12 m-0 p-0">
+                <div class="card">
+                    <div class="card-body pl-2 pr-2">
+                        @Body
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+@code{
+    private  string SideNavMain;
+    protected override void OnInitialized()
+    {
+
+    }
+    [JSInvokable]
+    public void NavClick()
+    {
+        SideNavMain = SideNavMain == "sidenav-toggled" ? "" : "sidenav-toggled";
+
+
+    }
+
+}
+

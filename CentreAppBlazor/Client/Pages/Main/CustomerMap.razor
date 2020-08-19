@@ -1,0 +1,84 @@
+﻿@page "/CustomerMap/{Id:int}"
+    <div class="h5">Местоположение клиента</div>
+    <div class="d-flex">
+        <RadzenButton Style="margin:30px;" Text="Сохранить" Click="Clicked" />
+        <RadzenButton Style="margin:30px;" ButtonStyle="ButtonStyle.Secondary" Text="На Маркер" Click="ClickedFly" />
+    </div>
+
+@if(GeoFromDB != null)
+{
+<div>
+    <LeafletMapComponent @ref="map" GeoFromDb="GeoFromDB" GetCoordinates="GetCoordinates"></LeafletMapComponent>
+</div>
+
+}
+@code { 
+    LeafletMapComponent map;
+    [Parameter]
+    public int Id { get; set; }
+
+    Customers GeoFromDB;
+    [Inject]
+    public IAppService serv { get; set; }
+    [Inject]
+    protected LoadingService loading { get; set; }
+    [Inject]
+    private NotificationService notificationService { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            loading.Visible = true;
+            GeoFromDB = await serv.GetByIdAsync<Customers>(Id, "api/Customers");
+            if (GeoFromDB == null) GeoFromDB = new Customers();
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при получении", Duration = 2500 });
+        }
+        finally
+        {
+            loading.Visible = false;
+        }
+
+    }
+
+    Geo _geo;
+    void GetCoordinates(Geo geo)
+    {
+        _geo = geo;
+    }
+
+    protected async Task ShowNotification(NotificationMessage message)
+    {
+        notificationService.Notify(message);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    async void Clicked()
+    {
+        try
+        {
+            loading.Visible = true;
+            await serv.UpdateAsync<Geo>(_geo, Id, "api/CustomerMap");
+            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Успешно сохранено", Duration = 1500 });
+        }
+        catch (Exception ex)
+        {
+            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при отправки", Duration = 2500 });
+        }
+        finally
+        {
+            loading.Visible = false;
+        }
+
+    }
+
+    async void ClickedFly()
+    {
+       await map.FlyTo(_geo.latitude, _geo.longitude);
+    }
+}

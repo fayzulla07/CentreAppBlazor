@@ -1,0 +1,115 @@
+﻿@attribute [Authorize]
+@using CentreAppBlazor.Shared.Report
+<div class="d-flex">
+    <div class="">
+        <RadzenCheckBox @bind-Value="IsResponsive" TriState="false" Name="CheckBox1" />
+        <RadzenLabel Text="Режим поиска" Component="CheckBox1" Style="margin-left: 5px;margin-bottom: 20px" />
+
+    </div>
+</div>
+
+
+<RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+            AllowSorting="true" Data="@dsource" TItem="RemainReportDto" ColumnWidth="200px">
+    <Columns>
+        <RadzenGridColumn Width="300px" TItem="RemainReportDto" Property="@nameof(RemainReportDto.Name)" Title="Имя">
+            <Template Context="vdata">
+                <span class="text-wrap @(vdata.RemainCount <= vdata.Limit ? "text-danger": "")">@vdata.Name</span>
+            </Template>
+            <FooterTemplate>
+                <span class="text-wrap font-weight-bold">Итого: </span>
+            </FooterTemplate>
+        </RadzenGridColumn>
+
+        <AuthorizeView Roles="admin">
+            <Authorized>
+                <RadzenGridColumn TItem="RemainReportDto" Property="@nameof(RemainReportDto.IncomeCost)" Title="Цена прихода" TextAlign="TextAlign.Center">
+                    <Template Context="vdata">
+                        <span class="text-wrap">@vdata.IncomeCost?.ToString("C0", new CultureInfo("kk-KZ"))</span>
+                    </Template>
+                </RadzenGridColumn>
+            </Authorized>
+        </AuthorizeView>
+
+        <RadzenGridColumn TItem="RemainReportDto" Property="@nameof(RemainReportDto.SaleCost)" Title="Цена продажи" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.SaleCost?.ToString("C0", new CultureInfo("kk-KZ"))</span>
+            </Template>
+            <FooterTemplate>
+                <AuthorizeView Roles="admin">
+                    <Authorized>
+                        <span class="text-wrap  font-weight-bold">@(dsource.Sum(x => x.SaleCost * x.RemainCount)?.ToString("C0", new CultureInfo("kk-KZ")))</span>
+                    </Authorized>
+                </AuthorizeView>
+            </FooterTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn TItem="RemainReportDto" Property="@nameof(RemainReportDto.OptCost)" Title="Оптовая цена" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.OptCost?.ToString("C0", new CultureInfo("kk-KZ"))</span>
+            </Template>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn TItem="RemainReportDto" Property="@nameof(RemainReportDto.RemainCount)" Title="Остаток шт" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap  @(vdata.RemainCount <= vdata.Limit ? "text-danger": "")">@vdata.RemainCount</span>
+            </Template>
+            <FooterTemplate>
+                <span class="text-wrap font-weight-bold">@(dsource.Sum(x => x.RemainCount)) шт</span>
+            </FooterTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="120px" TItem="RemainReportDto" Property="@nameof(RemainReportDto.Limit)" Title="Лимит" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Limit</span>
+            </Template>
+        </RadzenGridColumn>
+
+    </Columns>
+
+</RadzenGrid>
+
+
+@code {
+    public bool IsResponsive { get; set; }
+    List<RemainReportDto> dsource = new List<RemainReportDto>();
+    [Inject]
+    public IAppService serv { get; set; }
+    [Inject]
+    protected LoadingService loading { get; set; }
+    [Inject]
+    private NotificationService notificationService { get; set; }
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                loading.Visible = true;
+                dsource = await serv.GetAsync<List<RemainReportDto>>("api/report/GetRemains");
+
+            }
+            catch (Exception)
+            {
+                await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при получении данных", Duration = 2500 });
+            }
+            finally
+            {
+                loading.Visible = false;
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+
+
+    }
+    protected async Task ShowNotification(NotificationMessage message)
+    {
+        notificationService.Notify(message);
+        await InvokeAsync(StateHasChanged);
+    }
+
+}
+
+
+

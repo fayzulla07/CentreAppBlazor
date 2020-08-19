@@ -1,0 +1,95 @@
+﻿@page "/HistoryReturnPage"
+@inherits BaseCrud<ReturnView>
+@attribute [Authorize]
+
+<div class="d-flex">
+    <div class="">
+        <div class="h5">Возвращенные товары </div>
+    </div>
+    <div class="">
+        <RadzenCheckBox @bind-Value="IsResponsive" TriState="false" Name="CheckBox1" />
+        <RadzenLabel Text="Режим поиска" Component="CheckBox1" Style="margin-left: 5px;margin-bottom: 20px" />
+
+    </div>
+</div>
+
+<RadzenGrid @ref="Grid" AllowFiltering="true" AllowPaging="true" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+            AllowSorting="true" Data="@dsource" TItem="ReturnView" ColumnWidth="200px" RowUpdate="@OnUpdateRow">
+    <Columns>
+        <RadzenGridColumn TItem="ReturnView" Property="@nameof(ReturnView.Id)" Visible="false" />
+
+        <RadzenGridColumn Width="250px" TItem="ReturnView" Property="@nameof(ReturnView.Name)" Title="Имя">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Name</span>
+            </Template>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="120px" TItem="ReturnView" Property="@nameof(ReturnView.Amount)" Title="Коль-во">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Amount</span>
+            </Template>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="150px" TItem="ReturnView" Property="@nameof(ReturnView.ReturnCost)" Title="Сумма возврата">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.ReturnCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
+            </Template>
+        </RadzenGridColumn>
+
+
+        <RadzenGridColumn Width="150px" TItem="ReturnView" Property="@nameof(ReturnView.CustomerName)" Title="Имя покупателя">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.CustomerName</span>
+            </Template>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="130px" TItem="ReturnView" Property="@nameof(ReturnView.RegDt)" Title="Дата рег">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.RegDt</span>
+            </Template>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn Width="150px" TItem="ReturnView" Property="@nameof(ReturnView.Comments)" Title="Комменты">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Comments</span>
+            </Template>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn TItem="ReturnView" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
+            <Template Context="dsource">
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
+                </RadzenButton>
+            </Template>
+            <EditTemplate Context="dsource">
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
+                </RadzenButton>
+            </EditTemplate>
+        </RadzenGridColumn>
+    </Columns>
+
+</RadzenGrid>
+
+
+@code {
+    protected override string ApiUrl { get; set; } = "api/ReturnsView";
+
+
+    async Task DeleteConfirmation(ReturnView dat) => await DialogService.OpenAsync("Подтверждение", ds =>
+    @<RadzenCard Style="padding: 20px;">
+        <p Style="margin-bottom: 10px;">Вы действительно хотите удалить "@dat.Name"?</p>
+        <div class="row">
+            <div class="col-md-8">
+                <RadzenButton Text="Да" Click="args=>OkDialog(dat)" Style="margin-bottom: 10px; width: 150px" />
+                <RadzenButton Text="Отмена" Click="CancelDialog" ButtonStyle="ButtonStyle.Secondary" Style="margin-bottom: 10px; width: 150px" />
+            </div>
+        </div>
+    </RadzenCard>);
+
+    protected override void OnInitialized()
+    {
+        ErrorMessage = "КОЛИЧЕСТВО ОСТАТКОВ МЕНЬШЕ ЧЕМ УДАЛЯЕМОГО!";
+    }
+}
+
+
+

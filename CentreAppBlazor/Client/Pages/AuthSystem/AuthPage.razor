@@ -1,0 +1,96 @@
+﻿@page "/system/login"
+@layout EmptyLayout
+@inject AuthService authService
+@inject NavigationManager navigationManager
+
+<section class="material-half-bg">
+    <div class="cover"></div>
+</section>
+<section class="login-content">
+
+    <div class="logo">
+        <h1>Xan</h1>
+    </div>
+    <div class="login-box" style="height:450px">
+        <EditForm class="login-form" Model="model" OnValidSubmit="LoginSubmit">
+            <div class="d-flex">
+                <div class="flex-grow-1">
+                    <h3 class="login-head"><i class="fa fa-lg fa-fw fa-user"></i>Авторизация</h3>
+                </div> 
+                <div>
+                    <div style="height:30px;width:30px;">
+                        <LoadingCircleComponent IsActive="IsActive" />
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="text-danger">
+                @message
+            </div>
+            <div class="form-group">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+            </div>
+            <div class="form-group">
+                <label class="control-label">ЛОГИН</label>
+                <InputText class="form-control" @bind-Value="model.UserName" type="text" placeholder="Логин" autofocus />
+            </div>
+            <div class="form-group">
+                <label class="control-label">ПАРОЛЬ</label>
+                <InputText class="form-control" @bind-Value="model.Password" type="password" placeholder="Пароль" />
+            </div>
+            <div class="form-group">
+                <div class="form-check">
+                    <InputCheckbox @bind-Value="model.RememberMe" class="form-check-input" id="RememberMe22" />
+                    <label class="form-check-label" for="RememberMe22">Запомнить</label>
+                </div>
+            </div>
+            <div class="form-group btn-container">
+                <button type="submit" class="btn btn-primary btn-block">Войти</button>
+            </div>
+        </EditForm>
+      
+    </div>
+</section>
+
+@code {
+    [Inject]
+    public AuthenticationStateProvider provider { get; set; }
+
+    LoginViewModel model = new LoginViewModel();
+    string message = String.Empty;
+    UserResponse userInfo;
+    bool IsActive = false;
+
+    private async Task LoginSubmit()
+    {
+        try
+        {
+            IsActive = true;
+            userInfo = await authService.LoginUserAsync(model);
+        }
+        catch (SimpleHttpResponseException ex)
+        {
+            if(ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                message = "Логин или пароль неверно!";
+            }
+            Console.WriteLine("IN LoginUserAsync: " + ex.StatusCode);
+            Console.WriteLine("IN LoginUserAsync: " + ex.Message);
+        }
+        finally
+        {
+            IsActive = false;
+        }
+
+        if (userInfo != null)
+        {
+            LocalStorageAuthProvider Auth = (LocalStorageAuthProvider)provider;
+            await Auth.SetItemAsync(userInfo);
+            await Auth.GetAuthenticationStateAsync();
+            navigationManager.NavigateTo($"/");
+        }
+
+    }
+}

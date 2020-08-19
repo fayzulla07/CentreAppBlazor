@@ -1,0 +1,185 @@
+﻿@page "/UserPage"
+@inherits BaseCrud<Users>
+@attribute [Authorize(Roles = "admin")]
+
+<div class="d-flex">
+    <div class="">
+        <div class="h5">Пользователи </div>
+    </div>
+    <div class="">
+        <RadzenCheckBox @bind-Value="IsResponsive" TriState="false" Name="CheckBox1" />
+        <RadzenLabel Text="Режим поиска" Component="CheckBox1" Style="margin-left: 5px;margin-bottom: 20px" />
+
+    </div>
+</div>
+<RadzenPanel AllowCollapse="true" Collapsed="true" Expand="PanelExpand">
+    <ChildContent>
+        <RadzenTemplateForm TItem="Users" Data="dataform" Submit="@OnSubmit" InvalidSubmit="@OnInvalidSubmit">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Имя" />
+                        <br />
+                        <RadzenTextBox Style="width:100%" Name="Name" @bind-Value="dataform.Name" />
+                        <br />
+                        <RadzenRequiredValidator Component="@nameof(Users.Name)" Popup="false" Text="Значение должно быть заполнено!" />
+                        <RadzenRegexValidator Component="@nameof(Users.Name)" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
+                    </div>
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Описание" />
+                        <br />
+                        <RadzenTextBox Name="@nameof(Users.Description)" Style="width:100%" @bind-Value="dataform.Description" />
+                        <br />
+                    </div>
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Юзер" />
+                        <br />
+                        <RadzenTextBox Name="@nameof(Users.LoginName)" Style="width:100%" @bind-Value="dataform.LoginName" AutoComplete="false" />
+
+                        <br />
+                        <RadzenRequiredValidator Component="@nameof(Users.LoginName)" Popup="false" Text="Значение должно быть заполнено!" />
+                        <RadzenRegexValidator Component="@nameof(Users.LoginName)" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
+                    </div>
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Пароль" />
+                        <br />
+                        <RadzenPassword Disabled="InputDisable" Name="@nameof(Users.Password)" Style="width:100%" @bind-Value="dataform.Password" AutoComplete="false" />
+                        <br />
+                        <RadzenRequiredValidator Component="@nameof(Users.Password)" Popup="false" Text="Значение должно быть заполнено!" />
+                        <RadzenRegexValidator Component="@nameof(Users.Password)" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
+
+                    </div>
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Выберите роль" />
+                        <br />
+                        <RadzenDropDown AllowClear="true" Placeholder="Выберите роль" @bind-Value="dataform.RoleId" Data="role" TextProperty="@nameof(Roles.Name)" ValueProperty="@nameof(Roles.Id)" Name="@nameof(Users.RoleId)" Style="width:100%" />
+                        <br />
+                        <RadzenRequiredValidator Component="@nameof(Users.RoleId)" Popup="false" Text="Выберите роль!" />
+                    </div>
+                </div>
+                <div class="m-3 float-right">
+                    <RadzenButton ButtonType="ButtonType.Submit" Text="Добавить"></RadzenButton>
+                </div>
+            </div>
+        </RadzenTemplateForm>
+    </ChildContent>
+</RadzenPanel>
+
+
+<RadzenGrid @ref="Grid" AllowFiltering="true" AllowPaging="true" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+            AllowSorting="true" Data="@dsource" TItem="Users" ColumnWidth="200px" RowUpdate="@OnUpdateRow">
+    <Columns>
+        <RadzenGridColumn TItem="Users" Property="@nameof(Users.Id)" Visible="false" />
+        <RadzenGridColumn TItem="Users" Property="@nameof(Users.Name)" Title="Имя">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Name</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenTextBox @bind-Value="vdata.Name" Name="Name" Style="width:100%" />
+                <br />
+                <RadzenRequiredValidator Component="Name" Text="Заполните поле" />
+                <RadzenRegexValidator Component="Name" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
+            </EditTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn TItem="Users" Property="@nameof(Users.Description)" Title="Описание">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Description</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenTextBox @bind-Value="vdata.Description" Style="width:100%" />
+            </EditTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn TItem="Users" Property="@nameof(Users.LoginName)" Title="Логин">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.LoginName</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenTextBox @bind-Value="vdata.LoginName" Name="@nameof(Users.LoginName)" Style="width:100%" />
+                <br />
+                <RadzenRequiredValidator Component="@nameof(Users.LoginName)" Text="Заполните поле" />
+                <RadzenRegexValidator Component="@nameof(Users.LoginName)" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
+            </EditTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn TItem="Users" Property="@nameof(Users.Password)" Title="Пароль">
+            <Template Context="vdata">
+                <span class="text-wrap">****</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenPassword @bind-Value="vdata.Password" Name="@nameof(Users.Password)" Style="width:100%" />
+                <br />
+                <RadzenRequiredValidator Component="@nameof(Users.Password)" Text="Заполните поле" />
+                <RadzenRegexValidator Component="@nameof(Users.Password)" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
+            </EditTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn TItem="Users" Property="@nameof(Users.RoleId)" Title="Роль" Width="150px">
+            <Template Context="vdata">
+                <span class="text-wrap">@role.FirstOrDefault(x => x.Id == vdata.RoleId)?.Name</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenDropDown AllowClear="true" Placeholder="Выберите Тип" @bind-Value="vdata.RoleId" Data="role" TextProperty="@nameof(Roles.Name)" ValueProperty="@nameof(Roles.Id)" Name="@nameof(Users.RoleId)" Style="width:100%" />
+                <br />
+                <RadzenRequiredValidator Component="@nameof(Users.RoleId)" Text="Выберите роль" />
+
+            </EditTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn TItem="Users" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+            <Template Context="dsource">
+                <RadzenButton Icon="edit" Size="ButtonSize.Medium" Click="@(args => EditRow(dsource))">
+                </RadzenButton>
+            </Template>
+            <EditTemplate Context="dsource">
+                <RadzenButton Icon="save" Size="ButtonSize.Medium" Click="@((args) => SaveRow(dsource))">
+                </RadzenButton>
+                <RadzenButton Icon="cancel" Size="ButtonSize.Medium" ButtonStyle="ButtonStyle.Secondary" Click="@((args) => CancelEdit(dsource))">
+                </RadzenButton>
+            </EditTemplate>
+        </RadzenGridColumn>
+        <RadzenGridColumn TItem="Users" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
+            <Template Context="dsource">
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
+                </RadzenButton>
+            </Template>
+            <EditTemplate Context="dsource">
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
+                </RadzenButton>
+            </EditTemplate>
+        </RadzenGridColumn>
+    </Columns>
+</RadzenGrid>
+
+
+@code {
+    protected override string ApiUrl { get; set; } = "api/Users";
+    private bool InputDisable = true; //это для ссылочности
+
+    async Task DeleteConfirmation(Users dat) => await DialogService.OpenAsync("Подтверждение", ds =>
+    @<RadzenCard Style="padding: 20px;">
+        <p Style="margin-bottom: 10px;">Вы действительно хотите удалить "@dat.Name"?</p>
+        <div class="row">
+            <div class="col-md-8">
+                <RadzenButton Text="Да" Click="args=>OkDialog(dat)" Style="margin-bottom: 10px; width: 150px" />
+                <RadzenButton Text="Отмена" Click="CancelDialog" ButtonStyle="ButtonStyle.Secondary" Style="margin-bottom: 10px; width: 150px" />
+            </div>
+        </div>
+    </RadzenCard>);
+
+
+IEnumerable<Roles> role = new List<Roles>();
+protected async override Task GetForDropDown()
+{
+role = await serv.GetAsync<IEnumerable<Roles>>("api/Roles");
+}
+
+void PanelExpand()
+{
+InputDisable = false;
+}
+}
+
+
+
