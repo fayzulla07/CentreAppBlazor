@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace CentreAppBlazor.Client.Services
@@ -15,5 +16,6 @@ namespace CentreAppBlazor.Client.Services
 
         Task<T> PostAsync<T>(object obj, string url);
 
+        Task<HttpResponseMessage> CallAsync(string uri);
     }
 }

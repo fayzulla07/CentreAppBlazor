@@ -12,6 +12,7 @@
     <RadzenDatePicker TValue="DateTime?" @bind-Value="da1" />
     <RadzenDatePicker TValue="DateTime?" @bind-Value="da2" />
     <RadzenButton Text="Получить" Click="GetClicked"></RadzenButton>
+    <RadzenButton Text="Скачать" Icon="get_app" Click="GetFile" />
 </div>
 
 <div class="m-2">
@@ -33,6 +34,8 @@
     [Inject]
     private NotificationService notificationService { get; set; }
 
+    [Inject]
+    public IJSRuntime JS { get; set; }
 
     protected async Task ShowNotification(NotificationMessage message)
     {
@@ -69,7 +72,27 @@
             await InvokeAsync(StateHasChanged);
         }
     }
+    private async Task GetFile()
+    {
+        try
+        {
+            if (da1 == null) da1 = DateTime.Now.AddDays(-1);
+            if (da2 == null) da2 = DateTime.Now.AddDays(1);
+            loading.Visible = true;
+            var val = await serv.CallAsync($"api/report/GetSaleExcel?das1={da1.Value.ToString("yyyy-MM-dd")}&das2={da2.Value.ToString("yyyy-MM-dd")}");
 
+            await JS.InvokeVoidAsync("saveasFile", "SaleReturn.xlsx", Convert.ToBase64String(await val.Content.ReadAsByteArrayAsync()));
+        }
+        catch (Exception ex)
+        {
+            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при получении файла", Duration = 2500 });
+        }
+        finally
+        {
+            loading.Visible = false;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
 }
 
 

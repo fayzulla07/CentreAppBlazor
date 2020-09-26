@@ -17,6 +17,9 @@ using System.Text;
 using System;
 using CentreAppBlazor.Server.Services.Auth;
 using AutoMapper;
+using OfficeOpenXml;
+using CentreAppBlazor.Server.ReportToExcel;
+
 namespace CentreAppBlazor.Server
 {
     public class Startup
@@ -32,6 +35,7 @@ namespace CentreAppBlazor.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             DapperContext.ConStr = Configuration.GetConnectionString("DefaultConnection");
             RegisterCustomServices(services);
             services.AddAutoMapper(typeof(Startup));

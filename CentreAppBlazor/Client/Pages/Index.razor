@@ -132,14 +132,15 @@
 
 
 
-@code{
-    [Inject]
-    protected LoadingService loading { get; set; }
-    [Inject]
-    public IAppService _client { get; set; }
+@code
+{
+        [Inject]
+        protected LoadingService loading { get; set; }
+        [Inject]
+        public IAppService _client { get; set; }
 
-    [Inject]
-    private NotificationService notificationService { get; set; }
+        [Inject]
+        private NotificationService notificationService { get; set; }
 
     private CentreAppBlazor.Shared.Dto.SalesReturnsbyDayDto Values = new SalesReturnsbyDayDto();
     protected async override void OnInitialized()
@@ -188,5 +189,4 @@
             await InvokeAsync(StateHasChanged);
         }
     }
-
 }

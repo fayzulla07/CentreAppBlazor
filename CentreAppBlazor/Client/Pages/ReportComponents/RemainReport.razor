@@ -8,6 +8,9 @@
     </div>
 </div>
 
+<div class="m-3">
+    <RadzenButton Text="Скачать" Icon="get_app" Click="GetFile" />
+</div>
 
 <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowSorting="true" Data="@dsource" TItem="RemainReportDto" ColumnWidth="200px">
@@ -76,6 +79,12 @@
     [Inject]
     public IAppService serv { get; set; }
     [Inject]
+    public IJSRuntime jSRuntime { get; set; }
+
+    [Inject]
+    public HttpClient httpClient { get; set; }
+
+    [Inject]
     protected LoadingService loading { get; set; }
     [Inject]
     private NotificationService notificationService { get; set; }
@@ -86,8 +95,10 @@
         {
             try
             {
+
                 loading.Visible = true;
                 dsource = await serv.GetAsync<List<RemainReportDto>>("api/report/GetRemains");
+
 
             }
             catch (Exception)
@@ -103,6 +114,28 @@
 
 
     }
+
+    private async Task GetFile()
+    {
+        try
+        {
+           
+            loading.Visible = true;
+            var val =  await serv.CallAsync("api/report/GetRemainsExcel");
+            //var stream = new System.IO.MemoryStream(val.Content.ReadAsByteArrayAsync);
+            await jSRuntime.InvokeVoidAsync("saveasFile", "Remains.xlsx", Convert.ToBase64String(await val.Content.ReadAsByteArrayAsync()));
+        }
+        catch (Exception ex)
+        {
+            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при получении файла", Duration = 2500 });
+        }
+        finally
+        {
+            loading.Visible = false;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
     protected async Task ShowNotification(NotificationMessage message)
     {
         notificationService.Notify(message);

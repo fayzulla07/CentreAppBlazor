@@ -59,6 +59,12 @@ namespace CentreAppBlazor.Client.Services
             var responce = await _client.PostAsJsonAsync($"/{url}", obj);
             return await responce.Content.ReadFromJsonAsync<T>();
         }
-      
+
+
+        public async Task<HttpResponseMessage> CallAsync(string uri)
+        {
+            await SetToken();
+           return await _client.GetAsync($"/{uri}");
+        }
     }
 }
