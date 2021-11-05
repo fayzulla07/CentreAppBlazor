@@ -3,45 +3,45 @@
 
 @attribute [Authorize(Roles = "admin")]
 
-<RadzenGrid AllowFiltering="true" AllowPaging="true" Count="Count" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+<RadzenDataGrid AllowFiltering="true" AllowPaging="true" Count="Count" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowSorting="true" Data="@dsource" TItem="ReturnReportDto" ColumnWidth="200px">
     <Columns>
 
-        <RadzenGridColumn Width="200px" TItem="ReturnReportDto" Property="@nameof(ReturnReportDto.Name)" Title="Имя">
+        <RadzenDataGridColumn Width="200px" TItem="ReturnReportDto" Property="@nameof(ReturnReportDto.Name)" Title="Имя">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Name</span>
             </Template>
             <FooterTemplate>
                 <span class="text-wrap font-weight-bold">Итого:  @dsource.Sum(x => x.ReturnCost).ToString("C0", new CultureInfo("kk-KZ")) </span>
             </FooterTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="100px" TItem="ReturnReportDto" Property="@nameof(ReturnReportDto.Amount)" Title="Коль-во" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="100px" TItem="ReturnReportDto" Property="@nameof(ReturnReportDto.Amount)" Title="Коль-во" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Amount</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="130px" TItem="ReturnReportDto" Property="@nameof(ReturnReportDto.CustomerName)" Title="Коль-во" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="130px" TItem="ReturnReportDto" Property="@nameof(ReturnReportDto.CustomerName)" Title="Коль-во" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.CustomerName</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="130px" TItem="ReturnReportDto" Property="@nameof(ReturnReportDto.ReturnCost)" Title="Сумма возврата" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="130px" TItem="ReturnReportDto" Property="@nameof(ReturnReportDto.ReturnCost)" Title="Сумма возврата" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.ReturnCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="130px" TItem="ReturnReportDto" Property="@nameof(ReturnReportDto.RegDt)" Title="Дата рег" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="130px" TItem="ReturnReportDto" Property="@nameof(ReturnReportDto.RegDt)" Title="Дата рег" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.RegDt</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
     </Columns>
 
-</RadzenGrid>
+</RadzenDataGrid>
 
 
 @code {

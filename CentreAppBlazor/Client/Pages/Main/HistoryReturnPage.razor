@@ -13,49 +13,49 @@
     </div>
 </div>
 
-<RadzenGrid @ref="Grid" AllowFiltering="true" AllowPaging="true" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+<RadzenDataGrid @ref="Grid" AllowFiltering="true" AllowPaging="true" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowSorting="true" Data="@dsource" TItem="ReturnView" ColumnWidth="200px" RowUpdate="@OnUpdateRow">
     <Columns>
-        <RadzenGridColumn TItem="ReturnView" Property="@nameof(ReturnView.Id)" Visible="false" />
+        <RadzenDataGridColumn TItem="ReturnView" Property="@nameof(ReturnView.Id)" Visible="false" />
 
-        <RadzenGridColumn Width="250px" TItem="ReturnView" Property="@nameof(ReturnView.Name)" Title="Имя">
+        <RadzenDataGridColumn Width="250px" TItem="ReturnView" Property="@nameof(ReturnView.Name)" Title="Имя">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Name</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="120px" TItem="ReturnView" Property="@nameof(ReturnView.Amount)" Title="Коль-во">
+        <RadzenDataGridColumn Width="120px" TItem="ReturnView" Property="@nameof(ReturnView.Amount)" Title="Коль-во">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Amount</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="150px" TItem="ReturnView" Property="@nameof(ReturnView.ReturnCost)" Title="Сумма возврата">
+        <RadzenDataGridColumn Width="150px" TItem="ReturnView" Property="@nameof(ReturnView.ReturnCost)" Title="Сумма возврата">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.ReturnCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
 
-        <RadzenGridColumn Width="150px" TItem="ReturnView" Property="@nameof(ReturnView.CustomerName)" Title="Имя покупателя">
+        <RadzenDataGridColumn Width="150px" TItem="ReturnView" Property="@nameof(ReturnView.CustomerName)" Title="Имя покупателя">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.CustomerName</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="130px" TItem="ReturnView" Property="@nameof(ReturnView.RegDt)" Title="Дата рег">
+        <RadzenDataGridColumn Width="130px" TItem="ReturnView" Property="@nameof(ReturnView.RegDt)" Title="Дата рег">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.RegDt</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="150px" TItem="ReturnView" Property="@nameof(ReturnView.Comments)" Title="Комменты">
+        <RadzenDataGridColumn Width="150px" TItem="ReturnView" Property="@nameof(ReturnView.Comments)" Title="Комменты">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Comments</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn TItem="ReturnView" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
+        <RadzenDataGridColumn TItem="ReturnView" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
             <Template Context="dsource">
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
                 </RadzenButton>
@@ -64,10 +64,10 @@
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
                 </RadzenButton>
             </EditTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
     </Columns>
 
-</RadzenGrid>
+</RadzenDataGrid>
 
 
 @code {

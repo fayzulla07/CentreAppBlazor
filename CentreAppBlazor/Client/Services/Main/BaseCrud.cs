@@ -26,7 +26,7 @@ namespace CentreAppBlazor.Client.Services.Main
         [Inject]
         private NotificationService notificationService{ get; set; }
 
-        protected RadzenGrid<T> Grid { get; set; }
+        protected RadzenDataGrid<T> Grid { get; set; }
         private T temp;
         protected T dataform;
         protected List<T> dsource = new List<T>();

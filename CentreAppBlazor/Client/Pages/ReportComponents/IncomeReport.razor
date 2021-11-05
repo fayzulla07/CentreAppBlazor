@@ -16,10 +16,10 @@
 </div>
 
 
-<RadzenGrid AllowFiltering="true" AllowPaging="true" Count="Count" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+<RadzenDataGrid AllowFiltering="true" AllowPaging="true" Count="Count" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowSorting="true" Data="@dsource" TItem="IncomeReportDto" ColumnWidth="200px">
     <Columns>
-        <RadzenGridColumn Width="250px" TItem="IncomeReportDto" Property="@nameof(IncomeReportDto.Name)" Title="Имя">
+        <RadzenDataGridColumn Width="250px" TItem="IncomeReportDto" Property="@nameof(IncomeReportDto.Name)" Title="Имя">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Name</span>
             </Template>
@@ -28,36 +28,36 @@
                 <br />
                 <span class="text-wrap font-weight-bold">Прибыль: </span>
             </FooterTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="100px" TItem="IncomeReportDto" Property="@nameof(IncomeReportDto.Amount)" Title="Кол-во(шт)" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="100px" TItem="IncomeReportDto" Property="@nameof(IncomeReportDto.Amount)" Title="Кол-во(шт)" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Amount</span>
             </Template>
 
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="130px" TItem="IncomeReportDto" Property="@nameof(IncomeReportDto.SupplierName)" Title="Поставщик" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="130px" TItem="IncomeReportDto" Property="@nameof(IncomeReportDto.SupplierName)" Title="Поставщик" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.SupplierName</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
         <AuthorizeView Roles="admin">
             <Authorized>
-                <RadzenGridColumn Width="100px" TItem="IncomeReportDto" Property="@nameof(IncomeReportDto.IncomeCost)" Title="Цена прихода" TextAlign="TextAlign.Center">
+                <RadzenDataGridColumn Width="100px" TItem="IncomeReportDto" Property="@nameof(IncomeReportDto.IncomeCost)" Title="Цена прихода" TextAlign="TextAlign.Center">
                     <Template Context="vdata">
                         <span class="text-wrap">@vdata.IncomeCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
                     </Template>
                     <FooterTemplate>
                         <span class="text-wrap font-weight-bold">@dsource.Sum(x => x.IncomeCost * x.Amount).ToString("C0", new CultureInfo("kk-KZ")) </span>
                     </FooterTemplate>
-                </RadzenGridColumn>
+                </RadzenDataGridColumn>
             </Authorized>
         </AuthorizeView>
 
 
-        <RadzenGridColumn Width="100px" TItem="IncomeReportDto" Property="@nameof(IncomeReportDto.SaleCost)" Title="Цена продажа" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="100px" TItem="IncomeReportDto" Property="@nameof(IncomeReportDto.SaleCost)" Title="Цена продажа" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.SaleCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
             </Template>
@@ -71,9 +71,9 @@
                     </Authorized>
                 </AuthorizeView>
             </FooterTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="100px" TItem="IncomeReportDto" Property="@nameof(IncomeReportDto.OptCost)" Title="Отповая цена" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="100px" TItem="IncomeReportDto" Property="@nameof(IncomeReportDto.OptCost)" Title="Отповая цена" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.OptCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
             </Template>
@@ -87,22 +87,22 @@
                     </Authorized>
                 </AuthorizeView>
             </FooterTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="120px" TItem="IncomeReportDto" Property="@nameof(IncomeReportDto.RegDt)" Title="Дата рег-ции" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="120px" TItem="IncomeReportDto" Property="@nameof(IncomeReportDto.RegDt)" Title="Дата рег-ции" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.RegDt</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="130px" TItem="IncomeReportDto" Property="@nameof(IncomeReportDto.UserName)" Title="Пользователь" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="130px" TItem="IncomeReportDto" Property="@nameof(IncomeReportDto.UserName)" Title="Пользователь" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.UserName</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
     </Columns>
 
-</RadzenGrid>
+</RadzenDataGrid>
 
 
 @code {

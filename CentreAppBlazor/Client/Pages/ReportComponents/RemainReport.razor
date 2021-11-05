@@ -12,29 +12,29 @@
     <RadzenButton Text="Скачать" Icon="get_app" Click="GetFile" />
 </div>
 
-<RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+<RadzenDataGrid AllowFiltering="true" AllowPaging="true" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowSorting="true" Data="@dsource" TItem="RemainReportDto" ColumnWidth="200px">
     <Columns>
-        <RadzenGridColumn Width="300px" TItem="RemainReportDto" Property="@nameof(RemainReportDto.Name)" Title="Имя">
+        <RadzenDataGridColumn Width="300px" TItem="RemainReportDto" Property="@nameof(RemainReportDto.Name)" Title="Имя">
             <Template Context="vdata">
                 <span class="text-wrap @(vdata.RemainCount <= vdata.Limit ? "text-danger": "")">@vdata.Name</span>
             </Template>
             <FooterTemplate>
                 <span class="text-wrap font-weight-bold">Итого: </span>
             </FooterTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
         <AuthorizeView Roles="admin">
             <Authorized>
-                <RadzenGridColumn TItem="RemainReportDto" Property="@nameof(RemainReportDto.IncomeCost)" Title="Цена прихода" TextAlign="TextAlign.Center">
+                <RadzenDataGridColumn TItem="RemainReportDto" Property="@nameof(RemainReportDto.IncomeCost)" Title="Цена прихода" TextAlign="TextAlign.Center">
                     <Template Context="vdata">
                         <span class="text-wrap">@vdata.IncomeCost?.ToString("C0", new CultureInfo("kk-KZ"))</span>
                     </Template>
-                </RadzenGridColumn>
+                </RadzenDataGridColumn>
             </Authorized>
         </AuthorizeView>
 
-        <RadzenGridColumn TItem="RemainReportDto" Property="@nameof(RemainReportDto.SaleCost)" Title="Цена продажи" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn TItem="RemainReportDto" Property="@nameof(RemainReportDto.SaleCost)" Title="Цена продажи" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.SaleCost?.ToString("C0", new CultureInfo("kk-KZ"))</span>
             </Template>
@@ -45,32 +45,32 @@
                     </Authorized>
                 </AuthorizeView>
             </FooterTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn TItem="RemainReportDto" Property="@nameof(RemainReportDto.OptCost)" Title="Оптовая цена" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn TItem="RemainReportDto" Property="@nameof(RemainReportDto.OptCost)" Title="Оптовая цена" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.OptCost?.ToString("C0", new CultureInfo("kk-KZ"))</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn TItem="RemainReportDto" Property="@nameof(RemainReportDto.RemainCount)" Title="Остаток шт" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn TItem="RemainReportDto" Property="@nameof(RemainReportDto.RemainCount)" Title="Остаток шт" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap  @(vdata.RemainCount <= vdata.Limit ? "text-danger": "")">@vdata.RemainCount</span>
             </Template>
             <FooterTemplate>
                 <span class="text-wrap font-weight-bold">@(dsource.Sum(x => x.RemainCount)) шт</span>
             </FooterTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="120px" TItem="RemainReportDto" Property="@nameof(RemainReportDto.Limit)" Title="Лимит" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="120px" TItem="RemainReportDto" Property="@nameof(RemainReportDto.Limit)" Title="Лимит" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Limit</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
     </Columns>
 
-</RadzenGrid>
+</RadzenDataGrid>
 
 
 @code {

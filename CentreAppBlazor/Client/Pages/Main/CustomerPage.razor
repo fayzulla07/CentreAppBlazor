@@ -62,12 +62,12 @@
 </RadzenPanel>
 
 
-<RadzenGrid @ref="Grid" AllowFiltering="true" AllowPaging="true" PageSize="20" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-            RowSelect="RowSelected" RowDoubleClick="RowDoubleClick" AllowSorting="true" Data="@dsource" TItem="Customers" Responsive="@(!IsResponsive)" RowUpdate="@OnUpdateRow">
+<RadzenDataGrid @ref="Grid" AllowFiltering="true" AllowPaging="true" PageSize="20" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+            RowSelect="RowSelected" RowDoubleClick="(args)=> { RowDoubleClick(args.Data); }" AllowSorting="true" Data="@dsource" TItem="Customers" Responsive="@(!IsResponsive)" RowUpdate="@OnUpdateRow">
     <Columns>
-        <RadzenGridColumn TItem="Customers" Property="@nameof(Customers.Id)" Visible="false" />
+        <RadzenDataGridColumn TItem="Customers" Property="@nameof(Customers.Id)" Visible="false" />
 
-        <RadzenGridColumn TItem="Customers" Property="@nameof(Customers.Name)" Title="Имя" Width="200px">
+        <RadzenDataGridColumn TItem="Customers" Property="@nameof(Customers.Name)" Title="Имя" Width="200px">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Name</span>
             </Template>
@@ -77,36 +77,36 @@
                 <RadzenRequiredValidator Component="@nameof(Customers.Name)" Text="Заполните поле" />
                 <RadzenRegexValidator Component="@nameof(Customers.Name)" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
             </EditTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn TItem="Customers" Property="@nameof(Customers.Address)" Title="Адрес" Width="200px">
+        <RadzenDataGridColumn TItem="Customers" Property="@nameof(Customers.Address)" Title="Адрес" Width="200px">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Address</span>
             </Template>
             <EditTemplate Context="vdata">
                 <RadzenTextBox @bind-Value="vdata.Address" Name="@nameof(Customers.Address)" Style="width:100%" />
             </EditTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn TItem="Customers" Property="@nameof(Customers.Email)" Title="Почта" Width="200px">
+        <RadzenDataGridColumn TItem="Customers" Property="@nameof(Customers.Email)" Title="Почта" Width="200px">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Email</span>
             </Template>
             <EditTemplate Context="vdata">
                 <RadzenTextBox @bind-Value="vdata.Email" Name="@nameof(Customers.Email)" Style="width:100%" />
             </EditTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn TItem="Customers" Property="@nameof(Customers.PhoneNumber)" Title="Номер" Width="200px">
+        <RadzenDataGridColumn TItem="Customers" Property="@nameof(Customers.PhoneNumber)" Title="Номер" Width="200px">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.PhoneNumber</span>
             </Template>
             <EditTemplate Context="vdata">
                 <RadzenTextBox @bind-Value="vdata.PhoneNumber" Name="@nameof(Customers.PhoneNumber)" Style="width:100%" />
             </EditTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn TItem="Customers" Property="@nameof(Customers.CustomerTypeId)" Title="Тип клиента" Width="200px">
+        <RadzenDataGridColumn TItem="Customers" Property="@nameof(Customers.CustomerTypeId)" Title="Тип клиента" Width="200px">
 
             <Template Context="vdata">
                 <span class="text-wrap">@customer.FirstOrDefault(x => x.Id == vdata.CustomerTypeId)?.Name</span>
@@ -114,10 +114,10 @@
             <EditTemplate Context="vdata">
                 <RadzenDropDown AllowClear="true" Placeholder="Выберите Тип" @bind-Value="vdata.CustomerTypeId" Data="customer" TextProperty="@nameof(CustomerTypes.Name)" ValueProperty="@nameof(CustomerTypes.Id)" Name="@nameof(Customers.CustomerTypeId)" Style="width:100%" />
             </EditTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
 
-        <RadzenGridColumn TItem="Customers" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+        <RadzenDataGridColumn TItem="Customers" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
             <Template Context="dsource">
                 <RadzenButton Icon="edit" Size="ButtonSize.Medium" Click="@(args => EditRow(dsource))">
                 </RadzenButton>
@@ -128,8 +128,8 @@
                 <RadzenButton Icon="cancel" Size="ButtonSize.Medium" ButtonStyle="ButtonStyle.Secondary" Click="@((args) => CancelEdit(dsource))">
                 </RadzenButton>
             </EditTemplate>
-        </RadzenGridColumn>
-        <RadzenGridColumn TItem="Customers" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="Customers" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
             <Template Context="dsource">
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
                 </RadzenButton>
@@ -138,9 +138,9 @@
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
                 </RadzenButton>
             </EditTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
     </Columns>
-</RadzenGrid>
+</RadzenDataGrid>
 
 
 @code {

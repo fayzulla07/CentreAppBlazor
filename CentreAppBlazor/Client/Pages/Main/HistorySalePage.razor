@@ -14,74 +14,74 @@
 </div>
 
 
-<RadzenGrid @ref="Grid" AllowFiltering="true" AllowPaging="true" PageSize="10" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+<RadzenDataGrid @ref="Grid" AllowFiltering="true" AllowPaging="true" PageSize="10" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowSorting="true" Data="@DataSource" LoadData="LoadData" Count="Count" TItem="HistorySaleView" ColumnWidth="200px" RowUpdate="@OnUpdateRow">
     <Columns>
-        <RadzenGridColumn TItem="HistorySaleView" Property="@nameof(HistorySaleView.Id)" Visible="false" />
+        <RadzenDataGridColumn TItem="HistorySaleView" Property="@nameof(HistorySaleView.Id)" Visible="false" />
 
-        <RadzenGridColumn Width="80px" TItem="HistorySaleView" Property="@nameof(HistorySaleView.OrderNumber)" Title="#" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="80px" TItem="HistorySaleView" Property="@nameof(HistorySaleView.OrderNumber)" Title="#" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.OrderNumber</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="250px" TItem="HistorySaleView" Property="@nameof(HistorySaleView.Name)" Title="Имя">
+        <RadzenDataGridColumn Width="250px" TItem="HistorySaleView" Property="@nameof(HistorySaleView.Name)" Title="Имя">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Name</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="150px" TItem="HistorySaleView" Property="@nameof(HistorySaleView.UserName)" Title="Имя Сотрудника">
+        <RadzenDataGridColumn Width="150px" TItem="HistorySaleView" Property="@nameof(HistorySaleView.UserName)" Title="Имя Сотрудника">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.UserName</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="120px" TItem="HistorySaleView" Property="@nameof(HistorySaleView.AmountUnit)" Title="Количество" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="120px" TItem="HistorySaleView" Property="@nameof(HistorySaleView.AmountUnit)" Title="Количество" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Amount</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="120px" TItem="HistorySaleView" Property="@nameof(HistorySaleView.SaleCost)" Title="Цена продажи" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="120px" TItem="HistorySaleView" Property="@nameof(HistorySaleView.SaleCost)" Title="Цена продажи" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.SaleCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="100px" TItem="HistorySaleView" Property="@nameof(HistorySaleView.RegDt)" Title="Дата рег" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="100px" TItem="HistorySaleView" Property="@nameof(HistorySaleView.RegDt)" Title="Дата рег" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.RegDt</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="80px" TItem="HistorySaleView" Property="@nameof(HistorySaleView.OptCost)" Title="Оптовая?" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="80px" TItem="HistorySaleView" Property="@nameof(HistorySaleView.OptCost)" Title="Оптовая?" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.OptCost</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="80px" TItem="HistorySaleView" Property="@nameof(HistorySaleView.IsBank)" Title="Банк?" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="80px" TItem="HistorySaleView" Property="@nameof(HistorySaleView.IsBank)" Title="Банк?" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <RadzenCheckBox TValue="bool" Value="vdata.IsBank.Value" Disabled="true" />
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="150px" TItem="HistorySaleView" Property="@nameof(HistorySaleView.Comments)" Title="Коммент">
+        <RadzenDataGridColumn Width="150px" TItem="HistorySaleView" Property="@nameof(HistorySaleView.Comments)" Title="Коммент">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Comments</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
 
-        <RadzenGridColumn TItem="HistorySaleView" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
+        <RadzenDataGridColumn TItem="HistorySaleView" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
             <Template Context="dsource">
                 <RadzenButton ButtonStyle="ButtonStyle.Warning" Icon="assignment_return" Size="ButtonSize.Medium" Click="@(args => Conf(dsource))">
                 </RadzenButton>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn TItem="HistorySaleView" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
+        <RadzenDataGridColumn TItem="HistorySaleView" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
             <Template Context="dsource">
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
                 </RadzenButton>
@@ -90,10 +90,10 @@
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
                 </RadzenButton>
             </EditTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
     </Columns>
 
-</RadzenGrid>
+</RadzenDataGrid>
 
 
 @code {

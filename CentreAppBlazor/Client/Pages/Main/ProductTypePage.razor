@@ -44,11 +44,11 @@
 </RadzenPanel>
 
 
-<RadzenGrid @ref="Grid" AllowFiltering="true" AllowPaging="true" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+<RadzenDataGrid @ref="Grid" AllowFiltering="true" AllowPaging="true" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowSorting="true" Data="@dsource" TItem="ProductTypes" ColumnWidth="200px" RowUpdate="@OnUpdateRow">
     <Columns>
-        <RadzenGridColumn TItem="ProductTypes" Property="@nameof(ProductTypes.Id)" Visible="false" />
-        <RadzenGridColumn TItem="ProductTypes" Property="@nameof(ProductTypes.Name)" Title="Имя">
+        <RadzenDataGridColumn TItem="ProductTypes" Property="@nameof(ProductTypes.Id)" Visible="false" />
+        <RadzenDataGridColumn TItem="ProductTypes" Property="@nameof(ProductTypes.Name)" Title="Имя">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Name</span>
             </Template>
@@ -59,18 +59,18 @@
                 <RadzenRegexValidator Component="Name" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
             </EditTemplate>
 
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn TItem="ProductTypes" Property="@nameof(ProductTypes.Description)" Title="Описание">
+        <RadzenDataGridColumn TItem="ProductTypes" Property="@nameof(ProductTypes.Description)" Title="Описание">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Description</span>
             </Template>
             <EditTemplate Context="vdata">
                 <RadzenTextBox @bind-Value="vdata.Description" Style="width:100%" />
             </EditTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn TItem="ProductTypes" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+        <RadzenDataGridColumn TItem="ProductTypes" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
             <Template Context="dsource">
                 <RadzenButton Icon="edit" Size="ButtonSize.Medium" Click="@(args => EditRow(dsource))">
                 </RadzenButton>
@@ -81,8 +81,8 @@
                 <RadzenButton Icon="cancel" Size="ButtonSize.Medium" ButtonStyle="ButtonStyle.Secondary" Click="@((args) => CancelEdit(dsource))">
                 </RadzenButton>
             </EditTemplate>
-        </RadzenGridColumn>
-        <RadzenGridColumn TItem="ProductTypes" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="ProductTypes" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
             <Template Context="dsource">
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
                 </RadzenButton>
@@ -91,10 +91,10 @@
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
                 </RadzenButton>
             </EditTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
     </Columns>
 
-</RadzenGrid>
+</RadzenDataGrid>
 
 
 @code {

@@ -3,16 +3,16 @@
 
 @attribute [Authorize(Roles="admin, manager")]
 
-<RadzenGrid AllowFiltering="true" AllowPaging="true" Count="Count" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+<RadzenDataGrid AllowFiltering="true" AllowPaging="true" Count="Count" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowSorting="true" Data="@dsource" TItem="SaleReportDto" ColumnWidth="200px">
     <Columns>
-        <RadzenGridColumn Width="80px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.OrderNumber)" Title="Номер" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="80px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.OrderNumber)" Title="Номер" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.OrderNumber</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="200px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.Name)" Title="Имя">
+        <RadzenDataGridColumn Width="200px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.Name)" Title="Имя">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Name</span>
             </Template>
@@ -23,28 +23,28 @@
                     </Authorized>
                 </AuthorizeView>
             </FooterTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="120px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.Client)" Title="Клиент" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="120px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.Client)" Title="Клиент" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Client</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="100px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.Amount)" Title="Кол-во(шт)" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="100px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.Amount)" Title="Кол-во(шт)" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Amount</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="110px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.SaleCost)" Title="Цена продажи" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="110px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.SaleCost)" Title="Цена продажи" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.SaleCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
             </Template>
            
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="110px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.TotalSaleCost)" Title="Сумма" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="110px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.TotalSaleCost)" Title="Сумма" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.TotalSaleCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
             </Template>
@@ -55,28 +55,28 @@
                     </Authorized>
                 </AuthorizeView>
             </FooterTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="100px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.OptCost)" Title="Опт?" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="100px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.OptCost)" Title="Опт?" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.OptCost</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="80px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.IsBank)" Title="Банк?" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="80px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.IsBank)" Title="Банк?" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <RadzenCheckBox @bind-Value="vdata.IsBank" Disabled="true" />
             </Template>
 
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="100px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.RegDt)" Title="Дата рег" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="100px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.RegDt)" Title="Дата рег" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.RegDt</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="130px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.Comments)" Title="Дата рег" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="130px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.Comments)" Title="Дата рег" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Comments</span>
             </Template>
@@ -87,10 +87,10 @@
                     </Authorized>
                 </AuthorizeView>
             </FooterTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
     </Columns>
 
-</RadzenGrid>
+</RadzenDataGrid>
 
 
 @code {

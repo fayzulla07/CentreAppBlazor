@@ -49,18 +49,18 @@
 </div>
 
 
-<RadzenGrid @ref="Grid" Count="count" AllowFiltering="true" AllowPaging="true" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+<RadzenDataGrid @ref="Grid" Count="count" AllowFiltering="true" AllowPaging="true" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowSorting="true" Data="@dsource" TItem="ProductWithCostsDto" RowUpdate="@OnUpdateRow">
     <Columns>
-        <RadzenGridColumn TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.Id)" Visible="false" />
+        <RadzenDataGridColumn TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.Id)" Visible="false" />
 
-        <RadzenGridColumn Width="250px" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.Name)" Title="Имя">
+        <RadzenDataGridColumn Width="250px" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.Name)" Title="Имя">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Name</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="100px" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.Amount)" Title="Количество" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="100px" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.Amount)" Title="Количество" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Amount @vdata.UnitName</span>
             </Template>
@@ -70,52 +70,52 @@
                 <RadzenRequiredValidator Component="@nameof(ProductWithCostsDto.Amount)" Text="Заполните поле" />
                 <RadzenCompareValidator Component="@nameof(ProductWithCostsDto.Amount)" Value="vdata.RemainCount" Operator="CompareOperator.LessThanEqual" Text="Остаток меньше введенный" />
             </EditTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="120px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.OneTotal)" Title="Цена за ед">
+        <RadzenDataGridColumn Width="120px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.OneTotal)" Title="Цена за ед">
             <Template Context="vdata">
                 <span class="text-wrap"> @vdata.OneTotal.Value.ToString("C0", new CultureInfo("kk-KZ")) </span>
             </Template>
             <EditTemplate Context="vdata">
                 <RadzenNumeric Min="0" @bind-Value="vdata.OneTotal" Style="width:100%" />
             </EditTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="120px" TItem="ProductWithCostsDto" TextAlign="TextAlign.Center" Title="Цена за общ" Property="@nameof(ProductWithCostsDto.Total)">
+        <RadzenDataGridColumn Width="120px" TItem="ProductWithCostsDto" TextAlign="TextAlign.Center" Title="Цена за общ" Property="@nameof(ProductWithCostsDto.Total)">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Total.Value.ToString("C0", new CultureInfo("kk-KZ"))</span>
             </Template>
             <FooterTemplate>
                 <span class="text-wrap" style="color:blue;">@dsource.Sum(x => x.Total)?.ToString("C0", new CultureInfo("kk-KZ"))</span>
             </FooterTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="100px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Title="Оптовая?" Property="@nameof(ProductWithCostsDto.IsOptCost)">
+        <RadzenDataGridColumn Width="100px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Title="Оптовая?" Property="@nameof(ProductWithCostsDto.IsOptCost)">
             <Template Context="vdata">
                 <RadzenCheckBox TValue="bool" Disabled="true" @bind-Value="vdata.IsOptCost" />
             </Template>
             <EditTemplate Context="vdata">
                 <RadzenCheckBox TValue="bool" @bind-Value="vdata.IsOptCost" />
             </EditTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="100px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.RemainCount)" Title="Остаток">
+        <RadzenDataGridColumn Width="100px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.RemainCount)" Title="Остаток">
             <Template Context="vdata">
                 <span class="text-wrap ">@vdata.RemainCount @vdata.UnitName</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="140px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Title="Комментарии" Property="@nameof(ProductWithCostsDto.Comments)">
+        <RadzenDataGridColumn Width="140px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Title="Комментарии" Property="@nameof(ProductWithCostsDto.Comments)">
             <Template Context="vdata">
                 <span class="text-wrap ">@vdata.Comments</span>
             </Template>
             <EditTemplate Context="vdata">
                 <RadzenTextBox @bind-Value="vdata.Comments" />
             </EditTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
 
-        <RadzenGridColumn Width="100px" TItem="ProductWithCostsDto" Filterable="false" Sortable="false" Bubble="false" Context="dsource" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="100px" TItem="ProductWithCostsDto" Filterable="false" Sortable="false" Bubble="false" Context="dsource" TextAlign="TextAlign.Center">
             <Template Context="dsource">
                 <RadzenButton Icon="edit" Size="ButtonSize.Medium" Click="@(args => EditRow(dsource))">
                 </RadzenButton>
@@ -126,8 +126,8 @@
                 <RadzenButton Icon="cancel" Size="ButtonSize.Medium" ButtonStyle="ButtonStyle.Secondary" Click="@((args) => CancelEdit(dsource))">
                 </RadzenButton>
             </EditTemplate>
-        </RadzenGridColumn>
-        <RadzenGridColumn Width="60px" TItem="ProductWithCostsDto" Filterable="false" Sortable="false" Bubble="false" Context="dsource" TextAlign="TextAlign.Center">
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn Width="60px" TItem="ProductWithCostsDto" Filterable="false" Sortable="false" Bubble="false" Context="dsource" TextAlign="TextAlign.Center">
             <Template Context="dsource">
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
                 </RadzenButton>
@@ -136,10 +136,10 @@
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
                 </RadzenButton>
             </EditTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
     </Columns>
 
-</RadzenGrid>
+</RadzenDataGrid>
 <div class="row mt-3">
     <div class="col col-md-2">
         <RadzenButton Click="CloseConfirmation" ButtonStyle="ButtonStyle.Secondary" Text="Закрыть" />

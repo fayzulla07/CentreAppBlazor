@@ -66,11 +66,11 @@
 </RadzenPanel>
 
 
-<RadzenGrid @ref="Grid" AllowFiltering="true" AllowPaging="true" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+<RadzenDataGrid @ref="Grid" AllowFiltering="true" AllowPaging="true" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowSorting="true" Data="@dsource" TItem="Users" ColumnWidth="200px" RowUpdate="@OnUpdateRow">
     <Columns>
-        <RadzenGridColumn TItem="Users" Property="@nameof(Users.Id)" Visible="false" />
-        <RadzenGridColumn TItem="Users" Property="@nameof(Users.Name)" Title="Имя">
+        <RadzenDataGridColumn TItem="Users" Property="@nameof(Users.Id)" Visible="false" />
+        <RadzenDataGridColumn TItem="Users" Property="@nameof(Users.Name)" Title="Имя">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Name</span>
             </Template>
@@ -80,18 +80,18 @@
                 <RadzenRequiredValidator Component="Name" Text="Заполните поле" />
                 <RadzenRegexValidator Component="Name" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
             </EditTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn TItem="Users" Property="@nameof(Users.Description)" Title="Описание">
+        <RadzenDataGridColumn TItem="Users" Property="@nameof(Users.Description)" Title="Описание">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Description</span>
             </Template>
             <EditTemplate Context="vdata">
                 <RadzenTextBox @bind-Value="vdata.Description" Style="width:100%" />
             </EditTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn TItem="Users" Property="@nameof(Users.LoginName)" Title="Логин">
+        <RadzenDataGridColumn TItem="Users" Property="@nameof(Users.LoginName)" Title="Логин">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.LoginName</span>
             </Template>
@@ -101,9 +101,9 @@
                 <RadzenRequiredValidator Component="@nameof(Users.LoginName)" Text="Заполните поле" />
                 <RadzenRegexValidator Component="@nameof(Users.LoginName)" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
             </EditTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn TItem="Users" Property="@nameof(Users.Password)" Title="Пароль">
+        <RadzenDataGridColumn TItem="Users" Property="@nameof(Users.Password)" Title="Пароль">
             <Template Context="vdata">
                 <span class="text-wrap">****</span>
             </Template>
@@ -113,9 +113,9 @@
                 <RadzenRequiredValidator Component="@nameof(Users.Password)" Text="Заполните поле" />
                 <RadzenRegexValidator Component="@nameof(Users.Password)" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
             </EditTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn TItem="Users" Property="@nameof(Users.RoleId)" Title="Роль" Width="150px">
+        <RadzenDataGridColumn TItem="Users" Property="@nameof(Users.RoleId)" Title="Роль" Width="150px">
             <Template Context="vdata">
                 <span class="text-wrap">@role.FirstOrDefault(x => x.Id == vdata.RoleId)?.Name</span>
             </Template>
@@ -125,9 +125,9 @@
                 <RadzenRequiredValidator Component="@nameof(Users.RoleId)" Text="Выберите роль" />
 
             </EditTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn TItem="Users" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+        <RadzenDataGridColumn TItem="Users" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
             <Template Context="dsource">
                 <RadzenButton Icon="edit" Size="ButtonSize.Medium" Click="@(args => EditRow(dsource))">
                 </RadzenButton>
@@ -138,8 +138,8 @@
                 <RadzenButton Icon="cancel" Size="ButtonSize.Medium" ButtonStyle="ButtonStyle.Secondary" Click="@((args) => CancelEdit(dsource))">
                 </RadzenButton>
             </EditTemplate>
-        </RadzenGridColumn>
-        <RadzenGridColumn TItem="Users" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="Users" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
             <Template Context="dsource">
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
                 </RadzenButton>
@@ -148,9 +148,9 @@
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
                 </RadzenButton>
             </EditTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
     </Columns>
-</RadzenGrid>
+</RadzenDataGrid>
 
 
 @code {

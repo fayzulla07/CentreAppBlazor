@@ -60,17 +60,17 @@
 </RadzenPanel>
 
 
-<RadzenGrid @ref="Grid" AllowFiltering="true" AllowPaging="true" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+<RadzenDataGrid @ref="Grid" AllowFiltering="true" AllowPaging="true" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowSorting="true" Data="@dsource" TItem="ProductIncoms" ColumnWidth="200px" RowUpdate="@OnUpdateRow">
     <Columns>
-        <RadzenGridColumn TItem="ProductIncoms" Property="@nameof(ProductIncoms.Id)" Visible="false" />
-        <RadzenGridColumn Width="250px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.Product.Name)" Title="Имя">
+        <RadzenDataGridColumn TItem="ProductIncoms" Property="@nameof(ProductIncoms.Id)" Visible="false" />
+        <RadzenDataGridColumn Width="250px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.Product.Name)" Title="Имя">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Product.Name</span>
             </Template>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="110px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.Amount)" Title="Количество" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="110px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.Amount)" Title="Количество" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Amount</span>
             </Template>
@@ -80,9 +80,9 @@
             <FooterTemplate>
                 <span class="text-wrap">@dsource.Sum(x => x.Amount)</span>
             </FooterTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="120px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.IncomeCost)" Title="Цена прихода" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="120px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.IncomeCost)" Title="Цена прихода" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.IncomeCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
             </Template>
@@ -92,9 +92,9 @@
             <FooterTemplate>
                 <span class="text-wrap">@dsource.Sum(x => x.IncomeCost).ToString("C0", new CultureInfo("kk-KZ"))</span>
             </FooterTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="120px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.IncomeCost)" Title="Розн цена" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="120px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.IncomeCost)" Title="Розн цена" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.SaleCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
             </Template>
@@ -104,9 +104,9 @@
             <FooterTemplate>
                 <span class="text-wrap">@dsource.Sum(x => x.SaleCost).ToString("C0", new CultureInfo("kk-KZ"))</span>
             </FooterTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="120px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.OptCost)" Title="Оптовая цена" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="120px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.OptCost)" Title="Оптовая цена" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.OptCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
             </Template>
@@ -116,27 +116,27 @@
             <FooterTemplate>
                 <span class="text-wrap">@dsource.Sum(x => x.OptCost).ToString("C0", new CultureInfo("kk-KZ"))</span>
             </FooterTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="150px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.SupplierId)" Title="Поставщик" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="150px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.SupplierId)" Title="Поставщик" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@supplier.FirstOrDefault(x => x.Id == vdata.SupplierId)?.Name</span>
             </Template>
             <EditTemplate Context="vdata">
                 <RadzenDropDown @bind-Value="vdata.SupplierId" Data="supplier" Placeholder="Выберите Клиент" AllowFiltering="true" AllowClear="true" TextProperty="@nameof(Products.Name)" ValueProperty="@nameof(Products.Id)" Style="width:100%" />
             </EditTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn Width="200px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.Comments)" Title="Комментарии">
+        <RadzenDataGridColumn Width="200px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.Comments)" Title="Комментарии">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Comments</span>
             </Template>
             <EditTemplate Context="vdata">
                 <RadzenTextBox @bind-Value="vdata.Comments" Style="width:100%" />
             </EditTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
 
-        <RadzenGridColumn TItem="ProductIncoms" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+        <RadzenDataGridColumn TItem="ProductIncoms" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
             <Template Context="dsource">
                 <RadzenButton Icon="edit" Size="ButtonSize.Medium" Click="@(args => EditRow(dsource))">
                 </RadzenButton>
@@ -147,8 +147,8 @@
                 <RadzenButton Icon="cancel" Size="ButtonSize.Medium" ButtonStyle="ButtonStyle.Secondary" Click="@((args) => CancelEdit(dsource))">
                 </RadzenButton>
             </EditTemplate>
-        </RadzenGridColumn>
-        <RadzenGridColumn TItem="ProductIncoms" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="ProductIncoms" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
             <Template Context="dsource">
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
                 </RadzenButton>
@@ -157,10 +157,10 @@
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
                 </RadzenButton>
             </EditTemplate>
-        </RadzenGridColumn>
+        </RadzenDataGridColumn>
     </Columns>
 
-</RadzenGrid>
+</RadzenDataGrid>
 
 <RadzenButton Style="float:right; margin-top:20px;" Text="Закрыть" ButtonStyle="ButtonStyle.Success" Click="CloseOrder" />
 
