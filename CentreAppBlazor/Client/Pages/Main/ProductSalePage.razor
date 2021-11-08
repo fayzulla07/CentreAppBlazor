@@ -17,14 +17,14 @@
     <div class="row">
         <div class="col col-md-4 col-sm-12 col-12">
             <RadzenLabel Text="Тип продукта" Component="prtype" />
-            <RadzenDropDown TValue="int" Name="prtype" Change="SelectedProductType" AllowClear="true" Placeholder="Выберите тип продукта" Data="productype" ValueProperty="@nameof(ProductTypes.Id)" TextProperty="@nameof(ProductTypes.Name)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Style="width:100%" AllowFiltering="true" />
+            <RadzenDropDown TValue="int" Name="prtype" Change="SelectedProductType" AllowClear="true" Placeholder="Выберите тип продукта" Data="productype" ValueProperty="@nameof(ProductTypes.Id)" TextProperty="@nameof(ProductTypes.Name)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Style="width:100%" AllowFiltering="true" AllowColumnResize="true" />
         </div>
         <div class="col col-md-4 col-sm-12 col-12">
             <RadzenLabel Text="Продукт" Component="prct" />
-            @*<RadzenDropDown TValue="int" Name="prct" ValueChanged="@((args) => SelectedProduct(args))" Disabled="ProductTypeDisable" Placeholder="Выберите продукт" Data="product" AllowClear="true" AllowFiltering="true" ValueProperty="@nameof(Products.Id)" TextProperty="@nameof(Products.Name)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Style="width:100%" />*@
+            @*<RadzenDropDown TValue="int" Name="prct" ValueChanged="@((args) => SelectedProduct(args))" Disabled="ProductTypeDisable" Placeholder="Выберите продукт" Data="product" AllowClear="true" AllowFiltering="true" AllowColumnResize="true" ValueProperty="@nameof(Products.Id)" TextProperty="@nameof(Products.Name)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Style="width:100%" />*@
 
 
-            <RadzenDropDownDataGrid TValue="int" Name="prct" ValueChanged="@((args) => SelectedProduct(args))" Disabled="ProductTypeDisable" Placeholder="Выберите продукт" Data="product" AllowClear="true" AllowFiltering="true" ValueProperty="@nameof(Products.Id)" TextProperty="@nameof(Products.Name)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Style="width:100%">
+            <RadzenDropDownDataGrid TValue="int" Name="prct" ValueChanged="@((args) => SelectedProduct(args))" Disabled="ProductTypeDisable" Placeholder="Выберите продукт" Data="product" AllowClear="true" AllowFiltering="true" AllowColumnResize="true" ValueProperty="@nameof(Products.Id)" TextProperty="@nameof(Products.Name)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Style="width:100%">
                 <Columns>
                     <RadzenDropDownDataGridColumn Property="@nameof(Products.Id)" Visible="false" />
                     <RadzenDropDownDataGridColumn Property="@nameof(Products.Name)" Title="Имя" Width="230px">
@@ -43,13 +43,13 @@
         </div>
         <div class="col col-md-4 col-sm-12 col-12">
             <RadzenLabel Text="Клиент" Component="clnt" />
-            <RadzenDropDown TValue="int" @bind-Value="CustomerId" Name="clnt" Placeholder="Выберите Клиента" Data="customer" AllowFiltering="true" ValueProperty="@nameof(Customers.Id)" TextProperty="@nameof(Customers.Name)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Style="width:100%" />
+            <RadzenDropDown TValue="int" @bind-Value="CustomerId" Name="clnt" Placeholder="Выберите Клиента" Data="customer" AllowFiltering="true" AllowColumnResize="true" ValueProperty="@nameof(Customers.Id)" TextProperty="@nameof(Customers.Name)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Style="width:100%" />
         </div>
     </div>
 </div>
 
 
-<RadzenDataGrid @ref="Grid" Count="count" AllowFiltering="true" AllowPaging="true" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+<RadzenDataGrid @ref="Grid" Count="count" AllowFiltering="true" AllowColumnResize="true" AllowPaging="true" PageSize="20"  FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowSorting="true" Data="@dsource" TItem="ProductWithCostsDto" RowUpdate="@OnUpdateRow">
     <Columns>
         <RadzenDataGridColumn TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.Id)" Visible="false" />
@@ -115,7 +115,7 @@
         </RadzenDataGridColumn>
 
 
-        <RadzenDataGridColumn Width="100px" TItem="ProductWithCostsDto" Filterable="false" Sortable="false" Bubble="false" Context="dsource" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="100px" TItem="ProductWithCostsDto" Filterable="false" Sortable="false"  Context="dsource" TextAlign="TextAlign.Center">
             <Template Context="dsource">
                 <RadzenButton Icon="edit" Size="ButtonSize.Medium" Click="@(args => EditRow(dsource))">
                 </RadzenButton>
@@ -127,7 +127,7 @@
                 </RadzenButton>
             </EditTemplate>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn Width="60px" TItem="ProductWithCostsDto" Filterable="false" Sortable="false" Bubble="false" Context="dsource" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="60px" TItem="ProductWithCostsDto" Filterable="false" Sortable="false"  Context="dsource" TextAlign="TextAlign.Center">
             <Template Context="dsource">
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
                 </RadzenButton>
@@ -255,6 +255,7 @@ async Task CloseConfirmation() => await DialogService.OpenAsync("Подтвер�
         finally
         {
             loading.Visible = false;
+            await Grid.Reload();
         }
 
     }

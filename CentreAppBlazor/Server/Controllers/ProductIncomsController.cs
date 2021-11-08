@@ -12,7 +12,8 @@ using Radzen;
 using System.Linq.Dynamic.Core;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Authorization;
-
+using Microsoft.Net.Http.Headers;
+using System.IO;
 namespace CentreAppBlazor.Server.Controllers
 {
     [Authorize(Roles="admin, manager")]
@@ -66,7 +67,8 @@ namespace CentreAppBlazor.Server.Controllers
                 OptCost = x.OptCost,
                 IncomeCost = x.IncomeCost,
                 ProductId = x.ProductId,
-                Product = new Products { Id = x.Id, Name = x.Product.Name}
+                Product = new Products { Id = x.Id, Name = x.Product.Name},
+                IncomeNumber = x.IncomeNumber
             });
             return new ResponseMessage<IEnumerable<ProductIncoms>>() { entity = await result.ToListAsync(), TCount = _context.ProductIncoms.Count() };
         }
@@ -127,6 +129,20 @@ namespace CentreAppBlazor.Server.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetProductIncoms", new { id = productIncoms.Id }, productIncoms);
+        }
+        [AllowAnonymous]
+        [HttpGet("GetInvoice/{Id}")]
+        public async Task<FileStreamResult> GetInvoice(int Id)
+        {
+            var productIncoms = await _context.ProductIncoms.Include(x => x.Product).ThenInclude(x=>x.Unit).Where(p => p.IncomeNumber == Id).ToListAsync();
+
+                Services.Print print = new Services.Print();
+                var excel = print.GetIncomeFile(productIncoms);
+                Stream stream = new MemoryStream(excel);
+                return new FileStreamResult(stream, new MediaTypeHeaderValue("text/plain"))
+                {
+                    FileDownloadName = "IncomeInvoice.xlsx"
+                };
         }
 
         // DELETE: api/ProductIncoms/5

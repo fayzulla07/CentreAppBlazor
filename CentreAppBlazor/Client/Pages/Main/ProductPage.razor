@@ -6,11 +6,11 @@
     <div class="">
         <div class="h5">Продукты </div>
     </div>
-    <div class="">
+    @*<div class="">
         <RadzenCheckBox @bind-Value="IsResponsive" TriState="false" Name="CheckBox1" />
         <RadzenLabel Text="Режим поиска" Component="CheckBox1" Style="margin-left: 5px;margin-bottom: 20px" />
 
-    </div>
+    </div>*@
 </div>
 <RadzenPanel AllowCollapse="true" Collapsed="true">
     <ChildContent>
@@ -46,13 +46,13 @@
                     <div class="col-md-6">
                         <RadzenLabel Text="Тип продукта" />
                         <br />
-                        <RadzenDropDown @bind-Value="dataform.ProductTypeId" Data="producttype" Placeholder="Выберите Тип Продукта" AllowFiltering="true" AllowClear="true" TextProperty="@nameof(ProductTypes.Name)" ValueProperty="@nameof(ProductTypes.Id)" Name="@nameof(Products.ProductTypeId)" Style="width:100%" />
+                        <RadzenDropDown @bind-Value="dataform.ProductTypeId" Data="producttype" Placeholder="Выберите Тип Продукта" AllowFiltering="true" AllowColumnResize="true" AllowClear="true" TextProperty="@nameof(ProductTypes.Name)" ValueProperty="@nameof(ProductTypes.Id)" Name="@nameof(Products.ProductTypeId)" Style="width:100%" />
                         <br />
                     </div>
                     <div class="col-md-6">
                         <RadzenLabel Text="Единица измерения" />
                         <br />
-                        <RadzenDropDown @bind-Value="dataform.UnitId" Data="unit" Placeholder="Выберите единицу" AllowFiltering="true" AllowClear="true" TextProperty="@nameof(Units.Name)" ValueProperty="@nameof(Units.Id)" Name="@nameof(Products.UnitId)" Style="width:100%" />
+                        <RadzenDropDown @bind-Value="dataform.UnitId" Data="unit" Placeholder="Выберите единицу" AllowFiltering="true" AllowColumnResize="true" AllowClear="true" TextProperty="@nameof(Units.Name)" ValueProperty="@nameof(Units.Id)" Name="@nameof(Products.UnitId)" Style="width:100%" />
                         <br />
                     </div>
                 </div>
@@ -65,7 +65,7 @@
 </RadzenPanel>
 
 
-<RadzenDataGrid @ref="Grid" AllowFiltering="true" AllowPaging="true" Count="@Count" PageSize="10" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+<RadzenDataGrid @ref="Grid" AllowFiltering="true" AllowColumnResize="true" AllowPaging="true" Count="@Count" PageSize="10"  FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowSorting="true" Data="DataSource" LoadData="LoadData" TItem="Products" ColumnWidth="200px" RowUpdate="@OnUpdateRow">
     <Columns>
         <RadzenDataGridColumn TItem="Products" Property="@nameof(Products.Id)" Visible="false" />
@@ -133,7 +133,7 @@
             </EditTemplate>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn TItem="Products" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+        <RadzenDataGridColumn TItem="Products" Context="dsource"  Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
             <Template Context="dsource">
                 <RadzenButton Icon="edit" Size="ButtonSize.Medium" Click="@(args => EditRow(dsource))">
                 </RadzenButton>
@@ -145,7 +145,7 @@
                 </RadzenButton>
             </EditTemplate>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="Products" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="70px">
+        <RadzenDataGridColumn TItem="Products" Context="dsource"  Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="70px">
             <Template Context="dsource">
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
                 </RadzenButton>

@@ -19,6 +19,7 @@ using CentreAppBlazor.Server.Services.Auth;
 using AutoMapper;
 using OfficeOpenXml;
 using CentreAppBlazor.Server.ReportToExcel;
+using Microsoft.AspNetCore.Routing.Template;
 
 namespace CentreAppBlazor.Server
 {
@@ -41,7 +42,8 @@ namespace CentreAppBlazor.Server
             services.AddAutoMapper(typeof(Startup));
             services.AddControllersWithViews();
             services.AddRazorPages();
-
+            Services.TemplateConfig.IncomePath = Configuration.GetValue<string>("IncomeInvoice");
+            Services.TemplateConfig.SalePath = Configuration.GetValue<string>("SaleInvoice");
             // добавляем контекст MobileContext в качестве сервиса в приложение
             services.AddDbContext<TechContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -7,6 +8,8 @@ using CentreAppBlazor.Shared.Domain;
 using CentreAppBlazor.Shared.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
 
 namespace CentreAppBlazor.Server.Controllers
 {
@@ -38,17 +41,20 @@ namespace CentreAppBlazor.Server.Controllers
             return new ResponseMessage<ProductWithCostsDto> { entity = product.FirstOrDefault()  };
           
         }
-
+        async Task<int> GetLastOrderNumber()
+        {
+            var lastorder = await _dappercontext.QueryAsync<int>("select * from LastOrderView");
+            int LastOrder = lastorder.FirstOrDefault();
+            if (LastOrder <= 0)
+                return 1;
+            return LastOrder;
+        }
         [HttpPost(@"CloseOrder")]
         public async Task<ActionResult<ResponseMessage<int>>> CloseOrder([FromBody] ProductSales[] entity)
         {
             if (entity == null)
                 return BadRequest();
             
-            var lastorder = await _dappercontext.QueryAsync<int>("select * from LastOrderView");
-            int LastOrder = lastorder.FirstOrDefault();
-            if (LastOrder <= 0)
-                LastOrder = 1;
             int executed = 0;
             foreach (var item in entity)
             {
@@ -63,7 +69,7 @@ namespace CentreAppBlazor.Server.Controllers
                     UserID = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
                     Comments = item.Comments,
                     IncomeCost = item.IncomeCost,
-                    OrderNumber = LastOrder,
+                    OrderNumber = await GetLastOrderNumber(),
                     IsBank = item.IsBank 
                 };
                     executed += await _dappercontext.ExecuteAsync("SP_AddProductSale", n, CommandType: System.Data.CommandType.StoredProcedure);
@@ -88,7 +94,15 @@ namespace CentreAppBlazor.Server.Controllers
             }
             return new ResponseMessage<Products> { entity = product.FirstOrDefault() };
         }
-
+       
+        async Task<int> GetLastIncomeNumber()
+        {
+            var lastorder = await _dappercontext.QueryAsync<int>("select * from LastIncomeView");
+            int LastOrder = lastorder.FirstOrDefault();
+            if (LastOrder <= 0)
+                return 1;
+            return LastOrder;
+        }
 
         [HttpPost(@"CloseIncomeOrder")]
         public async Task<ActionResult<ResponseMessage<int>>> CloseIncomeOrder([FromBody] ProductIncoms[] entity)
@@ -96,6 +110,9 @@ namespace CentreAppBlazor.Server.Controllers
             if (entity == null)
                 return BadRequest();
             int executed = 0;
+
+            var num = await GetLastIncomeNumber();
+
             foreach (var item in entity)
             {
                 var n = new
@@ -109,7 +126,8 @@ namespace CentreAppBlazor.Server.Controllers
                     RegDT = item.RegDt,
                     UserID = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
                     Comments = item.Comments,
-                    IncomeCost = item.IncomeCost
+                    IncomeCost = item.IncomeCost,
+                    IncomeNumber = num
                 };
                 executed += await _dappercontext.ExecuteAsync("SP_AddProductIncome", n, CommandType: System.Data.CommandType.StoredProcedure);
             }

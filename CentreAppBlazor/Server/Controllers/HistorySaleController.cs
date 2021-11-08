@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore.Internal;
 using System.Security.Claims;
 using System.Linq.Dynamic.Core;
 using Dapper;
+using System.IO;
+using Microsoft.Net.Http.Headers;
 
 namespace CentreAppBlazor.Server.Controllers
 {
@@ -91,6 +93,18 @@ namespace CentreAppBlazor.Server.Controllers
 
             return Ok();
         }
-
+        [AllowAnonymous]
+        [HttpGet("GetInvoiceSale/{Id}")]
+        public async Task<FileStreamResult> GetInvoice(int Id)
+        {
+            var productSales = await _context.ProductSales.Include(x => x.Product).ThenInclude(x => x.Unit).Where(p => p.OrderNumber == Id).ToListAsync();
+            Services.Print print = new Services.Print();
+            var excel = print.GetSaleFile(productSales);
+            Stream stream = new MemoryStream(excel);
+            return new FileStreamResult(stream, new MediaTypeHeaderValue("text/plain"))
+            {
+                FileDownloadName = "IncomeInvoice.xlsx"
+            };
+        }
     }
 }

@@ -7,18 +7,24 @@
     <div class="">
         <div class="h5">История Прихода </div>
     </div>
-    <div class="">
+    @*<div class="">
         <RadzenCheckBox @bind-Value="IsResponsive" TriState="false" Name="CheckBox1" />
         <RadzenLabel Text="Режим поиска" Component="CheckBox1" Style="margin-left: 5px;margin-bottom: 20px" />
 
-    </div>
+    </div>*@
 </div>
 
 
-<RadzenDataGrid @ref="Grid" AllowFiltering="true" Count="Count" AllowPaging="true" PageSize="10" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-            AllowSorting="true" Data="@DataSource" LoadData="LoadData" TItem="ProductIncoms" ColumnWidth="200px" RowUpdate="@OnUpdateRow">
+<RadzenDataGrid @ref="Grid" AllowGrouping="true" AllowFiltering="true" AllowColumnResize="true" Count="Count" AllowPaging="true" PageSize="30"  FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+            AllowSorting="true" Data="@DataSource" LoadData="LoadData" TItem="ProductIncoms" ColumnWidth="200px" RowUpdate="@OnUpdateRow" FilterMode="FilterMode.Simple">
     <Columns>
         <RadzenDataGridColumn TItem="ProductIncoms" Property="@nameof(ProductIncoms.Id)" Visible="false" />
+
+        <RadzenDataGridColumn Width="80px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.IncomeNumber)" Title="#" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.IncomeNumber</span>
+            </Template>
+        </RadzenDataGridColumn>
 
         <RadzenDataGridColumn Width="230px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.Product.Name)" Title="Имя">
             <Template Context="vdata">
@@ -43,6 +49,12 @@
             <EditTemplate Context="vdata">
                 <RadzenNumeric Min="0" @bind-Value="vdata.IncomeCost" Style="width:100%" />
             </EditTemplate>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn Width="110px" TItem="ProductIncoms" Title="Сумма Прихода" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@(((vdata.IncomeCost * @vdata.Amount)).ToString("C0", new CultureInfo("kk-KZ")))</span>
+            </Template>
         </RadzenDataGridColumn>
 
         <RadzenDataGridColumn Width="110px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.SaleCost)" Title="Розн цена" TextAlign="TextAlign.Center">
@@ -74,7 +86,7 @@
                 <span class="text-wrap">@(supplier.FirstOrDefault(x=>x.Id == vdata.SupplierId)?.Name)</span>
             </Template>
             <EditTemplate Context="vdata">
-                <RadzenDropDown @bind-Value="vdata.SupplierId" Data="supplier" Placeholder="Выберите Поставщика" AllowFiltering="true" AllowClear="true" TextProperty="@nameof(Suppliers.Name)" ValueProperty="@nameof(Suppliers.Id)" Style="width:100%" />
+                <RadzenDropDown @bind-Value="vdata.SupplierId" Data="supplier" Placeholder="Выберите Поставщика" AllowFiltering="true" AllowColumnResize="true" AllowClear="true" TextProperty="@nameof(Suppliers.Name)" ValueProperty="@nameof(Suppliers.Id)" Style="width:100%" />
             </EditTemplate>
         </RadzenDataGridColumn>
 
@@ -86,8 +98,13 @@
                 <RadzenTextBox @bind-Value="vdata.Comments" Style="width:100%" />
             </EditTemplate>
         </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="ProductIncoms" Filterable="false" Sortable="false" Property="@nameof(ProductIncoms.IncomeNumber)" Width="60px">
+            <Template Context="vdata">
+               <RadzenButton Icon="assignment" Click="async(args)=> { await GetFile(vdata.IncomeNumber); }"></RadzenButton>
+            </Template>
+        </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn TItem="ProductIncoms" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+        <RadzenDataGridColumn TItem="ProductIncoms" Context="dsource" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
             <Template Context="dsource">
                 <RadzenButton Icon="edit" Size="ButtonSize.Medium" Click="@(args => EditRow(dsource))">
                 </RadzenButton>
@@ -100,7 +117,7 @@
             </EditTemplate>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn TItem="ProductIncoms" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
+        <RadzenDataGridColumn TItem="ProductIncoms" Context="dsource" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
             <Template Context="dsource">
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
                 </RadzenButton>
@@ -163,12 +180,19 @@
     {
         return Task.CompletedTask;
     }
+    [Inject]
+    public IJSRuntime jSRuntime { get; set; }
+
+    protected async Task GetFile(int? id)
+    {
+        var val = await serv.CallAsync($"api/ProductIncoms/GetInvoice/{id}");
+        await jSRuntime.InvokeVoidAsync("saveasFile", $"IncomeInvoice-{id}.xlsx", Convert.ToBase64String(await val.Content.ReadAsByteArrayAsync()));
+    }
 
     protected async override Task DeleteData(int Id)
     {
         await serv.DeleteAsync(Id, ApiUrl);
         DataSource = DataSource.Where(x => x.Id != Id).ToList();
-
     }
 }
 

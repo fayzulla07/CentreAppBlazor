@@ -136,6 +136,7 @@ namespace CentreAppBlazor.Client.Services.Main
             finally
             {
                 loading.Visible = false;
+                await Grid.Reload();
             }
         }
         protected virtual async void OnSubmit(T model)
@@ -158,6 +159,7 @@ namespace CentreAppBlazor.Client.Services.Main
             finally
             {
                 loading.Visible = false;
+                await Grid.Reload();
             }
         }
 

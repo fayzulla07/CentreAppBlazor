@@ -6,14 +6,14 @@
     <div class="">
         <div class="h5">Возвращенные товары </div>
     </div>
-    <div class="">
+    @*<div class="">
         <RadzenCheckBox @bind-Value="IsResponsive" TriState="false" Name="CheckBox1" />
         <RadzenLabel Text="Режим поиска" Component="CheckBox1" Style="margin-left: 5px;margin-bottom: 20px" />
 
-    </div>
+    </div>*@
 </div>
 
-<RadzenDataGrid @ref="Grid" AllowFiltering="true" AllowPaging="true" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+<RadzenDataGrid @ref="Grid" AllowFiltering="true" AllowColumnResize="true" AllowPaging="true" PageSize="20"  FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowSorting="true" Data="@dsource" TItem="ReturnView" ColumnWidth="200px" RowUpdate="@OnUpdateRow">
     <Columns>
         <RadzenDataGridColumn TItem="ReturnView" Property="@nameof(ReturnView.Id)" Visible="false" />
@@ -55,7 +55,7 @@
             </Template>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn TItem="ReturnView" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
+        <RadzenDataGridColumn TItem="ReturnView" Context="dsource"  Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
             <Template Context="dsource">
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
                 </RadzenButton>

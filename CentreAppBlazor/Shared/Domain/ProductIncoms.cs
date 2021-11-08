@@ -28,6 +28,7 @@ namespace CentreAppBlazor.Shared.Domain
         public int? UserId { get; set; }
         public string Comments { get; set; }
         public double Kurs { get; set; }
+        public int? IncomeNumber { get; set; }
 
         public virtual Products Product { get; set; }
         public virtual Suppliers Supplier { get; set; }

@@ -1,6 +1,6 @@
 ﻿@inherits BaseCrud<Customers>
 
-<RadzenPanel AllowCollapse="true" Collapsed="true">
+<RadzenPanel AllowCollapse="true" Collapsed="true" Text="Добавление клиента">
     <ChildContent>
         <RadzenTemplateForm TItem="Customers" Data="@dataform" Submit="(args) => { OnSubmit(args); }" InvalidSubmit="@OnInvalidSubmit">
             <div class="container-fluid">
@@ -35,7 +35,7 @@
                     <div class="col-md-6">
                         <RadzenLabel Text="Тел номер" />
                         <br />
-                        <RadzenDropDown @bind-Value="dataform.CustomerTypeId" Data="customer" Placeholder="Выберите Тип Клиента" AllowFiltering="true" AllowClear="true" TextProperty="@nameof(CustomerTypes.Name)" ValueProperty="@nameof(CustomerTypes.Id)" Name="@nameof(Customers.CustomerTypeId)" Style="width:100%" />
+                        <RadzenDropDown @bind-Value="dataform.CustomerTypeId" Data="customer" Placeholder="Выберите Тип Клиента" AllowFiltering="true" AllowColumnResize="true" AllowClear="true" TextProperty="@nameof(CustomerTypes.Name)" ValueProperty="@nameof(CustomerTypes.Id)" Name="@nameof(Customers.CustomerTypeId)" Style="width:100%" />
                         <br />
                     </div>
                 </div>

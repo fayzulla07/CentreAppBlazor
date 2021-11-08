@@ -6,16 +6,16 @@
     <div class="">
         <div class="h5">История продажи </div>
     </div>
-    <div class="">
+    @*<div class="">
         <RadzenCheckBox @bind-Value="IsResponsive" TriState="false" Name="CheckBox1" />
         <RadzenLabel Text="Режим поиска" Component="CheckBox1" Style="margin-left: 5px;margin-bottom: 20px" />
 
-    </div>
+    </div>*@
 </div>
 
 
-<RadzenDataGrid @ref="Grid" AllowFiltering="true" AllowPaging="true" PageSize="10" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-            AllowSorting="true" Data="@DataSource" LoadData="LoadData" Count="Count" TItem="HistorySaleView" ColumnWidth="200px" RowUpdate="@OnUpdateRow">
+<RadzenDataGrid @ref="Grid" AllowGrouping="true" AllowFiltering="true" AllowColumnResize="true" AllowPaging="true" PageSize="20" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+            AllowSorting="true" Data="@DataSource" LoadData="LoadData" Count="Count" TItem="HistorySaleView" ColumnWidth="200px" RowUpdate="@OnUpdateRow" FilterMode="FilterMode.Simple">
     <Columns>
         <RadzenDataGridColumn TItem="HistorySaleView" Property="@nameof(HistorySaleView.Id)" Visible="false" />
 
@@ -73,15 +73,20 @@
             </Template>
         </RadzenDataGridColumn>
 
+        <RadzenDataGridColumn TItem="HistorySaleView" Filterable="false" Sortable="false" Property="@nameof(ProductIncoms.IncomeNumber)" Width="60px">
+            <Template Context="vdata">
+                <RadzenButton Icon="assignment" Click="async(args)=> { await GetFile(vdata.OrderNumber); }"></RadzenButton>
+            </Template>
+        </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn TItem="HistorySaleView" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
+        <RadzenDataGridColumn TItem="HistorySaleView" Context="dsource" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
             <Template Context="dsource">
                 <RadzenButton ButtonStyle="ButtonStyle.Warning" Icon="assignment_return" Size="ButtonSize.Medium" Click="@(args => Conf(dsource))">
                 </RadzenButton>
             </Template>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn TItem="HistorySaleView" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
+        <RadzenDataGridColumn TItem="HistorySaleView" Context="dsource" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
             <Template Context="dsource">
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
                 </RadzenButton>
@@ -172,6 +177,7 @@ async Task Conf(HistorySaleView dat) => await DialogService.OpenAsync("Возв�
         {
             loading.Visible = true;
             var result = await serv.GetAsync<ResponseMessage<List<HistorySaleView>>>($"api/HistorySale?Filter={args.Filter}&OrderBy={args.OrderBy}&Skip={args.Skip}&Top={args.Top}");
+            //var result = await serv.GetAsync<ResponseMessage<List<HistorySaleView>>>($"api/HistorySale?Filter={args.Filter}&OrderBy={args.OrderBy}&Skip={args.Skip}&Top={args.Top}");
             Count = result.TCount.Value;
             DataSource = result.entity;
 
@@ -197,6 +203,15 @@ async Task Conf(HistorySaleView dat) => await DialogService.OpenAsync("Возв�
         await serv.DeleteAsync(Id, ApiUrl);
         DataSource = DataSource.Where(x => x.Id != Id).ToList();
 
+    }
+
+    [Inject]
+    public IJSRuntime jSRuntime { get; set; }
+
+    protected async Task GetFile(int? id)
+    {
+        var val = await serv.CallAsync($"api/HistorySale/GetInvoiceSale/{id}");
+        await jSRuntime.InvokeVoidAsync("saveasFile", $"Накладная-{id}.xlsx", Convert.ToBase64String(await val.Content.ReadAsByteArrayAsync()));
     }
 }
 

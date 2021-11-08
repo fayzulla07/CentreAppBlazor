@@ -6,13 +6,13 @@
     <div class="">
         <div class="h5">Приход </div>
     </div>
-    <div class="">
+    @*<div class="">
         <RadzenCheckBox @bind-Value="IsResponsive" TriState="false" Name="CheckBox1" />
         <RadzenLabel Text="Режим поиска" Component="CheckBox1" Style="margin-left: 5px;margin-bottom: 20px" />
 
-    </div>
+    </div>*@
 </div>
-<RadzenPanel AllowCollapse="true" Collapsed="true">
+<RadzenPanel AllowCollapse="true" Collapsed="false">
     <ChildContent>
         <div class="container-fluid">
             <div class="row">
@@ -25,7 +25,7 @@
                 <div class="col-md-4">
                     <RadzenLabel Text="Продукт" />
                     <br />
-                    <RadzenDropDown Disabled="ProductTypeDisable" TValue="int" Change="SelectedProduct" @bind-Value="dataform.ProductId" Data="product" Placeholder="Выберите Продукт" AllowFiltering="true" AllowClear="true" TextProperty="@nameof(Products.Name)" ValueProperty="@nameof(Products.Id)" Style="width:100%" />
+                    <RadzenDropDown Disabled="ProductTypeDisable" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" TValue="int" Change="SelectedProduct" @bind-Value="dataform.ProductId" Data="product" Placeholder="Выберите Продукт" AllowFiltering="true" AllowClear="true" TextProperty="@nameof(Products.Name)" ValueProperty="@nameof(Products.Id)" Style="width:100%" />
 
                     <br />
                 </div>
@@ -60,7 +60,7 @@
 </RadzenPanel>
 
 
-<RadzenDataGrid @ref="Grid" AllowFiltering="true" AllowPaging="true" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+<RadzenDataGrid @ref="Grid" AllowFiltering="true" AllowColumnResize="true" AllowPaging="true" PageSize="20"  FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowSorting="true" Data="@dsource" TItem="ProductIncoms" ColumnWidth="200px" RowUpdate="@OnUpdateRow">
     <Columns>
         <RadzenDataGridColumn TItem="ProductIncoms" Property="@nameof(ProductIncoms.Id)" Visible="false" />
@@ -94,6 +94,15 @@
             </FooterTemplate>
         </RadzenDataGridColumn>
 
+        <RadzenDataGridColumn Width="110px" TItem="ProductIncoms" Title="Сумма Прихода" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@(((vdata.IncomeCost * @vdata.Amount)).ToString("C0", new CultureInfo("kk-KZ")))</span>
+            </Template>
+            <FooterTemplate>
+                <span class="text-wrap">@dsource.Sum(x => (x.IncomeCost*x.Amount)).ToString("C0", new CultureInfo("kk-KZ"))</span>
+            </FooterTemplate>
+        </RadzenDataGridColumn>
+
         <RadzenDataGridColumn Width="120px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.IncomeCost)" Title="Розн цена" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.SaleCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
@@ -123,7 +132,7 @@
                 <span class="text-wrap">@supplier.FirstOrDefault(x => x.Id == vdata.SupplierId)?.Name</span>
             </Template>
             <EditTemplate Context="vdata">
-                <RadzenDropDown @bind-Value="vdata.SupplierId" Data="supplier" Placeholder="Выберите Клиент" AllowFiltering="true" AllowClear="true" TextProperty="@nameof(Products.Name)" ValueProperty="@nameof(Products.Id)" Style="width:100%" />
+                <RadzenDropDown @bind-Value="vdata.SupplierId" Data="supplier" Placeholder="Выберите Клиент" AllowFiltering="true" AllowColumnResize="true" AllowClear="true" TextProperty="@nameof(Products.Name)" ValueProperty="@nameof(Products.Id)" Style="width:100%" />
             </EditTemplate>
         </RadzenDataGridColumn>
 
@@ -136,7 +145,7 @@
             </EditTemplate>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn TItem="ProductIncoms" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+        <RadzenDataGridColumn TItem="ProductIncoms" Context="dsource" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
             <Template Context="dsource">
                 <RadzenButton Icon="edit" Size="ButtonSize.Medium" Click="@(args => EditRow(dsource))">
                 </RadzenButton>
@@ -148,7 +157,7 @@
                 </RadzenButton>
             </EditTemplate>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="ProductIncoms" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
+        <RadzenDataGridColumn TItem="ProductIncoms" Context="dsource" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
             <Template Context="dsource">
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
                 </RadzenButton>
@@ -176,6 +185,8 @@
     {
         prtype = await serv.GetAsync<IEnumerable<ProductTypes>>("api/DropDown/ProductTypes");
         supplier = await serv.GetAsync<IEnumerable<Suppliers>>("api/DropDown/Suppliers");
+        dataform.SaleCost = 20;
+        dataform.OptCost = 15;
     }
 
     Task DeleteConfirmation(ProductIncoms dat) { OkDialog(dat); return Task.CompletedTask; }
@@ -210,8 +221,11 @@
             if (executed.IsSuccessCode)
             {
                 await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Успешно сохранен!", Duration = 1500 });
+                // print a report
+                //await GetInvoiceFile();
+                // end print report
                 dsource.Clear();
-                Grid.Reload();
+                await Grid.Reload();
             }
             else
             {
@@ -226,6 +240,27 @@
         finally
         {
             loading.Visible = false;
+        }
+    }
+    [Inject]
+    public IJSRuntime JS { get; set; }
+    private async Task GetInvoiceFile()
+    {
+        try
+        {
+            loading.Visible = true;
+            var val = await serv.CallAsync(@"api/Main/GetIncomeExcel");
+
+            await JS.InvokeVoidAsync("saveasFile", "Invoice"+DateTime.Now.ToString("yyyy-MM-dd-H-m-s")+".xlsx", Convert.ToBase64String(await val.Content.ReadAsByteArrayAsync()));
+        }
+        catch (Exception ex)
+        {
+            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при получении файла", Duration = 2500 });
+        }
+        finally
+        {
+            loading.Visible = false;
+            await InvokeAsync(StateHasChanged);
         }
     }
 
@@ -294,14 +329,15 @@
                     }
                     else
                     {
+
                         dsource.Insert(0, new ProductIncoms
                         {
                             Id = ProductFromApi.entity.Id,
                             Amount = 1,
                             IncomeCost = dataform.IncomeCost,
 
-                            SaleCost = Math.Round(dataform.IncomeCost + ((dataform.SaleCost / dataform.IncomeCost) * 100), 2),
-                            OptCost =Math.Round(dataform.IncomeCost + ((dataform.OptCost / dataform.IncomeCost) * 100), 2),
+                            SaleCost = Math.Round(dataform.IncomeCost + ((dataform.SaleCost * dataform.IncomeCost) / 100), 2),
+                            OptCost =Math.Round(dataform.IncomeCost + ((dataform.OptCost * dataform.IncomeCost) / 100), 2),
                             SupplierId = CustomerId,
                             Product = new Products() { Name = ProductFromApi.entity.Name }
                         });
@@ -309,6 +345,7 @@
                     await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Продукт получен", Duration = 1500 });
                 }
             }
+
         }
         catch (Exception ex)
         {
@@ -318,6 +355,7 @@
         finally
         {
             loading.Visible = false;
+            await Grid.Reload();
         }
 
     }

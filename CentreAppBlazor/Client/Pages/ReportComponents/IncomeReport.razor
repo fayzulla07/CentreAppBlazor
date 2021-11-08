@@ -2,10 +2,10 @@
 @attribute [Authorize(Roles = "admin, manager")]
 @using CentreAppBlazor.Shared.Report
 <div class="d-flex">
-    <div class="">
+    @*<div class="">
         <RadzenCheckBox @bind-Value="IsResponsive" TriState="false" Name="CheckBox1" />
         <RadzenLabel Text="Режим поиска" Component="CheckBox1" Style="margin-left: 5px;margin-bottom: 20px" />
-    </div>
+    </div>*@
 </div>
 
 <div class="mb-2">
@@ -16,7 +16,7 @@
 </div>
 
 
-<RadzenDataGrid AllowFiltering="true" AllowPaging="true" Count="Count" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowPaging="true" Count="Count" PageSize="20"  FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowSorting="true" Data="@dsource" TItem="IncomeReportDto" ColumnWidth="200px">
     <Columns>
         <RadzenDataGridColumn Width="250px" TItem="IncomeReportDto" Property="@nameof(IncomeReportDto.Name)" Title="Имя">

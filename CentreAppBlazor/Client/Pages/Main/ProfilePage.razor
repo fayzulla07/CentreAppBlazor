@@ -3,13 +3,13 @@
 @attribute [Authorize]
 
 <div class="h2">Профиль</div>
-<div style="align-content:end">
+@*<div style="align-content:end">
     <RadzenCheckBox @bind-Value="IsResponsive" TriState="false" Name="CheckBox1" />
     <RadzenLabel Text="Режим поиска" Component="CheckBox1" Style="margin-left: 5px;margin-bottom: 20px" />
-</div>
+</div>*@
 
 
-<RadzenDataGrid @ref="Grid" AllowFiltering="true" AllowPaging="true" PageSize="20" Responsive="@(!IsResponsive)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+<RadzenDataGrid @ref="Grid" AllowFiltering="true" AllowColumnResize="true" AllowPaging="true" PageSize="20"  FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowSorting="true" Data="@dsource" TItem="Users" ColumnWidth="200px" RowUpdate="@OnUpdateRow">
     <Columns>
         <RadzenDataGridColumn TItem="Users" Property="@nameof(Users.Id)" Visible="false" />
@@ -64,7 +64,7 @@
             </Template>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn TItem="Users" Context="dsource" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+        <RadzenDataGridColumn TItem="Users" Context="dsource"  Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
             <Template Context="dsource">
                 <RadzenButton Icon="edit" Size="ButtonSize.Medium" Click="@(args => EditRow(dsource))">
                 </RadzenButton>
