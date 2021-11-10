@@ -59,7 +59,12 @@ namespace CentreAppBlazor.Client.Services
             var responce = await _client.PostAsJsonAsync($"/{url}", obj);
             return await responce.Content.ReadFromJsonAsync<T>();
         }
-
+        public async Task<string> PostGetStringAsync<T>(object obj, string url)
+        {
+            if (string.IsNullOrEmpty(await SetToken())) return "";
+            var responce = await _client.PostAsJsonAsync($"/{url}", obj);
+            return await responce.Content.ReadAsStringAsync();
+        }
 
         public async Task<HttpResponseMessage> CallAsync(string uri)
         {

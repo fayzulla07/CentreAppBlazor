@@ -59,7 +59,7 @@ namespace CentreAppBlazor.Server.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<HistorySaleView>> PostHistorySaleView(HistorySaleView entity)
+        public async Task<ActionResult<bool>> PostHistorySaleView(HistorySaleView entity)
         {
             try
             {
@@ -75,10 +75,10 @@ namespace CentreAppBlazor.Server.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                return Ok(ex.Message);
             }
 
-            return new HistorySaleView();
+            return true;
         }
 
         // DELETE: api/Units/5

@@ -154,7 +154,15 @@ async Task Conf(HistorySaleView dat) => await DialogService.OpenAsync("Возв�
             dataform.RegDt = DateTime.Now;
             dataform.Id = dat.Id;
 
-            await serv.PostAsync<HistorySaleView>(dataform, "api/HistorySale");
+            var data = await serv.PostGetStringAsync<HistorySaleView>(dataform, "api/HistorySale");
+            if(data == "true")
+            {
+                await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Успешно отправлено", Duration = 2500 });
+            }
+            else
+            {
+                await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = data, Duration = 2500 });
+            }
         }
         catch (Exception ex)
         {
@@ -164,6 +172,7 @@ async Task Conf(HistorySaleView dat) => await DialogService.OpenAsync("Возв�
         finally
         {
             loading.Visible = false;
+            DialogService.Close();
         }
 
     }

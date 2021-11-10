@@ -24,7 +24,7 @@
             @*<RadzenDropDown TValue="int" Name="prct" ValueChanged="@((args) => SelectedProduct(args))" Disabled="ProductTypeDisable" Placeholder="Выберите продукт" Data="product" AllowClear="true" AllowFiltering="true" AllowColumnResize="true" ValueProperty="@nameof(Products.Id)" TextProperty="@nameof(Products.Name)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Style="width:100%" />*@
 
 
-            <RadzenDropDownDataGrid TValue="int" Name="prct" ValueChanged="@((args) => SelectedProduct(args))" Disabled="ProductTypeDisable" Placeholder="Выберите продукт" Data="product" AllowClear="true" AllowFiltering="true" AllowColumnResize="true" ValueProperty="@nameof(Products.Id)" TextProperty="@nameof(Products.Name)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Style="width:100%">
+            <RadzenDropDownDataGrid @ref="productDropDown" EmptyText="Продукт нет в наличии" TValue="int" Name="prct" ValueChanged="@((args) => SelectedProduct(args))" Disabled="ProductTypeDisable" Placeholder="Выберите продукт" Data="product" AllowClear="true" AllowFiltering="true" AllowColumnResize="true" ValueProperty="@nameof(Products.Id)" TextProperty="@nameof(Products.Name)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Style="width:100%">
                 <Columns>
                     <RadzenDropDownDataGridColumn Property="@nameof(Products.Id)" Visible="false" />
                     <RadzenDropDownDataGridColumn Property="@nameof(Products.Name)" Title="Имя" Width="230px">
@@ -154,21 +154,22 @@
 
 <AddCustomerComponent ClientAddedCallback="ClientAddedHandler"></AddCustomerComponent>
 @code {
-    bool IsBank;
-    int CustomerId = 1;
-    protected override string ApiUrl { get; set; } = "api/ProductSales";
-    private bool ProductTypeDisable = true;
-    IEnumerable<Products> product = new List<Products>();
-    IEnumerable<ProductTypes> productype = new List<ProductTypes>();
-    IEnumerable<Customers> customer = new List<Customers>();
+            private RadzenDropDownDataGrid<int> productDropDown;
+            bool IsBank;
+            int CustomerId = 1;
+            protected override string ApiUrl { get; set; } = "api/ProductSales";
+            private bool ProductTypeDisable = true;
+            IEnumerable<Products> product = new List<Products>();
+            IEnumerable<ProductTypes> productype = new List<ProductTypes>();
+            IEnumerable<Customers> customer = new List<Customers>();
 
-    protected async override Task GetForDropDown()
-    {
-        productype = await serv.GetAsync<IEnumerable<ProductTypes>>("api/DropDown/ProductTypes");
-        customer = await serv.GetAsync<IEnumerable<Customers>>("api/DropDown/Customers");
-    }
+            protected async override Task GetForDropDown()
+            {
+                productype = await serv.GetAsync<IEnumerable<ProductTypes>>("api/DropDown/ProductTypes");
+                customer = await serv.GetAsync<IEnumerable<Customers>>("api/DropDown/Customers");
+            }
 
-    async Task DeleteConfirmation(ProductWithCostsDto dat) => await DialogService.OpenAsync("Подтверждение", ds =>
+            async Task DeleteConfirmation(ProductWithCostsDto dat) => await DialogService.OpenAsync("Подтверждение", ds =>
     @<RadzenCard Style="padding: 20px;">
         <p Style="margin-bottom: 10px;">Вы действительно хотите удалить "@dat.Name"?</p>
         <div class="row">
@@ -224,29 +225,31 @@ async Task CloseConfirmation() => await DialogService.OpenAsync("Подтвер�
         {
             loading.Visible = true;
             int Id = (int)_Id;
-            if (Id != 0)
-            {
-                var result = dsource.FirstOrDefault(x => x.Id == Id);
-                if (result != null)
-                {
-                    if (result.RemainCount >= (result.Amount + 1))
-                        result.Amount++;
-                    await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Продукт получен", Duration = 1500 });
-                    return;
-                }
 
-                var ProductFromApi = await serv.GetByIdAsync<ResponseMessage<ProductWithCostsDto>>(Id, "api/Main/GetOneProduct");
-                if (!ProductFromApi.IsSuccessCode)
+                if (Id != 0)
                 {
-                    await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Инфо", Detail = ProductFromApi.ErrorMessage, Duration = 2000 });
+                    productDropDown.Reset();
+                    var result = dsource.FirstOrDefault(x => x.Id == Id);
+                    if (result != null)
+                    {
+                        if (result.RemainCount >= (result.Amount + 1))
+                            result.Amount++;
+                        await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Продукт получен", Duration = 1500 });
+                        return;
+                    }
+
+                    var ProductFromApi = await serv.GetByIdAsync<ResponseMessage<ProductWithCostsDto>>(Id, "api/Main/GetOneProduct");
+                    if (!ProductFromApi.IsSuccessCode)
+                    {
+                        await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Инфо", Detail = ProductFromApi.ErrorMessage, Duration = 2000 });
+                    }
+                    else
+                    {
+                        count++;
+                        dsource.Insert(0, ProductFromApi.entity);
+                        await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Продукт получен", Duration = 1500 });
+                    }
                 }
-                else
-                {
-                    count++;
-                    dsource.Insert(0, ProductFromApi.entity);
-                    await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Продукт получен", Duration = 1500 });
-                }
-            }
         }
         catch (Exception)
         {
