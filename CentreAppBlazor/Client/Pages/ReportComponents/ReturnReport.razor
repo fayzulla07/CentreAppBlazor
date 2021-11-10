@@ -4,7 +4,7 @@
 @attribute [Authorize(Roles = "admin")]
 
 <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowPaging="true" Count="Count" PageSize="20"  FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-            AllowSorting="true" Data="@dsource" TItem="ReturnReportDto" ColumnWidth="200px">
+            AllowSorting="true" Data="@dsource" TItem="ReturnReportDto" ColumnWidth="200px" FilterMode="FilterMode.Simple">
     <Columns>
 
         <RadzenDataGridColumn Width="200px" TItem="ReturnReportDto" Property="@nameof(ReturnReportDto.Name)" Title="Имя">

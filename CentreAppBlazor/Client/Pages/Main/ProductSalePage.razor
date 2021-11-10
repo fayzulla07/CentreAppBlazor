@@ -6,11 +6,11 @@
     <div class="">
         <div class="h5">Продажа </div>
     </div>
-    <div class="">
+    @*<div class="">
         <RadzenCheckBox @bind-Value="IsResponsive" TriState="false" Name="CheckBox1" />
         <RadzenLabel Text="Режим поиска" Component="CheckBox1" Style="margin-left: 5px;margin-bottom: 20px" />
 
-    </div>
+    </div>*@
 </div>
 
 <div class="container-fluid">
@@ -50,7 +50,7 @@
 
 
 <RadzenDataGrid @ref="Grid" Count="count" AllowFiltering="true" AllowColumnResize="true" AllowPaging="true" PageSize="20"  FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-            AllowSorting="true" Data="@dsource" TItem="ProductWithCostsDto" RowUpdate="@OnUpdateRow">
+            AllowSorting="true" Data="@dsource" TItem="ProductWithCostsDto" RowUpdate="@OnUpdateRow" FilterMode="FilterMode.Simple">
     <Columns>
         <RadzenDataGridColumn TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.Id)" Visible="false" />
 

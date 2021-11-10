@@ -62,7 +62,7 @@
 </RadzenPanel>
 
 
-<RadzenDataGrid @ref="Grid" AllowFiltering="true" AllowColumnResize="true" AllowPaging="true" PageSize="20" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+<RadzenDataGrid @ref="Grid" AllowFiltering="true" FilterMode="FilterMode.Simple" AllowColumnResize="true" AllowPaging="true" PageSize="20" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             RowSelect="RowSelected" RowDoubleClick="(args)=> { RowDoubleClick(args.Data); }" AllowSorting="true" Data="@dsource" TItem="Customers"  RowUpdate="@OnUpdateRow">
     <Columns>
         <RadzenDataGridColumn TItem="Customers" Property="@nameof(Customers.Id)" Visible="false" />

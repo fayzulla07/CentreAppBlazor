@@ -66,7 +66,7 @@
 
 
 <RadzenDataGrid @ref="Grid" AllowFiltering="true" AllowColumnResize="true" AllowPaging="true" PageSize="20"  FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-            AllowSorting="true" Data="@dsource" TItem="Suppliers" ColumnWidth="200px" RowUpdate="@OnUpdateRow">
+            AllowSorting="true" Data="@dsource" TItem="Suppliers" ColumnWidth="200px" RowUpdate="@OnUpdateRow" FilterMode="FilterMode.Simple">
     <Columns>
         <RadzenDataGridColumn TItem="Suppliers" Property="@nameof(Suppliers.Id)" Visible="false" />
         <RadzenDataGridColumn TItem="Suppliers" Property="@nameof(Suppliers.Name)" Title="Имя">
