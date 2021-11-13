@@ -24,7 +24,7 @@ namespace CentreAppBlazor.Server.ReportToExcel
                 PrepareHead(2, ws);
                 LoadData("A3", itemlist.sale, ws);
 
-                ws.Cells["G3:F" + (itemlist.sale.Count + 2)].Style.Numberformat.Format = "dd-MM-yyyy";
+                ws.Cells["F3:F" + (itemlist.sale.Count + 2)].Style.Numberformat.Format = "dd-MM-yyyy";
                 ws.Column(6).Width = 14;
 
                 int iColCnt = ws.Dimension.End.Column;
