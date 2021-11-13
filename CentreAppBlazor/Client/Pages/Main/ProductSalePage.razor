@@ -90,14 +90,14 @@
             </FooterTemplate>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn Width="100px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Title="Оптовая?" Property="@nameof(ProductWithCostsDto.IsOptCost)">
+        @*<RadzenDataGridColumn Width="100px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Title="Оптовая?" Property="@nameof(ProductWithCostsDto.IsOptCost)">
             <Template Context="vdata">
                 <RadzenCheckBox TValue="bool" Disabled="true" @bind-Value="vdata.IsOptCost" />
             </Template>
             <EditTemplate Context="vdata">
                 <RadzenCheckBox TValue="bool" @bind-Value="vdata.IsOptCost" />
             </EditTemplate>
-        </RadzenDataGridColumn>
+        </RadzenDataGridColumn>*@
 
         <RadzenDataGridColumn Width="100px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.RemainCount)" Title="Остаток">
             <Template Context="vdata">
@@ -298,7 +298,7 @@ async Task CloseConfirmation() => await DialogService.OpenAsync("Подтвер�
             {
                 await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Успешно сохранен!", Duration = 1500 });
                 dsource.Clear();
-                Grid.Reload();
+                await Grid.Reload();
             }
             else
             {

@@ -47,11 +47,11 @@
             </FooterTemplate>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn TItem="RemainReportDto" Property="@nameof(RemainReportDto.OptCost)" Title="Оптовая цена" TextAlign="TextAlign.Center">
+        @*<RadzenDataGridColumn TItem="RemainReportDto" Property="@nameof(RemainReportDto.OptCost)" Title="Оптовая цена" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.OptCost?.ToString("C0", new CultureInfo("kk-KZ"))</span>
             </Template>
-        </RadzenDataGridColumn>
+        </RadzenDataGridColumn>*@
 
         <RadzenDataGridColumn TItem="RemainReportDto" Property="@nameof(RemainReportDto.RemainCount)" Title="Остаток шт" TextAlign="TextAlign.Center">
             <Template Context="vdata">

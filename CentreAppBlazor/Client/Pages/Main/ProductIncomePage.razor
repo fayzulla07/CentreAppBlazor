@@ -42,17 +42,17 @@
                     <br />
                 </div>
                 <div class="col-md-4">
-                    <RadzenLabel Text="Цена продажи (приход + %)" />
+                    <RadzenLabel Text="Цена продажи" />
                     <br />
                     <RadzenNumeric Min="0" Style="width:100%" Name="@nameof(ProductIncoms.SaleCost)" @bind-Value="dataform.SaleCost" />
                     <br />
                 </div>
-                <div class="col-md-4">
+                @*<div class="col-md-4">
                     <RadzenLabel Text="Оптовая цена (приход + %)" />
                     <br />
                     <RadzenNumeric Min="0" Style="width:100%" Name="@nameof(ProductIncoms.OptCost)" @bind-Value="dataform.OptCost" />
                     <br />
-                </div>
+                </div>*@
             </div>
 
         </div>
@@ -115,7 +115,7 @@
             </FooterTemplate>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn Width="120px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.OptCost)" Title="Оптовая цена" TextAlign="TextAlign.Center">
+        @*<RadzenDataGridColumn Width="120px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.OptCost)" Title="Оптовая цена" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.OptCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
             </Template>
@@ -125,7 +125,7 @@
             <FooterTemplate>
                 <span class="text-wrap">@dsource.Sum(x => x.OptCost).ToString("C0", new CultureInfo("kk-KZ"))</span>
             </FooterTemplate>
-        </RadzenDataGridColumn>
+        </RadzenDataGridColumn>*@
 
         <RadzenDataGridColumn Width="150px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.SupplierId)" Title="Поставщик" TextAlign="TextAlign.Center">
             <Template Context="vdata">
@@ -186,8 +186,6 @@
     {
         prtype = await serv.GetAsync<IEnumerable<ProductTypes>>("api/DropDown/ProductTypes");
         supplier = await serv.GetAsync<IEnumerable<Suppliers>>("api/DropDown/Suppliers");
-        dataform.SaleCost = 20;
-        dataform.OptCost = 15;
     }
 
     Task DeleteConfirmation(ProductIncoms dat) { OkDialog(dat); return Task.CompletedTask; }
@@ -340,9 +338,9 @@
                             Id = ProductFromApi.entity.Id,
                             Amount = 1,
                             IncomeCost = dataform.IncomeCost,
-
-                            SaleCost = Math.Round(dataform.IncomeCost + ((dataform.SaleCost * dataform.IncomeCost) / 100), 2),
-                            OptCost =Math.Round(dataform.IncomeCost + ((dataform.OptCost * dataform.IncomeCost) / 100), 2),
+                            
+                            SaleCost = Math.Round(dataform.SaleCost, 2),
+                            //OptCost =Math.Round(dataform.IncomeCost + ((dataform.OptCost * dataform.IncomeCost) / 100), 2),
                             SupplierId = CustomerId,
                             Product = new Products() { Name = ProductFromApi.entity.Name }
                         });

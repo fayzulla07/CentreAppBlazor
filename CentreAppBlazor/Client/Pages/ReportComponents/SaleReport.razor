@@ -57,11 +57,11 @@
             </FooterTemplate>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn Width="100px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.OptCost)" Title="Опт?" TextAlign="TextAlign.Center">
+        @*<RadzenDataGridColumn Width="100px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.OptCost)" Title="Опт?" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.OptCost</span>
             </Template>
-        </RadzenDataGridColumn>
+        </RadzenDataGridColumn>*@
 
         <RadzenDataGridColumn Width="80px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.IsBank)" Title="Банк?" TextAlign="TextAlign.Center">
             <Template Context="vdata">
@@ -76,7 +76,7 @@
             </Template>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn Width="130px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.Comments)" Title="Дата рег" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="130px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.Comments)" Title="Комментарии" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Comments</span>
             </Template>

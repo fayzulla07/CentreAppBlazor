@@ -35,14 +35,14 @@ namespace CentreAppBlazor.Server.ReportToExcel
                     r.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.CenterContinuous;
                     double itogo = 0;
                     double pribl = 0;
-                    double opt = 0;
+                    //double opt = 0;
                     foreach (var item in itemlist)
                     {
                         itogo += (item.IncomeCost * item.Amount);
                         pribl += (item.SaleCost * item.Amount) - (item.IncomeCost * item.Amount);
-                        opt += (item.OptCost * item.Amount) - (item.IncomeCost * item.Amount);
+                        //opt += (item.OptCost * item.Amount) - (item.IncomeCost * item.Amount);
                     }
-                     r.Value = $"Итого приход: {itogo.ToString("C0", new CultureInfo("kk-KZ"))} \r\n Розничная: {pribl.ToString("C0", new CultureInfo("kk-KZ"))}   Оптовая: {opt.ToString("C0", new CultureInfo("kk-KZ"))}";
+                     r.Value = $"Итого приход: {itogo.ToString("C0", new CultureInfo("kk-KZ"))} \r\n Розничная: {pribl.ToString("C0", new CultureInfo("kk-KZ"))}";
                 }
 
                 return new MemoryStream(pck.GetAsByteArray()); //Get updated stream

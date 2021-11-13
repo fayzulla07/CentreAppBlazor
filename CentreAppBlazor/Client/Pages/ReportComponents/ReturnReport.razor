@@ -22,7 +22,7 @@
             </Template>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn Width="130px" TItem="ReturnReportDto" Property="@nameof(ReturnReportDto.CustomerName)" Title="Коль-во" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="130px" TItem="ReturnReportDto" Property="@nameof(ReturnReportDto.CustomerName)" Title="Имя Клиента" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.CustomerName</span>
             </Template>

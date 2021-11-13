@@ -66,14 +66,14 @@
             </EditTemplate>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn Width="110px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.OptCost)" Title="Оптовая цена" TextAlign="TextAlign.Center">
+        @*<RadzenDataGridColumn Width="110px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.OptCost)" Title="Оптовая цена" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.OptCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
             </Template>
             <EditTemplate Context="vdata">
                 <RadzenNumeric Min="0" @bind-Value="vdata.OptCost" Style="width:100%" />
             </EditTemplate>
-        </RadzenDataGridColumn>
+        </RadzenDataGridColumn>*@
 
         <RadzenDataGridColumn Width="120px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.RegDt)" Title="Дата рег" TextAlign="TextAlign.Center">
             <Template Context="vdata">

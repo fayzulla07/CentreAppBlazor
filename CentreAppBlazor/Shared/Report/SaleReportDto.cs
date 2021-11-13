@@ -24,9 +24,6 @@ namespace CentreAppBlazor.Shared.Report
         [EpplusDisplay(Name = "Клиент")]
         public string Client { get; set; }
 
-        [EpplusDisplay(Name = "Оптом")]
-        public string OptCost { get; set; }
-
         [EpplusDisplay(Name = "Дата рег")]
         public DateTime RegDt { get; set; }
 
