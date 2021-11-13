@@ -99,7 +99,7 @@
                 <span class="text-wrap">@(((vdata.IncomeCost * @vdata.Amount)).ToString("C0", new CultureInfo("kk-KZ")))</span>
             </Template>
             <FooterTemplate>
-                <span class="text-wrap">@dsource.Sum(x => (x.IncomeCost*x.Amount)).ToString("C0", new CultureInfo("kk-KZ"))</span>
+                <span class="text-wrap" style="color:red">@dsource.Sum(x => (x.IncomeCost*x.Amount)).ToString("C0", new CultureInfo("kk-KZ"))</span>
             </FooterTemplate>
         </RadzenDataGridColumn>
 
@@ -316,6 +316,7 @@
                 if (!ProductFromApi.IsSuccessCode)
                 {
                     await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Инфо", Detail = ProductFromApi.ErrorMessage, Duration = 2000 });
+
                 }
                 else
                 {

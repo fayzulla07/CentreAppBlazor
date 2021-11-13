@@ -16,7 +16,7 @@
 </div>
 
 
-<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowPaging="true" Count="Count" PageSize="20"  FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+<RadzenDataGrid AllowFiltering="true" AllowGrouping="true" AllowColumnResize="true" AllowPaging="true" Count="Count" PageSize="20"  FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowSorting="true" Data="@dsource" TItem="IncomeReportDto" ColumnWidth="200px" FilterMode="FilterMode.Simple">
     <Columns>
         <RadzenDataGridColumn Width="250px" TItem="IncomeReportDto" Property="@nameof(IncomeReportDto.Name)" Title="Имя">

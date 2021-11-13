@@ -94,7 +94,19 @@ namespace CentreAppBlazor.Server.Controllers
             }
             return new ResponseMessage<Products> { entity = product.FirstOrDefault() };
         }
-       
+
+        [HttpGet(@"GetLastIncomePrice/{ProductId}")]
+        public async Task<ActionResult<ResponseMessage<double?>>> GetLastIncomePrice(int ProductId)
+        {
+            if (ProductId <= 0)
+            {
+                return BadRequest();
+            }
+            var product = await _dappercontext.QueryAsync<double?>("select IncomeCost from (select max(Id) as Id, IncomeCost from ProductIncoms p where  p.ProductId= @_ProductId);", new { _ProductId = ProductId });
+            
+            return new ResponseMessage<double?>() { entity=product.FirstOrDefault(), IsSuccessCode = true };
+        }
+
         async Task<int> GetLastIncomeNumber()
         {
             var lastorder = await _dappercontext.QueryAsync<int>("select * from LastIncomeView");

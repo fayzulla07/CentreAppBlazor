@@ -12,7 +12,7 @@
     <RadzenButton Text="Скачать" Icon="get_app" Click="GetFile" />
 </div>
 
-<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowPaging="true" PageSize="20"  FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+<RadzenDataGrid AllowFiltering="true" AllowGrouping="true" AllowColumnResize="true" AllowPaging="true" PageSize="20"  FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowSorting="true" Data="@dsource" TItem="RemainReportDto" ColumnWidth="200px" FilterMode="FilterMode.Simple">
     <Columns>
         <RadzenDataGridColumn Width="300px" TItem="RemainReportDto" Property="@nameof(RemainReportDto.Name)" Title="Имя">

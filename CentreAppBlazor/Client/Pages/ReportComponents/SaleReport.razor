@@ -3,7 +3,7 @@
 
 @attribute [Authorize(Roles="admin, manager")]
 
-<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowPaging="true" Count="Count" PageSize="20"  FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+<RadzenDataGrid AllowFiltering="true" AllowGrouping="true" AllowColumnResize="true" AllowPaging="true" Count="Count" PageSize="20"  FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowSorting="true" Data="@dsource" TItem="SaleReportDto" ColumnWidth="200px" FilterMode="FilterMode.Simple">
     <Columns>
         <RadzenDataGridColumn Width="80px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.OrderNumber)" Title="Номер" TextAlign="TextAlign.Center">

@@ -150,6 +150,11 @@ async Task Conf(HistorySaleView dat) => await DialogService.OpenAsync("Возв�
     {
         try
         {
+            if(dataform.Amount <= 0)
+            {
+                await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Предупреждение", Detail = "Укажите количество возврата больше чем 0", Duration = 2500 });
+                return;
+            }
             loading.Visible = true;
             dataform.RegDt = DateTime.Now;
             dataform.Id = dat.Id;
