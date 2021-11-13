@@ -21,9 +21,6 @@ namespace CentreAppBlazor.Shared.Report
         [EpplusDisplay(Name = "Цена прихода")]
         public double? IncomeCost { get; set; }
 
-        [EpplusDisplay(Name = "Оптовая цена")]
-        public double? OptCost { get; set; }
-
         [EpplusDisplay(Name = "Цена продажи")]
         public double? SaleCost { get; set; }
 

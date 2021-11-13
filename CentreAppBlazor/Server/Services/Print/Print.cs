@@ -25,10 +25,9 @@ namespace CentreAppBlazor.Server.Services
                 ws.Cells["A1"].Value = header;
                 ws.Cells["A2"].Value = ws.Cells["A2"].Value.ToString() + DateTime.Now.ToString("MM.dd.yyyy");
                 ws.InsertRow(i, data.Count(), 5);
-                int rowCount = 0;
-                ws.Cells["A5"].LoadFromCollection(data.Select(x => new
+                ws.Cells["A5"].LoadFromCollection(data.Select((x, i) => new
                 {
-                    Number = ++rowCount,
+                    Number = i+1,
                     Name = x.Product.Name,
                     UnitName = x.Product.Unit.Name,
                     Cost = x.IncomeCost,
@@ -61,10 +60,9 @@ namespace CentreAppBlazor.Server.Services
                 ws.Cells["A1"].Value = header;
                 ws.Cells["A2"].Value = ws.Cells["A2"].Value.ToString() + DateTime.Now.ToString("MM.dd.yyyy");
                 ws.InsertRow(i, data.Count(), 5);
-                int rowCount = 0;
-                ws.Cells["A5"].LoadFromCollection(data.Select(x => new
+                ws.Cells["A5"].LoadFromCollection(data.Select((x, i) => new
                 {
-                    Number = ++rowCount,
+                    Number = i + 1,
                     Name = x.Product.Name,
                     UnitName = x.Product.Unit.Name,
                     Cost = x.SaleCost,

@@ -22,8 +22,8 @@ namespace CentreAppBlazor.Server.ReportToExcel
                 PrepareHead(2, ws);
                 LoadData("A3", itemlist, ws);
 
-                ws.Column(7).Style.Numberformat.Format = "dd-MM-yyyy";
-                ws.Column(7).Width = 10;
+                ws.Column(6).Style.Numberformat.Format = "dd-MM-yyyy";
+                ws.Column(6).Width = 13;
 
                 int iColCnt = ws.Dimension.End.Column;
                 int iRowCnt = ws.Dimension.End.Row + 1;
@@ -33,16 +33,16 @@ namespace CentreAppBlazor.Server.ReportToExcel
                 {
                     r.Merge = true;
                     r.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.CenterContinuous;
-                    double itogo = 0;
-                    double pribl = 0;
+                    double inc = 0;
+                    double sale = 0;
                     //double opt = 0;
                     foreach (var item in itemlist)
                     {
-                        itogo += (item.IncomeCost * item.Amount);
-                        pribl += (item.SaleCost * item.Amount) - (item.IncomeCost * item.Amount);
+                        inc += (item.IncomeCost * item.Amount);
+                        sale += (item.SaleCost * item.Amount);
                         //opt += (item.OptCost * item.Amount) - (item.IncomeCost * item.Amount);
                     }
-                     r.Value = $"Итого приход: {itogo.ToString("C0", new CultureInfo("kk-KZ"))} \r\n Розничная: {pribl.ToString("C0", new CultureInfo("kk-KZ"))}";
+                     r.Value = $"Итого приход: {inc.ToString("C0", new CultureInfo("kk-KZ"))} \r\n Итого продажа: {sale.ToString("C0", new CultureInfo("kk-KZ"))}";
                 }
 
                 return new MemoryStream(pck.GetAsByteArray()); //Get updated stream

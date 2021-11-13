@@ -19,13 +19,13 @@
                 <div class="col-md-4">
                     <RadzenLabel Text="Тип Продукта" />
                     <br />
-                    <RadzenDropDown TValue="int" Change="SelectedProductType" Data="prtype" Placeholder="Выберите Тип Продукта" AllowFiltering="true" AllowClear="true" TextProperty="@nameof(ProductTypes.Name)" ValueProperty="@nameof(ProductTypes.Id)" Style="width:100%" />
+                    <RadzenDropDown  TValue="int" Change="SelectedProductType" Data="prtype" Placeholder="Выберите Тип Продукта" AllowFiltering="true" AllowClear="true" TextProperty="@nameof(ProductTypes.Name)" ValueProperty="@nameof(ProductTypes.Id)" Style="width:100%" />
                     <br />
                 </div>
                 <div class="col-md-4">
                     <RadzenLabel Text="Продукт" />
                     <br />
-                    <RadzenDropDown @ref="productDropDown" Disabled="ProductTypeDisable" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" TValue="int" Change="SelectedProduct" @bind-Value="dataform.ProductId" Data="product" Placeholder="Выберите Продукт" AllowFiltering="true" AllowClear="true" TextProperty="@nameof(Products.Name)" ValueProperty="@nameof(Products.Id)" Style="width:100%" />
+                    <RadzenDropDown  @ref="productDropDown" Disabled="ProductTypeDisable" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" TValue="int" Change="SelectedProduct" @bind-Value="dataform.ProductId" Data="product" Placeholder="Выберите Продукт" AllowFiltering="true" AllowClear="true" TextProperty="@nameof(Products.Name)" ValueProperty="@nameof(Products.Id)" Style="width:100%" />
 
                     <br />
                 </div>
@@ -38,13 +38,13 @@
                 <div class="col-md-4">
                     <RadzenLabel Text="Цена прихода" />
                     <br />
-                    <RadzenNumeric Min="0" Style="width:100%" Name="@nameof(ProductIncoms.IncomeCost)" @bind-Value="dataform.IncomeCost" />
+                    <RadzenNumeric AutoComplete="false" Min="0" Style="width:100%" Name="@nameof(ProductIncoms.IncomeCost)" @bind-Value="dataform.IncomeCost" />
                     <br />
                 </div>
                 <div class="col-md-4">
                     <RadzenLabel Text="Цена продажи" />
                     <br />
-                    <RadzenNumeric Min="0" Style="width:100%" Name="@nameof(ProductIncoms.SaleCost)" @bind-Value="dataform.SaleCost" />
+                    <RadzenNumeric AutoComplete="false" Min="0" Style="width:100%" Name="@nameof(ProductIncoms.SaleCost)" @bind-Value="dataform.SaleCost" />
                     <br />
                 </div>
                 @*<div class="col-md-4">
