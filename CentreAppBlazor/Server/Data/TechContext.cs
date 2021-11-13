@@ -54,7 +54,7 @@ namespace CentreAppBlazor.Server.Data
 
             modelBuilder.Entity<AvProfit>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasNoKey();   
 
                 entity.ToView("AvProfit");
             });
