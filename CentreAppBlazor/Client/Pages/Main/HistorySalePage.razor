@@ -43,6 +43,12 @@
             </Template>
         </RadzenDataGridColumn>
 
+        <RadzenDataGridColumn Width="120px" TItem="HistorySaleView" Property="@nameof(HistorySaleView.IncomeCost)" Title="Цена прихода" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.IncomeCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
+            </Template>
+        </RadzenDataGridColumn>
+
         <RadzenDataGridColumn Width="120px" TItem="HistorySaleView" Property="@nameof(HistorySaleView.SaleCost)" Title="Цена продажи" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.SaleCost.ToString("C0", new CultureInfo("kk-KZ"))</span>

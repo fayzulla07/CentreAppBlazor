@@ -63,7 +63,7 @@ namespace CentreAppBlazor.Server.Controllers
 
             SaleReturnReportDto saleret = new SaleReturnReportDto();
 
-            saleret.sale = await _dapperContext.QueryAsync<SaleReportDto>("SELECT [Id],[Name],[Amount],[SaleCost], ([Amount] *[SaleCost]) as TotalSaleCost,[Client],[OptCost],[RegDt],[OrderNumber],[Comments],[IsBank] FROM[HistorySaleView] where RegDt between @da1 and @da2", new { da1, da2 });
+            saleret.sale = await _dapperContext.QueryAsync<SaleReportDto>("SELECT [Id],[Name],[Amount],[IncomeCost],[SaleCost], ([Amount] *[SaleCost]) as TotalSaleCost,[Client],[OptCost],[RegDt],[OrderNumber],[Comments],[IsBank] FROM[HistorySaleView] where RegDt between @da1 and @da2", new { da1, da2 });
             saleret.returns = await _dapperContext.QueryAsync<ReturnReportDto>("SELECT [Id],[Name],[ReturnCost],[Amount],[RegDt],[CustomerName] FROM[ReturnView] where RegDt between @da1 and @da2", new { da1, da2 });
 
             return saleret;
@@ -102,7 +102,7 @@ namespace CentreAppBlazor.Server.Controllers
 
             SaleReturnReportDto saleret = new SaleReturnReportDto();
 
-            saleret.sale = await _dapperContext.QueryAsync<SaleReportDto>("SELECT [Id],[Name],[Amount],[SaleCost], ([Amount] *[SaleCost]) as TotalSaleCost,[Client],[OptCost],[RegDt],[OrderNumber],[Comments],[IsBank] FROM[HistorySaleView] where RegDt between @da1 and @da2", new { da1, da2 });
+            saleret.sale = await _dapperContext.QueryAsync<SaleReportDto>("SELECT [Id],[Name],[Amount],[IncomeCost], [SaleCost], ([Amount] *[SaleCost]) as TotalSaleCost,[Client],[OptCost],[RegDt],[OrderNumber],[Comments],[IsBank] FROM [HistorySaleView] where RegDt between @da1 and @da2", new { da1, da2 });
             saleret.returns = await _dapperContext.QueryAsync<ReturnReportDto>("SELECT [Id],[Name],[ReturnCost],[Amount],[RegDt],[CustomerName] FROM[ReturnView] where RegDt between @da1 and @da2", new { da1, da2 });
 
             reportToFile = new SalesReport();

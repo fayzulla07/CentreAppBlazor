@@ -10,6 +10,7 @@ namespace CentreAppBlazor.Shared.Domain
         public double Amount { get; set; }
         public string AmountUnit { get; set; }
         public double SaleCost { get; set; }
+        public double IncomeCost { get; set; }
         public string Client { get; set; }
         public string OptCost { get; set; }
         public DateTime RegDt { get; set; }

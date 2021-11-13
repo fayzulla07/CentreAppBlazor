@@ -24,8 +24,8 @@ namespace CentreAppBlazor.Server.ReportToExcel
                 PrepareHead(2, ws);
                 LoadData("A3", itemlist.sale, ws);
 
-                ws.Cells["F3:F" + (itemlist.sale.Count + 2)].Style.Numberformat.Format = "dd-MM-yyyy";
-                ws.Column(6).Width = 14;
+                ws.Cells["G3:G" + (itemlist.sale.Count + 2)].Style.Numberformat.Format = "dd-MM-yyyy";
+                ws.Column(7).Width = 14;
 
                 int iColCnt = ws.Dimension.End.Column;
                 int iRowCnt = ws.Dimension.End.Row + 2;
@@ -36,12 +36,13 @@ namespace CentreAppBlazor.Server.ReportToExcel
                     r.Merge = true;
                     r.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.CenterContinuous;
                     double total = 0;
+                    double incomeTotal = 0;
                     foreach (var item in itemlist.sale)
                     {
                         total += item.TotalSaleCost;
-                     
+                        incomeTotal += item.IncomeCost * item.Amount;
                     }
-                    r.Value = $"Итого: {total.ToString("C0", new CultureInfo("kk-KZ"))}";
+                    r.Value = $"Итого Продажа: {total.ToString("C0", new CultureInfo("kk-KZ"))} \t Итого Прибыль: {(total - incomeTotal).ToString("C0", new CultureInfo("kk-KZ"))}";
                 }
  /// -------------------------------------------------------------------------------------------------------------- ///
                 SetType(typeof(ReturnReportDto));

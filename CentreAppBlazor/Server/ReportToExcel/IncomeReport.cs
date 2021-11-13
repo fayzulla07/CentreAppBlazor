@@ -42,7 +42,7 @@ namespace CentreAppBlazor.Server.ReportToExcel
                         sale += (item.SaleCost * item.Amount);
                         //opt += (item.OptCost * item.Amount) - (item.IncomeCost * item.Amount);
                     }
-                     r.Value = $"Итого приход: {inc.ToString("C0", new CultureInfo("kk-KZ"))} \r\n Итого продажа: {sale.ToString("C0", new CultureInfo("kk-KZ"))}";
+                    r.Value = $"Итого приход: {inc.ToString("C0", new CultureInfo("kk-KZ"))} \r\n Итого продажа: {sale.ToString("C0", new CultureInfo("kk-KZ"))}";
                 }
 
                 return new MemoryStream(pck.GetAsByteArray()); //Get updated stream

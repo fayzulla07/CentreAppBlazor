@@ -36,12 +36,16 @@
                 <span class="text-wrap">@vdata.Amount</span>
             </Template>
         </RadzenDataGridColumn>
-
+        <RadzenDataGridColumn Width="110px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.IncomeCost)" Title="Цена прихода" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.IncomeCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
+            </Template>
+        </RadzenDataGridColumn>
         <RadzenDataGridColumn Width="110px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.SaleCost)" Title="Цена продажи" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.SaleCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
             </Template>
-           
+
         </RadzenDataGridColumn>
 
         <RadzenDataGridColumn Width="110px" TItem="SaleReportDto" Property="@nameof(SaleReportDto.TotalSaleCost)" Title="Сумма" TextAlign="TextAlign.Center">

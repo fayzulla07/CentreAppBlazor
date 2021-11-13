@@ -15,6 +15,9 @@ namespace CentreAppBlazor.Shared.Report
         [EpplusDisplay(Name = "Коль-во")]
         public int Amount { get; set; }
 
+        [EpplusDisplay(Name = "Цена Прихода")]
+        public double IncomeCost { get; set; }
+
         [EpplusDisplay(Name = "Цена продажи")]
         public double SaleCost { get; set; }
 
