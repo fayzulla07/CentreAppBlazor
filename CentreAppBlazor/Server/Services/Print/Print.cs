@@ -23,7 +23,7 @@ namespace CentreAppBlazor.Server.Services
                 int i = 5;
                 string header = ws.Cells["A1"].Value.ToString() + data.FirstOrDefault().IncomeNumber;
                 ws.Cells["A1"].Value = header;
-                ws.Cells["A2"].Value = ws.Cells["A2"].Value.ToString() + DateTime.Now.ToString("MM.dd.yyyy");
+                ws.Cells["A2"].Value = ws.Cells["A2"].Value.ToString() + DateTime.Now.ToString("dd.MM.yyyy");
                 ws.InsertRow(i, data.Count(), 5);
                 ws.Cells["A5"].LoadFromCollection(data.Select((x, i) => new
                 {
@@ -58,7 +58,7 @@ namespace CentreAppBlazor.Server.Services
                 int i = 5;
                 string header = ws.Cells["A1"].Value.ToString() + data.FirstOrDefault().OrderNumber;
                 ws.Cells["A1"].Value = header;
-                ws.Cells["A2"].Value = ws.Cells["A2"].Value.ToString() + DateTime.Now.ToString("MM.dd.yyyy");
+                ws.Cells["A2"].Value = ws.Cells["A2"].Value.ToString() + DateTime.Now.ToString("dd.MM.yyyy");
                 ws.InsertRow(i, data.Count(), 5);
                 ws.Cells["A5"].LoadFromCollection(data.Select((x, i) => new
                 {

@@ -57,7 +57,7 @@
             </Template>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn Width="110px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.SaleCost)" Title="Розн цена" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="110px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.SaleCost)" Title="Цена продажи" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.SaleCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
             </Template>
