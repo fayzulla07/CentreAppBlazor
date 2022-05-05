@@ -37,13 +37,15 @@
             </AuthorizeView>
 
             <li><a class="app-menu__item" href="HistoryReturnPage"><i class="app-menu__icon fas fa-history"></i><span class="app-menu__label">История Возврата</span></a></li>
+            <li><a class="app-menu__item" href="ExpensePage"><i class="app-menu__icon fas fa-list"></i><span class="app-menu__label">Расходы</span></a></li>
             <li><a class="app-menu__item" href="CustomerPage"><i class="app-menu__icon fas fa-users"></i><span class="app-menu__label">Клиенты</span></a></li>
             <li><a class="app-menu__item" href="ReportPage"><i class="app-menu__icon fas far fa-list-alt"></i><span class="app-menu__label">Отчеты</span></a></li>
+            <li><a class="app-menu__item" href="ReportsConfigPage"><i class="app-menu__icon fas far fa-list-alt"></i><span class="app-menu__label">Д.Отчеты</span></a></li>
 
             <AuthorizeView Roles="admin, manager">
                 <Authorized>
                     <li class="treeview @IsExpanded">
-                        <a class="app-menu__item fayzulla"  @onclick:preventDefault @onclick="ToggleTree" href="" data-toggle="treeview"><i class="app-menu__icon fa fa-laptop"></i><span class="app-menu__label">Настройки</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                        <a class="app-menu__item fayzulla" @onclick:preventDefault @onclick="ToggleTree" href="" data-toggle="treeview"><i class="app-menu__icon fa fa-laptop"></i><span class="app-menu__label">Настройки</span><i class="treeview-indicator fa fa-angle-right"></i></a>
                         <ul class="treeview-menu">
                             @if (context.User.IsInRole("admin"))
                             {

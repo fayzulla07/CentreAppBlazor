@@ -8,6 +8,8 @@ using CentreAppBlazor.Client.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Globalization;
 using Radzen;
+using System.Reflection;
+using Microsoft.Extensions.Configuration;
 
 namespace CentreAppBlazor.Client
 {
@@ -50,6 +52,19 @@ namespace CentreAppBlazor.Client
             builder.Services.AddScoped<AuthenticationStateProvider, LocalStorageAuthProvider>();
 
             builder.Services.AddSingleton<LoadingService>();
+
+            string fileName = "CentreAppBlazor.Client.Settings.json";
+            var stream = Assembly.GetExecutingAssembly()
+                                 .GetManifestResourceStream(fileName);
+
+            var config = new ConfigurationBuilder()
+                    .AddJsonStream(stream)
+                    .Build();
+
+            builder.Services.AddSingleton(_ =>
+            {
+                return config["LoginPageTitle"];
+            });
         }
     }
 }

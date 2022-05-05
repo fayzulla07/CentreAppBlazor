@@ -1,0 +1,60 @@
+﻿@using Stimulsoft.Report
+@using Stimulsoft.Report.Blazor
+
+@if (ReportStream != null)
+{
+    <StiBlazorViewer Report="@report" Options="@options" />
+}
+
+@code {
+    StiReport report = new StiReport();
+    //Options object
+    private StiBlazorViewerOptions options;
+    [Parameter]
+    public bool IsToolbarVisible { get; set; } = true;
+    [Parameter]
+    public byte[] ReportStream { get; set; }
+
+    public static void InitKey()
+    {
+        //Activation with using license file
+        //Stimulsoft.Base.StiLicense.LoadFromFile("license.key");
+        Stimulsoft.Base.StiLicense.Key = "6vJhGtLLLz2GNviWmUTrhSqnOItdDwjBylQzQcAOiHnVeRJNihDzwCEi9gq1rbuHCxdKh7jFHoKLlQ7kkZUHZMg1yb" +
+    "h8TsEr5lbwn7fkSjZEhaXaAsPbWi2YRJBnImBxjZRMi7FXxjO1w0Ketidq7iOOJPTEiydMK6iovMLmr/FhkzobpPwP" +
+    "E5c6rqLjsTr314FtX3WhqmG4bJNuklcJRkY4uV7tcScwXM7gUF2DyCPLvvnBEkMRrmvVQL1pFMaD3kAndhApYr6j8K" +
+    "r3DrylUDW+SVXJM5jO979DoT4DbxODi0GuO+ge8onGKokkJ4ufX4UUAk2on1KVnf0RYMKZZcxaZcNW4i/qKPyBKR/E" +
+    "G63UoL65I227V+vPR5Z4u+wdmRAjUvw2ZCRRLabknnkQkAuN1mbM0dpd/TV4cvSD0xSXJzmm8x0HoQ+KRPNYfMMY/A" +
+    "8Orv7J31RqZZqQPMOROp9iJaH4A0Ztt2hGHKdjv95ldK9JOxD01vmosZIwQF+MZ94/RiPxS/hgFIGff9a3pB8sALu5" +
+    "QU3+d46WoIfrpcjhMvJJe2ZW9nR/0zQGppV+";
+    }
+    protected async override Task OnInitializedAsync()
+    {
+        InitKey();
+
+        report.Load(ReportStream);
+
+        //Init options object
+        options = new StiBlazorViewerOptions();
+
+        options.Toolbar.Visible = IsToolbarVisible;
+        options.Toolbar.ShowAboutButton = false;
+        options.Exports.ShowExportToCsv = false;
+        options.Exports.ShowExportToDif = false;
+        options.Exports.ShowExportToDbf = false;
+        options.Exports.ShowExportToExcelXml = false;
+        options.Exports.ShowExportToHtml5 = false;
+        options.Exports.ShowExportToImageBmp = false;
+        options.Exports.ShowExportToPowerPoint = false;
+        options.Exports.ShowExportToPowerPoint = false;
+
+        StateHasChanged();
+    }
+    protected override void OnParametersSet()
+    {
+        report.Load(ReportStream);
+        //StateHasChanged();
+    }
+
+
+
+}

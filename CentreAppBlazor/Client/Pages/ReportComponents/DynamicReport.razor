@@ -1,0 +1,32 @@
+﻿@using CentreAppBlazor.Client.Pages.Main
+@inject HttpClient client 
+
+<RadzenDropDown TValue="int" ValueProperty="Id" Name="RepSelector" TextProperty="Name"
+                AllowFiltering="true"  FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                Data="RepList" Change="@(args=>SelectReport(args))" Placeholder="Выберите отчет">
+</RadzenDropDown>
+
+@if(content != null) { 
+    <ReportViewer IsToolbarVisible="true" ReportStream="content">
+    </ReportViewer>
+}
+
+@code {  
+    [Inject]
+    public IAppService serv { get; set; }
+    IEnumerable<Reports> RepList = new List<Reports>();
+    byte[] content;
+    protected async override Task OnInitializedAsync()
+    {
+        await LoadApi();
+    }
+
+    async Task LoadApi()
+    {
+        RepList = await serv.GetAsync<List<Reports>>("api/reports");
+    }
+    void SelectReport(object sender)
+    {
+        content = RepList.Where(p=>p.Id==(Convert.ToInt32(sender))).Select(p=>p.Content).FirstOrDefault();
+    }
+}

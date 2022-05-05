@@ -37,6 +37,8 @@ namespace CentreAppBlazor.Server.Data
         public virtual DbSet<Suppliers> Suppliers { get; set; }
         public virtual DbSet<Units> Units { get; set; }
         public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<Expenses> Expenses { get; set; }
+        public virtual DbSet<Reports> Reports { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -344,6 +346,22 @@ namespace CentreAppBlazor.Server.Data
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.RoleId)
                     .HasConstraintName("FK_Users_Roles");
+            });
+            modelBuilder.Entity<Expenses>(entity =>
+            {
+                entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(400);
+
+                entity.Property(e => e.Cost)
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity<Reports>(entity =>
+            {
+                entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(200);
             });
 
             OnModelCreatingPartial(modelBuilder);

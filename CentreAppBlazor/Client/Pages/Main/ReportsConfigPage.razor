@@ -1,0 +1,120 @@
+﻿@page "/ReportsConfigPage"
+@inherits BaseCrud<Reports>
+@attribute [Authorize]
+
+<div class="d-flex">
+    <div class="">
+        <div class="h5">Динамические отчеты</div>
+    </div>
+</div>
+<RadzenPanel AllowCollapse="true" Collapsed="true">
+    <ChildContent>
+        <RadzenTemplateForm TItem="Reports" Data="dataform" Submit="@OnSubmit" InvalidSubmit="@OnInvalidSubmit">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Имя" />
+                        <br />
+                        <RadzenTextBox AutoComplete="false" Style="width:100%" Name="@nameof(Reports.Name)" @bind-Value="dataform.Name" />
+                        <br />
+                        <RadzenRequiredValidator Component="@nameof(Reports.Name)" Popup="false" Text="Значение должно быть заполнено!" />
+                        <RadzenRegexValidator Component="@nameof(Reports.Name)" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
+                    </div>
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Контент" />
+                        <br />
+                        <InputFile accept=".mrt" @bind-Value="dataform.Content" OnChange="@OnFileSelection"></InputFile>
+                        <br />
+                    </div>
+                </div>
+                <div class="m-3 float-right">
+                    <RadzenButton ButtonType="ButtonType.Submit" Text="Добавить" />
+                </div>
+            </div>
+        </RadzenTemplateForm>
+    </ChildContent>
+</RadzenPanel>
+
+
+<RadzenDataGrid @ref="Grid" AllowFiltering="true" FilterMode="FilterMode.Simple" AllowColumnResize="true" AllowPaging="true" PageSize="20" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                AllowSorting="true" Data="@dsource" TItem="Reports" ColumnWidth="200px" RowUpdate="@OnUpdateRow">
+    <Columns>
+        <RadzenDataGridColumn TItem="Reports" Property="@nameof(Reports.Id)" Visible="false" />
+        <RadzenDataGridColumn TItem="Reports" Property="@nameof(Reports.Name)" Title="Имя">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Name</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenTextBox @bind-Value="vdata.Name" Name="Name" Style="width:100%" />
+                <br />
+                <RadzenRequiredValidator Component="Name" Text="Заполните поле" />
+                <RadzenRegexValidator Component="Name" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
+            </EditTemplate>
+
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="Reports" Property="@nameof(Reports.Content)" Title="Контент">
+            <Template Context="vdata">
+                <span class="text-wrap">Контент отчета</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <InputFile accept=".mrt" OnChange="@OnFileSelection"></InputFile>
+            </EditTemplate>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="Reports" Context="dsource" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+            <Template Context="dsource">
+                <RadzenButton Icon="edit" Size="ButtonSize.Medium" Click="@(args => EditRow(dsource))">
+                </RadzenButton>
+            </Template>
+            <EditTemplate Context="dsource">
+                <RadzenButton Icon="save" Size="ButtonSize.Medium" Click="@((args) => SaveRow(dsource))">
+                </RadzenButton>
+                <RadzenButton Icon="cancel" Size="ButtonSize.Medium" ButtonStyle="ButtonStyle.Secondary" Click="@((args) => CancelEdit(dsource))">
+                </RadzenButton>
+            </EditTemplate>
+        </RadzenDataGridColumn>
+
+
+        <RadzenDataGridColumn TItem="Reports" Context="dsource" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
+            <Template Context="dsource">
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
+                </RadzenButton>
+            </Template>
+            <EditTemplate Context="dsource">
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
+                </RadzenButton>
+            </EditTemplate>
+        </RadzenDataGridColumn>
+
+
+    </Columns>
+
+</RadzenDataGrid>
+
+
+@code {
+    protected override string ApiUrl { get; set; } = "api/Reports";
+
+    async Task DeleteConfirmation(Reports dat) => await DialogService.OpenAsync("Подтверждение", ds =>
+    @<RadzenCard Style="padding: 20px;">
+        <p Style="margin-bottom: 10px;">Вы действительно хотите удалить "@dat.Name"?</p>
+        <div class="row">
+            <div class="col-md-8">
+                <RadzenButton Text="Да" Click="args=>OkDialog(dat)" Style="margin-bottom: 10px; width: 150px" />
+                <RadzenButton Text="Отмена" Click="CancelDialog" ButtonStyle="ButtonStyle.Secondary" Style="margin-bottom: 10px; width: 150px" />
+            </div>
+        </div>
+    </RadzenCard>);
+
+    private async Task OnFileSelection(InputFileChangeEventArgs e)
+    {
+        IBrowserFile content = e.File;
+        var buffers = new byte[content.Size];
+        await content.OpenReadStream().ReadAsync(buffers);
+        dataform.Content = buffers;
+    }
+}
+
+
+

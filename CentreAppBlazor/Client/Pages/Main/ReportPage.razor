@@ -3,6 +3,9 @@
 @using CentreAppBlazor.Client.Pages.ReportComponents
 <RadzenTabs>
     <Tabs>
+        <RadzenTabsItem Text="Отчеты">
+            <DynamicReport></DynamicReport>
+        </RadzenTabsItem>
         <RadzenTabsItem Text="Остаток">
             <RemainReport></RemainReport>
         </RadzenTabsItem>
@@ -12,7 +15,7 @@
         <RadzenTabsItem Text="Приход">
             <AuthorizeView Roles="admin, manager">
                 <Authorized>
-                 <IncomeReport></IncomeReport>
+                    <IncomeReport></IncomeReport>
                 </Authorized>
             </AuthorizeView>
         </RadzenTabsItem>

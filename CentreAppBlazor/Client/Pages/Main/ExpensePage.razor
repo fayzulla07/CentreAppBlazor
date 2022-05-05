@@ -1,0 +1,161 @@
+﻿@page "/ExpensePage"
+@inherits BaseCrud<Expenses>
+@attribute [Authorize]
+
+<div class="d-flex">
+    <div class="">
+        <div class="h5">Расходы </div>
+    </div>
+</div>
+<RadzenPanel AllowCollapse="true" Collapsed="false">
+    <ChildContent>
+        <RadzenTemplateForm TItem="Expenses" Data="dataform" Submit="@OnSubmit" InvalidSubmit="@OnInvalidSubmit">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Расход" />
+                        <br />
+                        <RadzenTextBox AutoComplete="false" Style="width:100%" Name="@nameof(Expenses.Name)" @bind-Value="dataform.Name" />
+                        <br />
+                        <RadzenRequiredValidator Component="@nameof(Expenses.Name)" Popup="false" Text="Значение должно быть заполнено!" />
+                        <RadzenRegexValidator Component="@nameof(Expenses.Name)" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
+                    </div>
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Сумма:" />
+                        <br />
+                        <RadzenNumeric AutoComplete="false" Name="Cost" Min="1" Style="width:100%" @bind-Value="dataform.Cost" />
+                        <RadzenRequiredValidator Component="@nameof(Expenses.Cost)" Popup="false" Text="Значение должно быть заполнено!" />
+                        <br />
+
+                    </div>
+                </div>
+                
+                <div class="m-3 float-right">
+                    <RadzenButton ButtonType="ButtonType.Submit" Text="Добавить"></RadzenButton>
+                </div>
+
+            </div>
+</RadzenTemplateForm>
+    </ChildContent>
+</RadzenPanel>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <RadzenDatePicker Placeholder=" Начало периода" @bind-Value="@da1"></RadzenDatePicker>
+        </div>
+        <div class="col-md-2">
+            <RadzenDatePicker Placeholder=" Конец периода" @bind-Value="@da2"></RadzenDatePicker>
+        </div>
+        <div class="col-2">
+            <RadzenButton class="btn btn-secondary" Click="GetFile" Text="Скачать"/>
+        </div>
+    </div>
+</div>
+
+
+<RadzenDataGrid @ref="Grid" AllowFiltering="true" FilterMode="FilterMode.Simple" AllowColumnResize="true" AllowPaging="true" PageSize="20" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                AllowSorting="true" Data="@dsource" TItem="Expenses" ColumnWidth="200px" RowUpdate="@OnUpdateRow">
+    <Columns>
+        <RadzenDataGridColumn TItem="Expenses" Property="@nameof(Expenses.Id)" Visible="false" />
+        <RadzenDataGridColumn  TItem="Expenses" Property="@nameof(Expenses.Name)" Title="Имя">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Name</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenTextBox AutoComplete="false" @bind-Value="vdata.Name" Name="Name" Style="width:100%" />
+                <br />
+                <RadzenRequiredValidator Component="Name" Text="Заполните поле" />
+                <RadzenRegexValidator Component="Name" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
+            </EditTemplate>
+
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="Expenses" Property="@nameof(Expenses.Cost)" Title="Сумма">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Cost</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenNumeric AutoComplete="false" @bind-Value="vdata.Cost" Style="width:100%" Min="1" />
+            </EditTemplate>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="Expenses" Property="@nameof(Expenses.RegDateTime)" Title="Дата">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.RegDateTime.ToString()</span>
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="Expenses" Context="dsource" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+            <Template Context="dsource">
+                <RadzenButton Icon="edit" Size="ButtonSize.Medium" Click="@(args => EditRow(dsource))">
+                </RadzenButton>
+            </Template>
+            <EditTemplate Context="dsource">
+                <RadzenButton Icon="save" Size="ButtonSize.Medium" Click="@((args) => SaveRow(dsource))">
+                </RadzenButton>
+                <RadzenButton Icon="cancel" Size="ButtonSize.Medium" ButtonStyle="ButtonStyle.Secondary" Click="@((args) => CancelEdit(dsource))">
+                </RadzenButton>
+            </EditTemplate>
+        </RadzenDataGridColumn>
+
+
+        <RadzenDataGridColumn TItem="Expenses" Context="dsource" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
+            <Template Context="dsource">
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
+                </RadzenButton>
+            </Template>
+            <EditTemplate Context="dsource">
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
+                </RadzenButton>
+            </EditTemplate>
+        </RadzenDataGridColumn>
+
+
+    </Columns>
+
+</RadzenDataGrid>
+
+
+@code {
+    protected override string ApiUrl { get; set; } = "api/Expenses";
+    [Inject]
+    public IJSRuntime jSRuntime { get; set; }
+    DateTime? da1;
+    DateTime? da2;
+    private async Task GetFile()
+    {
+        if (da1 == null) da1 = DateTime.Now.AddDays(-1);
+        if (da2 == null) da2 = DateTime.Now.AddDays(1);
+        try
+        {
+
+            loading.Visible = true;
+            var val = await serv.CallAsync($"api/report/GetExpenses?das1={da1.Value.ToString("yyyy-MM-dd")}&das2={da2.Value.ToString("yyyy-MM-dd")}");
+            await jSRuntime.InvokeVoidAsync("saveasFile", "Expenses.xlsx", Convert.ToBase64String(await val.Content.ReadAsByteArrayAsync()));
+        }
+        catch (Exception ex)
+        {
+            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при получении файла", Duration = 2500 });
+        }
+        finally
+        {
+            loading.Visible = false;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    async Task DeleteConfirmation(Expenses dat) => await DialogService.OpenAsync("Подтверждение", ds =>
+    @<RadzenCard Style="padding: 20px;">
+        <p Style="margin-bottom: 10px;">Вы действительно хотите удалить "@dat.Name"?</p>
+        <div class="row">
+            <div class="col-md-8">
+                <RadzenButton Text="Да" Click="args=>OkDialog(dat)" Style="margin-bottom: 10px; width: 150px" />
+                <RadzenButton Text="Отмена" Click="CancelDialog" ButtonStyle="ButtonStyle.Secondary" Style="margin-bottom: 10px; width: 150px" />
+            </div>
+        </div>
+    </RadzenCard>);
+
+}
+
+
+

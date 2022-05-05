@@ -10,16 +10,47 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CentreAppBlazor.Server.Migrations
 {
     [DbContext(typeof(TechContext))]
-    [Migration("20200517164847_TechMigration")]
-    partial class TechMigration
+    [Migration("20220503101724_Added_Expenses")]
+    partial class Added_Expenses
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("CentreAppBlazor.Shared.Domain.AvCurrentCosts", b =>
+                {
+                    b.Property<double?>("IncomeCost")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("OptCost")
+                        .HasColumnType("float");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<double?>("SaleCost")
+                        .HasColumnType("float");
+
+                    b.ToView("AvCurrentCosts");
+                });
+
+            modelBuilder.Entity("CentreAppBlazor.Shared.Domain.AvProfit", b =>
+                {
+                    b.Property<double>("TotalIncome")
+                        .HasColumnType("float");
+
+                    b.Property<double>("TotalOpt")
+                        .HasColumnType("float");
+
+                    b.Property<double>("TotalSale")
+                        .HasColumnType("float");
+
+                    b.ToView("AvProfit");
+                });
 
             modelBuilder.Entity("CentreAppBlazor.Shared.Domain.CustomerTypes", b =>
                 {
@@ -29,13 +60,13 @@ namespace CentreAppBlazor.Server.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(350)")
-                        .HasMaxLength(350);
+                        .HasMaxLength(350)
+                        .HasColumnType("nvarchar(350)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
@@ -50,15 +81,15 @@ namespace CentreAppBlazor.Server.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Address")
-                        .HasColumnType("nvarchar(300)")
-                        .HasMaxLength(300);
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<int?>("CustomerTypeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(150)")
-                        .HasMaxLength(150);
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<double?>("GeoAltitude")
                         .HasColumnType("float");
@@ -71,12 +102,12 @@ namespace CentreAppBlazor.Server.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -104,6 +135,87 @@ namespace CentreAppBlazor.Server.Migrations
                     b.ToTable("DbLogs");
                 });
 
+            modelBuilder.Entity("CentreAppBlazor.Shared.Domain.Expenses", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Cost")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Expenses");
+                });
+
+            modelBuilder.Entity("CentreAppBlazor.Shared.Domain.HistorySaleView", b =>
+                {
+                    b.Property<double>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<string>("AmountUnit")
+                        .HasMaxLength(211)
+                        .HasColumnType("nvarchar(211)");
+
+                    b.Property<string>("Client")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Comments")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<double>("IncomeCost")
+                        .HasColumnType("float");
+
+                    b.Property<bool?>("IsBank")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("OptCost")
+                        .HasMaxLength(3)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(3)");
+
+                    b.Property<int?>("OrderNumber")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("RegDt")
+                        .HasColumnType("datetime");
+
+                    b.Property<double>("SaleCost")
+                        .HasColumnType("float");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.ToView("HistorySaleView");
+                });
+
+            modelBuilder.Entity("CentreAppBlazor.Shared.Domain.LastOrderView", b =>
+                {
+                    b.Property<int>("OrderNumber")
+                        .HasColumnType("int");
+
+                    b.ToView("LastOrderView");
+                });
+
             modelBuilder.Entity("CentreAppBlazor.Shared.Domain.MyCompany", b =>
                 {
                     b.Property<int>("Id")
@@ -112,16 +224,16 @@ namespace CentreAppBlazor.Server.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(300)")
-                        .HasMaxLength(300);
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<int?>("Level")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int?>("ParentId")
                         .HasColumnType("int");
@@ -142,11 +254,14 @@ namespace CentreAppBlazor.Server.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("Comments")
-                        .HasColumnType("nvarchar(300)")
-                        .HasMaxLength(300);
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<double>("IncomeCost")
                         .HasColumnType("float");
+
+                    b.Property<int?>("IncomeNumber")
+                        .HasColumnType("int");
 
                     b.Property<double>("Kurs")
                         .ValueGeneratedOnAdd()
@@ -197,8 +312,8 @@ namespace CentreAppBlazor.Server.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("Comments")
-                        .HasColumnType("nvarchar(300)")
-                        .HasMaxLength(300);
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<double>("Kurs")
                         .ValueGeneratedOnAdd()
@@ -237,8 +352,8 @@ namespace CentreAppBlazor.Server.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("Comments")
-                        .HasColumnType("nvarchar(300)")
-                        .HasMaxLength(300);
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<int?>("CustomerId")
                         .HasColumnType("int");
@@ -293,13 +408,13 @@ namespace CentreAppBlazor.Server.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(350)")
-                        .HasMaxLength(350);
+                        .HasMaxLength(350)
+                        .HasColumnType("nvarchar(350)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
@@ -314,12 +429,12 @@ namespace CentreAppBlazor.Server.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Code")
-                        .HasColumnType("nvarchar(60)")
-                        .HasMaxLength(60);
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(350)")
-                        .HasMaxLength(350);
+                        .HasMaxLength(350)
+                        .HasColumnType("nvarchar(350)");
 
                     b.Property<int>("Limit")
                         .ValueGeneratedOnAdd()
@@ -328,8 +443,8 @@ namespace CentreAppBlazor.Server.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int?>("ProductTypeId")
                         .HasColumnType("int");
@@ -344,7 +459,7 @@ namespace CentreAppBlazor.Server.Migrations
 
                     b.HasIndex("Code")
                         .IsUnique()
-                        .HasName("UQ_ProductCode")
+                        .HasDatabaseName("UQ_ProductCode")
                         .HasFilter("[Code] IS NOT NULL");
 
                     b.HasIndex("ProductTypeId");
@@ -352,6 +467,52 @@ namespace CentreAppBlazor.Server.Migrations
                     b.HasIndex("UnitId");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("CentreAppBlazor.Shared.Domain.ReturnTotalByDayView", b =>
+                {
+                    b.Property<DateTime?>("RegDt")
+                        .HasColumnType("date");
+
+                    b.Property<double>("ReturnCost")
+                        .HasColumnType("float");
+
+                    b.ToView("ReturnTotalByDayView");
+                });
+
+            modelBuilder.Entity("CentreAppBlazor.Shared.Domain.ReturnView", b =>
+                {
+                    b.Property<double>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<string>("AmountUnit")
+                        .HasMaxLength(226)
+                        .HasColumnType("nvarchar(226)");
+
+                    b.Property<string>("Comments")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("CustomerName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("RegDt")
+                        .HasColumnType("datetime");
+
+                    b.Property<double>("ReturnCost")
+                        .HasColumnType("float");
+
+                    b.ToView("ReturnView");
                 });
 
             modelBuilder.Entity("CentreAppBlazor.Shared.Domain.Roles", b =>
@@ -362,17 +523,31 @@ namespace CentreAppBlazor.Server.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(250)")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(150)")
-                        .HasMaxLength(150);
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("CentreAppBlazor.Shared.Domain.SalesTotalByDayView", b =>
+                {
+                    b.Property<double?>("IncomeCost")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime?>("RegDt")
+                        .HasColumnType("date");
+
+                    b.Property<double?>("SaleTotal")
+                        .HasColumnType("float");
+
+                    b.ToView("SalesTotalByDayView");
                 });
 
             modelBuilder.Entity("CentreAppBlazor.Shared.Domain.Suppliers", b =>
@@ -383,12 +558,12 @@ namespace CentreAppBlazor.Server.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(300)")
-                        .HasMaxLength(300);
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(120)")
-                        .HasMaxLength(120);
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
 
                     b.Property<double?>("HisDebt")
                         .HasColumnType("float");
@@ -398,12 +573,12 @@ namespace CentreAppBlazor.Server.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -418,13 +593,13 @@ namespace CentreAppBlazor.Server.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(300)")
-                        .HasMaxLength(300);
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
@@ -439,24 +614,24 @@ namespace CentreAppBlazor.Server.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(300)")
-                        .HasMaxLength(300);
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("LoginName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(150)")
-                        .HasMaxLength(150);
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)")
-                        .HasComment("FIO")
-                        .HasMaxLength(200);
+                        .HasComment("FIO");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(350)")
-                        .HasMaxLength(350);
+                        .HasMaxLength(350)
+                        .HasColumnType("nvarchar(350)");
 
                     b.Property<int?>("RoleId")
                         .HasColumnType("int");
@@ -475,6 +650,8 @@ namespace CentreAppBlazor.Server.Migrations
                         .HasForeignKey("CustomerTypeId")
                         .HasConstraintName("FK_Customers_CustomerTypes")
                         .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("CustomerType");
                 });
 
             modelBuilder.Entity("CentreAppBlazor.Shared.Domain.ProductIncoms", b =>
@@ -497,6 +674,12 @@ namespace CentreAppBlazor.Server.Migrations
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK_ProductIncoms_Users")
                         .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Supplier");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CentreAppBlazor.Shared.Domain.ProductReturns", b =>
@@ -513,6 +696,10 @@ namespace CentreAppBlazor.Server.Migrations
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK_ProductReturns_Users")
                         .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("ProductSale");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CentreAppBlazor.Shared.Domain.ProductSales", b =>
@@ -535,6 +722,12 @@ namespace CentreAppBlazor.Server.Migrations
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK_ProductSales_Users")
                         .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CentreAppBlazor.Shared.Domain.Products", b =>
@@ -550,6 +743,10 @@ namespace CentreAppBlazor.Server.Migrations
                         .HasForeignKey("UnitId")
                         .HasConstraintName("FK_Products_Units")
                         .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("ProductType");
+
+                    b.Navigation("Unit");
                 });
 
             modelBuilder.Entity("CentreAppBlazor.Shared.Domain.Users", b =>
@@ -558,6 +755,59 @@ namespace CentreAppBlazor.Server.Migrations
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
                         .HasConstraintName("FK_Users_Roles");
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("CentreAppBlazor.Shared.Domain.CustomerTypes", b =>
+                {
+                    b.Navigation("Customers");
+                });
+
+            modelBuilder.Entity("CentreAppBlazor.Shared.Domain.Customers", b =>
+                {
+                    b.Navigation("ProductSales");
+                });
+
+            modelBuilder.Entity("CentreAppBlazor.Shared.Domain.ProductSales", b =>
+                {
+                    b.Navigation("ProductReturns");
+                });
+
+            modelBuilder.Entity("CentreAppBlazor.Shared.Domain.ProductTypes", b =>
+                {
+                    b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("CentreAppBlazor.Shared.Domain.Products", b =>
+                {
+                    b.Navigation("ProductIncoms");
+
+                    b.Navigation("ProductSales");
+                });
+
+            modelBuilder.Entity("CentreAppBlazor.Shared.Domain.Roles", b =>
+                {
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("CentreAppBlazor.Shared.Domain.Suppliers", b =>
+                {
+                    b.Navigation("ProductIncoms");
+                });
+
+            modelBuilder.Entity("CentreAppBlazor.Shared.Domain.Units", b =>
+                {
+                    b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("CentreAppBlazor.Shared.Domain.Users", b =>
+                {
+                    b.Navigation("ProductIncoms");
+
+                    b.Navigation("ProductReturns");
+
+                    b.Navigation("ProductSales");
                 });
 #pragma warning restore 612, 618
         }

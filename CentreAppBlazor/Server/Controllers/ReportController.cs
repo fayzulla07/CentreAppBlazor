@@ -139,5 +139,30 @@ namespace CentreAppBlazor.Server.Controllers
                 FileDownloadName = "Income.xlsx"
             };
         }
+
+        [Authorize]
+        [HttpGet(@"GetExpenses")]
+        public async Task<FileStreamResult> GetExpenses([FromQuery] string das1, string das2)
+        {
+            DateTime da1;
+            DateTime da2;
+
+            if (!DateTime.TryParse(das1, out da1))
+                return null;
+            if (!DateTime.TryParse(das2, out da2))
+                return null;
+
+            IEnumerable<Expenses> expList=new List<Expenses>();
+
+            expList = await _dapperContext.QueryAsync<Expenses>("SELECT [Id],[Name],[Cost],[RegDateTime] FROM [Expenses] where RegDateTime between @da1 and @da2", new { da1, da2 });
+
+            reportToFile = new ExpenseReport();
+            var excel = reportToFile.GetFile($" Расходы  {da1.ToShortDateString()} -  {da2.ToShortDateString()}", expList);
+
+            return new FileStreamResult(excel, new MediaTypeHeaderValue("text/plain"))
+            {
+                FileDownloadName = "Расходы.xlsx"
+            };
+        }
     }
 }
