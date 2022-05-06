@@ -63,8 +63,10 @@ namespace CentreAppBlazor.Client
 
             builder.Services.AddSingleton(_ =>
             {
-                return config["LoginPageTitle"];
+                return config.GetSection("LoginPageTitle").Get<Settings>();
             });
+
+            builder.Services.AddSingleton<Settings>();
         }
     }
 }
