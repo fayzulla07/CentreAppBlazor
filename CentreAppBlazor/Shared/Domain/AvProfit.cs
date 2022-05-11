@@ -16,5 +16,18 @@ namespace CentreAppBlazor.Shared.Domain
         {
             get { return TotalOpt - TotalIncome; }
         }
+
+        public double TotalIncomeTG { get; set; }
+        public double TotalSaleTG { get; set; }
+        public double TotalOptTG { get; set; }
+
+        public double TotalSaleProfitTG
+        {
+            get { return TotalSaleTG - TotalIncomeTG; }
+        }
+        public double TotalOptProfitTG
+        {
+            get { return TotalOptTG - TotalIncomeTG; }
+        }
     }
 }

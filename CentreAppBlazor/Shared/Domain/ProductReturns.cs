@@ -14,7 +14,7 @@ namespace CentreAppBlazor.Shared.Domain
         public double Amount { get; set; }
 
         [Required]
-        public double ReturnCost { get; set; }
+        public decimal ReturnCost { get; set; }
         public DateTime RegDt { get; set; }
         public int? UserId { get; set; }
         public string Comments { get; set; }

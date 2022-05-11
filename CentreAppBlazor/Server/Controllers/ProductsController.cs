@@ -51,6 +51,15 @@ namespace CentreAppBlazor.Server.Controllers
             {
                 result = result.Take(query.Top.Value);
             }
+            try
+            {
+                await result.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
             return new ResponseMessage<IEnumerable<Products>>() { entity = await result.ToListAsync(), TCount = _context.Products.Count() };
         }
 

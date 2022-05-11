@@ -20,13 +20,13 @@ namespace CentreAppBlazor.Shared.Domain
         public double Amount { get; set; }
 
         [Required]
-        public double SaleCost { get; set; }
+        public decimal SaleCost { get; set; }
         public bool? IsOptCost { get; set; }
         public int? CustomerId { get; set; }
         public DateTime RegDt { get; set; }
         public int? UserId { get; set; }
         public string Comments { get; set; }
-        public double IncomeCost { get; set; }
+        public decimal IncomeCost { get; set; }
         public int? OrderNumber { get; set; }
         public bool? IsBank { get; set; }
         public double Kurs { get; set; }

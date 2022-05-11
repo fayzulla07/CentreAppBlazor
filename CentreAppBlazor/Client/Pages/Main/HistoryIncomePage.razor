@@ -53,7 +53,7 @@
 
         <RadzenDataGridColumn Width="110px" TItem="ProductIncoms" Title="Сумма Прихода" TextAlign="TextAlign.Center">
             <Template Context="vdata">
-                <span class="text-wrap">@(((vdata.IncomeCost * @vdata.Amount)).ToString("C0", new CultureInfo("kk-KZ")))</span>
+                <span class="text-wrap">@(((vdata.IncomeCost * (decimal)@vdata.Amount)).ToString("C0", new CultureInfo("kk-KZ")))</span>
             </Template>
         </RadzenDataGridColumn>
 

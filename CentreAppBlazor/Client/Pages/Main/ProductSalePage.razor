@@ -45,6 +45,16 @@
             <RadzenLabel Text="Клиент" Component="clnt" />
             <RadzenDropDown TValue="int" @bind-Value="CustomerId" Name="clnt" Placeholder="Выберите Клиента" Data="customer" AllowFiltering="true" AllowColumnResize="true" ValueProperty="@nameof(Customers.Id)" TextProperty="@nameof(Customers.Name)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Style="width:100%" />
         </div>
+         <div class="col col-md-4 col-sm-12 col-12" style="margin-bottom:15px;">
+           
+        </div>
+        <div class="col col-md-4 col-sm-12 col-12" style="margin-bottom:15px;">
+            <RadzenLabel Text="Код продукта" Component="сde" />
+            <RadzenTextBox Name="сde" Placeholder="" Style="width:100%" Change="ChangeCode" />
+        </div>
+         <div class="col col-md-4 col-sm-12 col-12" style="margin-bottom:15px;">
+           
+        </div>
     </div>
 </div>
 
@@ -189,7 +199,8 @@ async Task CloseConfirmation() => await DialogService.OpenAsync("Подтвер�
             <RadzenButton Text="Отмена" Click="CancelDialog" ButtonStyle="ButtonStyle.Secondary" Style="margin-bottom: 10px; width: 150px" />
         </div>
     </div>
-</RadzenCard>);
+    </RadzenCard>
+        );
 
     async void SelectedProductType(object _Id)
     {
@@ -219,32 +230,43 @@ async Task CloseConfirmation() => await DialogService.OpenAsync("Подтвер�
         }
 
     }
-    async void SelectedProduct(object _Id)
+    async Task ChangeCode(string value)
+    {
+        await SelectedProduct(0, value);
+        await InvokeAsync(StateHasChanged);
+    }
+    async Task SelectedProduct(object _Id, string code = null)
     {
         try
         {
             loading.Visible = true;
             int Id = (int)_Id;
 
-                if (Id != 0)
+            if (Id != 0 || code != null)
+            {
+                productDropDown.Reset();
+                var result = dsource.FirstOrDefault(x => x.Id == Id);
+                if (result != null)
                 {
-                    productDropDown.Reset();
-                    var result = dsource.FirstOrDefault(x => x.Id == Id);
-                    if (result != null)
+                    if (result.RemainCount >= (result.Amount + 1))
+                        result.Amount++;
+                    await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Продукт получен", Duration = 1500 });
+                    return;
+                }
+                code = code != null ? $"?code={code}" : "";
+                var ProductFromApi = await serv.GetJustAsync<ResponseMessage<ProductWithCostsDto>>($"api/Main/GetOneProduct/{Id}" + code);
+                if (!ProductFromApi.IsSuccessCode)
+                {
+                    await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Инфо", Detail = ProductFromApi.ErrorMessage, Duration = 2000 });
+                }
+                else
+                {
+                    if(ProductFromApi.entity == null)
                     {
-                        if (result.RemainCount >= (result.Amount + 1))
-                            result.Amount++;
-                        await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Продукт получен", Duration = 1500 });
+                    await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Не найдено", Detail = "Возможно нет в наличии!", Duration = 2000 });
+
                         return;
                     }
-
-                    var ProductFromApi = await serv.GetByIdAsync<ResponseMessage<ProductWithCostsDto>>(Id, "api/Main/GetOneProduct");
-                    if (!ProductFromApi.IsSuccessCode)
-                    {
-                        await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Инфо", Detail = ProductFromApi.ErrorMessage, Duration = 2000 });
-                    }
-                    else
-                    {
                         count++;
                         dsource.Insert(0, ProductFromApi.entity);
                         await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Продукт получен", Duration = 1500 });

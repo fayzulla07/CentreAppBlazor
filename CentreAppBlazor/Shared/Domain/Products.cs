@@ -22,6 +22,8 @@ namespace CentreAppBlazor.Shared.Domain
         public double RemainCount { get; set; }
         public int? UnitId { get; set; }
         public int Limit { get; set; }
+        public double Volume { get; set; }
+        public double Amount { get; set; }
 
         public virtual ProductTypes ProductType { get; set; }
         public virtual Units Unit { get; set; }

@@ -18,5 +18,6 @@ namespace CentreAppBlazor.Client.Services
         Task<string> PostGetStringAsync<T>(object obj, string url);
 
         Task<HttpResponseMessage> CallAsync(string uri);
+        Task<T> GetJustAsync<T>(string uri);
     }
 }

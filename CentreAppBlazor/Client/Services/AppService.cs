@@ -71,5 +71,10 @@ namespace CentreAppBlazor.Client.Services
             await SetToken();
            return await _client.GetAsync($"/{uri}");
         }
+        public async Task<T> GetJustAsync<T>(string uri)
+        {
+            if (string.IsNullOrEmpty(await SetToken())) return default(T);
+            return await _client.GetFromJsonAsync<T>($"/{uri}");
+        }
     }
 }

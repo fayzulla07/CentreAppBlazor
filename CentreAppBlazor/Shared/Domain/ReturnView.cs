@@ -7,7 +7,7 @@ namespace CentreAppBlazor.Shared.Domain
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public double ReturnCost { get; set; }
+        public decimal ReturnCost { get; set; }
         public string AmountUnit { get; set; }
         public DateTime RegDt { get; set; }
         public string CustomerName { get; set; }

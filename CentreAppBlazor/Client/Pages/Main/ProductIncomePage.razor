@@ -96,10 +96,10 @@
 
         <RadzenDataGridColumn Width="110px" TItem="ProductIncoms" Title="Сумма Прихода" TextAlign="TextAlign.Center">
             <Template Context="vdata">
-                <span class="text-wrap">@(((vdata.IncomeCost * @vdata.Amount)).ToString("C0", new CultureInfo("kk-KZ")))</span>
+                <span class="text-wrap">@(((vdata.IncomeCost * (decimal)@vdata.Amount)).ToString("C0", new CultureInfo("kk-KZ")))</span>
             </Template>
             <FooterTemplate>
-                <span class="text-wrap" style="color:red">@dsource.Sum(x => (x.IncomeCost*x.Amount)).ToString("C0", new CultureInfo("kk-KZ"))</span>
+                <span class="text-wrap" style="color:red">@dsource.Sum(x => (x.IncomeCost * (decimal)x.Amount)).ToString("C0", new CultureInfo("kk-KZ"))</span>
             </FooterTemplate>
         </RadzenDataGridColumn>
 
@@ -186,6 +186,7 @@
     {
         prtype = await serv.GetAsync<IEnumerable<ProductTypes>>("api/DropDown/ProductTypes");
         supplier = await serv.GetAsync<IEnumerable<Suppliers>>("api/DropDown/Suppliers");
+        CustomerId = supplier.FirstOrDefault().Id;
     }
 
     Task DeleteConfirmation(ProductIncoms dat) { OkDialog(dat); return Task.CompletedTask; }

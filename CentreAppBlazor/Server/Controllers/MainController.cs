@@ -26,14 +26,10 @@ namespace CentreAppBlazor.Server.Controllers
             _dappercontext = dappercontext;
         }
         [HttpGet(@"GetOneProduct/{ProductId}")]
-        public async Task<ActionResult<ResponseMessage<ProductWithCostsDto>>> GetOneProduct(int ProductId)
+        public async Task<ActionResult<ResponseMessage<ProductWithCostsDto>>> GetOneProduct(int ProductId, [FromQuery]string code)
         {
-            if(ProductId <= 0)
-            {
-                return BadRequest();
-            }
            var product = await _dappercontext.QueryAsync<ProductWithCostsDto>("select p.Id, p.[Name], p.RemainCount, p.Code, av.IncomeCost, av.OptCost, av.SaleCost, u.[Name] as UnitName " +
-               "from Products as p INNER JOIN AvCurrentCosts as av on p.Id = av.ProductId LEFT OUTER JOIN Units as u on p.UnitId = u.Id WHERE p.[Id] = @_ProductId  AND p.RemainCount > 0; ", new { _ProductId = ProductId });
+               "from Products as p INNER JOIN AvCurrentCosts as av on p.Id = av.ProductId LEFT OUTER JOIN Units as u on p.UnitId = u.Id WHERE (p.[Id] = @_ProductId or p.[code] = @code)  AND p.RemainCount > 0; ", new { _ProductId = ProductId, code });
             if(product == null)
             {
                 return new ResponseMessage<ProductWithCostsDto>() { IsSuccessCode = false, ErrorMessage = "Продукт не найдено!" };
@@ -124,7 +120,7 @@ namespace CentreAppBlazor.Server.Controllers
             int executed = 0;
 
             var num = await GetLastIncomeNumber();
-
+            
             foreach (var item in entity)
             {
                 var n = new
@@ -141,7 +137,16 @@ namespace CentreAppBlazor.Server.Controllers
                     IncomeCost = item.IncomeCost,
                     IncomeNumber = num
                 };
-                executed += await _dappercontext.ExecuteAsync("SP_AddProductIncome", n, CommandType: System.Data.CommandType.StoredProcedure);
+                try
+                {
+                    executed += await _dappercontext.ExecuteAsync("SP_AddProductIncome", n, CommandType: System.Data.CommandType.StoredProcedure);
+
+                }
+                catch (Exception ex)
+                {
+
+                    throw;
+                }
             }
             return new ResponseMessage<int>() { entity = executed, IsSuccessCode = true };
         }

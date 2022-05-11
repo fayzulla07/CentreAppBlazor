@@ -30,6 +30,15 @@ namespace CentreAppBlazor.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ReturnView>>> GetReturnsView()
         {
+            try
+            {
+                await _context.ReturnView.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
             return await _context.ReturnView.ToListAsync();
         }
 

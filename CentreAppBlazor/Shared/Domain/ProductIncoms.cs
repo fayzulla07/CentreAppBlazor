@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace CentreAppBlazor.Shared.Domain
@@ -15,13 +14,13 @@ namespace CentreAppBlazor.Shared.Domain
         public double Amount { get; set; }
 
         [Required]
-        public double IncomeCost { get; set; }
+        public decimal IncomeCost { get; set; }
 
         [Required]
-        public double SaleCost { get; set; }
+        public decimal SaleCost { get; set; }
 
         [Required]
-        public double OptCost { get; set; }
+        public decimal OptCost { get; set; }
         public DateTime? ProductionDt { get; set; }
         public int? SupplierId { get; set; }
         public DateTime RegDt { get; set; }

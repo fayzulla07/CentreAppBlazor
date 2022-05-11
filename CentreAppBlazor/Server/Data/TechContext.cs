@@ -148,6 +148,7 @@ namespace CentreAppBlazor.Server.Data
                     .HasComment("Год выпуска");
 
                 entity.Property(e => e.RegDt).HasColumnType("datetime");
+                entity.Property(e => e.IncomeNumber).HasColumnType("int");
 
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.ProductIncoms)
@@ -231,7 +232,8 @@ namespace CentreAppBlazor.Server.Data
                     .IsUnique();
 
                 entity.Property(e => e.Code).HasMaxLength(60);
-
+                entity.Property(e => e.Volume);
+                entity.Ignore(e => e.Amount);
                 entity.Property(e => e.Description).HasMaxLength(350);
 
                 entity.Property(e => e.Limit).HasDefaultValueSql("((1))");

@@ -32,12 +32,12 @@ namespace CentreAppBlazor.Server.Services
                     UnitName = x.Product.Unit.Name,
                     Cost = x.IncomeCost,
                     Amount = x.Amount,
-                    Sum = x.IncomeCost * x.Amount
+                    Sum = x.IncomeCost * (decimal)x.Amount
 
                 }), false);
 
                 ws.Cells[5 + data.Count(), 5].Value = "Итого:";
-                ws.Cells[5 + data.Count(), 6].Value=data.Sum(x=>(x.IncomeCost * x.Amount));
+                ws.Cells[5 + data.Count(), 6].Value=data.Sum(x=>(x.IncomeCost * (decimal)x.Amount));
 
                 return pck.GetAsByteArray();
             }
@@ -67,12 +67,12 @@ namespace CentreAppBlazor.Server.Services
                     UnitName = x.Product.Unit.Name,
                     Cost = x.SaleCost,
                     Amount = x.Amount,
-                    Sum = x.SaleCost * x.Amount
+                    Sum = x.SaleCost * (decimal)x.Amount
 
                 }), false);
 
                 ws.Cells[5 + data.Count(), 5].Value = "Итого:";
-                ws.Cells[5 + data.Count(), 6].Value = data.Sum(x => (x.SaleCost * x.Amount));
+                ws.Cells[5 + data.Count(), 6].Value = data.Sum(x => (x.SaleCost * (decimal)x.Amount));
 
                 return pck.GetAsByteArray();
             }

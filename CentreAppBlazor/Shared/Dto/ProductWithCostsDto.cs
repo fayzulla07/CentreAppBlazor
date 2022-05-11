@@ -14,9 +14,9 @@ namespace CentreAppBlazor.Shared.Dto
         public string UnitName { get; set; }
 
 
-        public double? IncomeCost { get; set; }
-        public double? OptCost { get; set; }
-        public double? SaleCost {get; set; }
+        public decimal? IncomeCost { get; set; }
+        public decimal? OptCost { get; set; }
+        public decimal? SaleCost {get; set; }
 
         // For operations
         public string Comments { get; set; }
@@ -24,18 +24,18 @@ namespace CentreAppBlazor.Shared.Dto
         public double Amount { get; set; } = 1;
 
      
-        public double? Total 
+        public decimal? Total 
         {
             get 
             {
-                return IsOptCost == true ? OptCost * Amount : SaleCost * Amount;
+                return IsOptCost == true ? OptCost * (decimal)Amount : SaleCost * (decimal)Amount;
             }
             set 
             {
                
             }
         }
-        public double? OneTotal
+        public decimal? OneTotal
         {
             get 
             {

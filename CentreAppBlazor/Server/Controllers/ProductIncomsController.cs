@@ -10,7 +10,6 @@ using CentreAppBlazor.Shared.Domain;
 using CentreAppBlazor.Shared.Dto;
 using Radzen;
 using System.Linq.Dynamic.Core;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Net.Http.Headers;
 using System.IO;

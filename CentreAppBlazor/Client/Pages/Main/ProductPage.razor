@@ -37,6 +37,11 @@
                         <RadzenTextBox Name="@nameof(Products.Code)" Style="width:100%" @bind-Value="dataform.Code" />
                         <br />
                     </div>
+                       <div class="col-md-6">
+                        <RadzenLabel Text="Объем" />
+                        <br />
+                        <RadzenNumeric TValue="double" Min=0 Name="@nameof(Products.Volume)" Style="width:100%" @bind-Value="dataform.Volume" />
+                    </div>
                     <div class="col-md-6">
                         <RadzenLabel Text="Лимит" />
                         <br />
@@ -106,7 +111,16 @@
             </Template>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn Width="80px" TItem="Products" Property="@nameof(Products.Limit)" Title="Лимит" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="80px" TItem="Products" Property="@nameof(Products.Volume)" Title="Остаток м³" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap">@vdata.Volume</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenNumeric @bind-Value="vdata.Volume" Style="width:100%" />
+            </EditTemplate>
+        </RadzenDataGridColumn>
+
+         <RadzenDataGridColumn Width="80px" TItem="Products" Property="@nameof(Products.Limit)" Title="Лимит" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Limit</span>
             </Template>
