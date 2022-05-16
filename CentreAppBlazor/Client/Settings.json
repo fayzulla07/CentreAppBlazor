@@ -1,4 +1,6 @@
 {
-  "LoginPageTitle": "ES-Sklad-Shoxrux",
-  "SiteTitle": "ES-Sklad-Shoxrux"
+  "Settings": {
+    "LoginPageTitle": "Energosoft - Mebel Shoxrux",
+    "SiteTitle": "ES-Mebel-Shoxrux"
+  }
 }

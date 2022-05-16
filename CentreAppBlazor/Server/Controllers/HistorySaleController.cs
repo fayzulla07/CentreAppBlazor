@@ -98,8 +98,9 @@ namespace CentreAppBlazor.Server.Controllers
         public async Task<FileStreamResult> GetInvoice(int Id)
         {
             var productSales = await _context.ProductSales.Include(x => x.Product).ThenInclude(x => x.Unit).Where(p => p.OrderNumber == Id).ToListAsync();
+            string clientName = _context.Customers.Where(p => p.Id == productSales.FirstOrDefault().CustomerId).FirstOrDefault().Name;
             Services.Print print = new Services.Print();
-            var excel = print.GetSaleFile(productSales);
+            var excel = print.GetSaleFile(productSales, clientName);
             Stream stream = new MemoryStream(excel);
             return new FileStreamResult(stream, new MediaTypeHeaderValue("text/plain"))
             {

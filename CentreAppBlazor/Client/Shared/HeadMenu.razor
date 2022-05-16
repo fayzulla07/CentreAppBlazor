@@ -1,8 +1,7 @@
-﻿    @*@inject Settings*@  
-    
+﻿    @inject Settings sett
     <!-- Navbar-->
     <header class="app-header">
-        <a class="app-header__logo" href="">ES-Sklad-Shoxrux</a>
+        <a class="app-header__logo" href="">@(sett.SiteTitle)</a>
          <a class="sidetoggle btn border-0 m-1 shadow-none" @onclick:preventDefault @onclick="OnClick"><i class="fas fa-bars fa-2x" style="color:white;" ></i></a>
 
 
@@ -26,7 +25,6 @@
 @inject AuthenticationStateProvider authenticationStateProvider
 @inject NavigationManager navigationManager
 @code {
-
 
     [Parameter] public EventCallback OnClick { get; set; }
 

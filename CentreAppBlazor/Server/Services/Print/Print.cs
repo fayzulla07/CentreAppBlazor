@@ -11,7 +11,7 @@ namespace CentreAppBlazor.Server.Services
 { 
     public class Print
     {
-        public byte[] GetIncomeFile(IEnumerable<ProductIncoms> data)
+        public byte[] GetIncomeFile(IEnumerable<ProductIncoms> data,string supplierName)
         {
             try
             {
@@ -20,12 +20,13 @@ namespace CentreAppBlazor.Server.Services
                 ExcelPackage pck = new ExcelPackage();
                 pck.Load(new MemoryStream(file));
                 ExcelWorksheet ws = pck.Workbook.Worksheets.First();
-                int i = 5;
-                string header = ws.Cells["A1"].Value.ToString() + data.FirstOrDefault().IncomeNumber;
-                ws.Cells["A1"].Value = header;
-                ws.Cells["A2"].Value = ws.Cells["A2"].Value.ToString() + DateTime.Now.ToString("dd.MM.yyyy");
+                int i = 10;
+                string header = ws.Cells["A4"].Value.ToString() + data.FirstOrDefault().IncomeNumber;
+                ws.Cells["A4"].Value = header;
+                ws.Cells["A5"].Value = ws.Cells["A5"].Value.ToString() + DateTime.Now.ToString("dd.MM.yyyy");
+                ws.Cells["A6"].Value = ws.Cells["A6"].Value.ToString() + supplierName;
                 ws.InsertRow(i, data.Count(), 5);
-                ws.Cells["A5"].LoadFromCollection(data.Select((x, i) => new
+                ws.Cells["A10"].LoadFromCollection(data.Select((x, i) => new
                 {
                     Number = i+1,
                     Name = x.Product.Name,
@@ -36,8 +37,8 @@ namespace CentreAppBlazor.Server.Services
 
                 }), false);
 
-                ws.Cells[5 + data.Count(), 5].Value = "Итого:";
-                ws.Cells[5 + data.Count(), 6].Value=data.Sum(x=>(x.IncomeCost * x.Amount));
+                ws.Cells[10 + data.Count(), 5].Value = "Итого:";
+                ws.Cells[10 + data.Count(), 6].Value=data.Sum(x=>(x.IncomeCost * x.Amount));
 
                 return pck.GetAsByteArray();
             }
@@ -46,7 +47,7 @@ namespace CentreAppBlazor.Server.Services
                 throw ex;
             }
         }
-        public byte[] GetSaleFile(IEnumerable<ProductSales> data)
+        public byte[] GetSaleFile(IEnumerable<ProductSales> data,string clientName)
         {
             try
             {
@@ -55,12 +56,13 @@ namespace CentreAppBlazor.Server.Services
                 ExcelPackage pck = new ExcelPackage();
                 pck.Load(new MemoryStream(file));
                 ExcelWorksheet ws = pck.Workbook.Worksheets.First();
-                int i = 5;
-                string header = ws.Cells["A1"].Value.ToString() + data.FirstOrDefault().OrderNumber;
-                ws.Cells["A1"].Value = header;
-                ws.Cells["A2"].Value = ws.Cells["A2"].Value.ToString() + DateTime.Now.ToString("dd.MM.yyyy");
+                int i = 10;
+                string header = ws.Cells["A4"].Value.ToString() + data.FirstOrDefault().OrderNumber;
+                ws.Cells["A4"].Value = header;
+                ws.Cells["A5"].Value = ws.Cells["A5"].Value.ToString() + DateTime.Now.ToString("dd.MM.yyyy");
+                ws.Cells["A6"].Value = ws.Cells["A6"].Value.ToString() + clientName;
                 ws.InsertRow(i, data.Count(), 5);
-                ws.Cells["A5"].LoadFromCollection(data.Select((x, i) => new
+                ws.Cells["A10"].LoadFromCollection(data.Select((x, i) => new
                 {
                     Number = i + 1,
                     Name = x.Product.Name,
@@ -71,8 +73,8 @@ namespace CentreAppBlazor.Server.Services
 
                 }), false);
 
-                ws.Cells[5 + data.Count(), 5].Value = "Итого:";
-                ws.Cells[5 + data.Count(), 6].Value = data.Sum(x => (x.SaleCost * x.Amount));
+                ws.Cells[10 + data.Count(), 5].Value = "Итого:";
+                ws.Cells[10 + data.Count(), 6].Value = data.Sum(x => (x.SaleCost * x.Amount));
 
                 return pck.GetAsByteArray();
             }

@@ -10,6 +10,7 @@ using System.Globalization;
 using Radzen;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
+using System.Net.Http.Json;
 
 namespace CentreAppBlazor.Client
 {
@@ -48,7 +49,7 @@ namespace CentreAppBlazor.Client
             builder.Services.AddTransient<TokenService>();
             builder.Services.AddTransient<AuthService>();
             builder.Services.AddScoped<IAppService, AppService>();
-
+            
             builder.Services.AddScoped<AuthenticationStateProvider, LocalStorageAuthProvider>();
 
             builder.Services.AddSingleton<LoadingService>();
@@ -61,12 +62,11 @@ namespace CentreAppBlazor.Client
                     .AddJsonStream(stream)
                     .Build();
 
-            builder.Services.AddSingleton(_ =>
+            builder.Services.AddTransient(_ =>
             {
-                return config.GetSection("LoginPageTitle").Get<Settings>();
+                return config.GetSection("Settings").Get<Settings>();
             });
 
-            builder.Services.AddSingleton<Settings>();
         }
     }
 }
