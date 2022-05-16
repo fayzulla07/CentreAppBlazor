@@ -9,7 +9,6 @@
     @*<div class="">
         <RadzenCheckBox @bind-Value="IsResponsive" TriState="false" Name="CheckBox1" />
         <RadzenLabel Text="Режим поиска" Component="CheckBox1" Style="margin-left: 5px;margin-bottom: 20px" />
-
     </div>*@
 </div>
 
@@ -53,7 +52,8 @@
             <RadzenTextBox Name="сde" Placeholder="" Style="width:100%" Change="ChangeCode" />
         </div>
          <div class="col col-md-4 col-sm-12 col-12" style="margin-bottom:15px;">
-           
+            <RadzenLabel Text="Курс($)" Component="kurs" />
+            <RadzenNumeric Min=0 Name="kurs" @bind-Value="kurs" TValue="double" Placeholder="" Style="width:100%" Change="ChangeList" />
         </div>
     </div>
 </div>
@@ -75,39 +75,62 @@
                 <span class="text-wrap">@vdata.Amount @vdata.UnitName</span>
             </Template>
             <EditTemplate Context="vdata">
-                <RadzenNumeric Min="0" @bind-Value="vdata.Amount" Name="@nameof(ProductWithCostsDto.Amount)" Style="width:100%" />
+                <RadzenNumeric Min="0" TValue="double" @bind-Value="vdata.Amount" Name="@nameof(ProductWithCostsDto.Amount)" Style="width:100%" />
                 <br />
                 <RadzenRequiredValidator Component="@nameof(ProductWithCostsDto.Amount)" Text="Заполните поле" />
                 <RadzenCompareValidator Component="@nameof(ProductWithCostsDto.Amount)" Value="vdata.RemainCount" Operator="CompareOperator.LessThanEqual" Text="Остаток меньше введенный" />
             </EditTemplate>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn Width="120px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.OneTotal)" Title="Цена за ед">
+         <RadzenDataGridColumn Width="120px" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.VolumeTotal)" Title="Кол.общ-м²">
             <Template Context="vdata">
-                <span class="text-wrap"> @vdata.OneTotal.Value.ToString("C0", new CultureInfo("kk-KZ")) </span>
+                <span class="text-wrap">@vdata.VolumeTotal</span>
+            </Template>
+            <EditTemplate Context="vdata">
+                <RadzenNumeric Min="0" @bind-Value="vdata.VolumeTotal" Style="width:100%" />
+            </EditTemplate>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn Width="120px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.OneTotal)" Title="Цена за ед($)">
+            <Template Context="vdata">
+                <span class="text-wrap"> @vdata.OneTotal.Value.ToString("C0", new CultureInfo("en-US")) </span>
             </Template>
             <EditTemplate Context="vdata">
                 <RadzenNumeric Min="0" @bind-Value="vdata.OneTotal" Style="width:100%" />
             </EditTemplate>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn Width="120px" TItem="ProductWithCostsDto" TextAlign="TextAlign.Center" Title="Цена за общ" Property="@nameof(ProductWithCostsDto.Total)">
+        <RadzenDataGridColumn Width="120px" TItem="ProductWithCostsDto" TextAlign="TextAlign.Center" Title="Цена за общ($)" Property="@nameof(ProductWithCostsDto.Total)">
             <Template Context="vdata">
-                <span class="text-wrap">@vdata.Total.Value.ToString("C0", new CultureInfo("kk-KZ"))</span>
+                <span class="text-wrap">@vdata.Total.Value.ToString("C0", new CultureInfo("en-US"))</span>
             </Template>
             <FooterTemplate>
-                <span class="text-wrap" style="color:blue;">@dsource.Sum(x => x.Total)?.ToString("C0", new CultureInfo("kk-KZ"))</span>
+                <span class="text-wrap" style="color:blue;">@dsource.Sum(x => x.Total)?.ToString("C0", new CultureInfo("en-US"))</span>
             </FooterTemplate>
         </RadzenDataGridColumn>
 
-        @*<RadzenDataGridColumn Width="100px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Title="Оптовая?" Property="@nameof(ProductWithCostsDto.IsOptCost)">
+          <RadzenDataGridColumn Width="120px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Title="Цена за ед(тг)">
             <Template Context="vdata">
-                <RadzenCheckBox TValue="bool" Disabled="true" @bind-Value="vdata.IsOptCost" />
+                <span class="text-wrap"> @((vdata.OneTotal * (decimal)kurs ).Value.ToString("C0", new CultureInfo("kk-KZ")))   </span>
             </Template>
-            <EditTemplate Context="vdata">
-                <RadzenCheckBox TValue="bool" @bind-Value="vdata.IsOptCost" />
-            </EditTemplate>
-        </RadzenDataGridColumn>*@
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn Width="120px" TItem="ProductWithCostsDto" TextAlign="TextAlign.Center" Title="Цена за общ(тг)" >
+            <Template Context="vdata">
+                <span class="text-wrap"> @((vdata.Total * kurs ).Value.ToString("C0", new CultureInfo("kk-KZ")))   </span>
+            </Template>
+             <FooterTemplate>
+                <span class="text-wrap" style="color:blue;">@dsource.Sum(x => x.Total * kurs)?.ToString("C0", new CultureInfo("kk-KZ"))</span>
+            </FooterTemplate>
+        </RadzenDataGridColumn>
+
+
+         <RadzenDataGridColumn Width="120px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.Volume)" Title="За ед-м3">
+            <Template Context="vdata">
+                <span class="text-wrap"> @vdata.Volume.ToString("C0", new CultureInfo("en-US")) </span>
+            </Template>
+        </RadzenDataGridColumn>
+
 
         <RadzenDataGridColumn Width="100px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.RemainCount)" Title="Остаток">
             <Template Context="vdata">
@@ -115,7 +138,7 @@
             </Template>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn Width="140px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Title="Комментарии" Property="@nameof(ProductWithCostsDto.Comments)">
+        <RadzenDataGridColumn Width="150px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Title="Комментарии" Property="@nameof(ProductWithCostsDto.Comments)">
             <Template Context="vdata">
                 <span class="text-wrap ">@vdata.Comments</span>
             </Template>
@@ -167,6 +190,7 @@
             private RadzenDropDownDataGrid<int> productDropDown;
             bool IsBank;
             int CustomerId = 1;
+            double kurs = 1;
             protected override string ApiUrl { get; set; } = "api/ProductSales";
             private bool ProductTypeDisable = true;
             IEnumerable<Products> product = new List<Products>();
@@ -180,15 +204,15 @@
             }
 
             async Task DeleteConfirmation(ProductWithCostsDto dat) => await DialogService.OpenAsync("Подтверждение", ds =>
-    @<RadzenCard Style="padding: 20px;">
-        <p Style="margin-bottom: 10px;">Вы действительно хотите удалить "@dat.Name"?</p>
-        <div class="row">
-            <div class="col-md-8">
-                <RadzenButton Text="Да" Click="args => OkDialog(dat)" Style="margin-bottom: 10px; width: 150px" />
-                <RadzenButton Text="Отмена" Click="CancelDialog" ButtonStyle="ButtonStyle.Secondary" Style="margin-bottom: 10px; width: 150px" />
-            </div>
-        </div>
-    </RadzenCard>);
+            @<RadzenCard Style="padding: 20px;">
+                <p Style="margin-bottom: 10px;">Вы действительно хотите удалить "@dat.Name"?</p>
+                <div class="row">
+                    <div class="col-md-8">
+                        <RadzenButton Text="Да" Click="args => OkDialog(dat)" Style="margin-bottom: 10px; width: 150px" />
+                        <RadzenButton Text="Отмена" Click="CancelDialog" ButtonStyle="ButtonStyle.Secondary" Style="margin-bottom: 10px; width: 150px" />
+                    </div>
+                </div>
+            </RadzenCard>);
 
 async Task CloseConfirmation() => await DialogService.OpenAsync("Подтверждение", ds =>
 @<RadzenCard Style="padding: 20px;">
@@ -235,6 +259,15 @@ async Task CloseConfirmation() => await DialogService.OpenAsync("Подтвер�
         await SelectedProduct(0, value);
         await InvokeAsync(StateHasChanged);
     }
+    async Task ChangeList(double d)
+    {
+        var value = kurs;
+        foreach(var item in dsource)
+        {
+           // item.
+        }
+        await InvokeAsync(StateHasChanged);
+    }
     async Task SelectedProduct(object _Id, string code = null)
     {
         try
@@ -268,6 +301,7 @@ async Task CloseConfirmation() => await DialogService.OpenAsync("Подтвер�
                         return;
                     }
                         count++;
+                        ProductFromApi.entity.Amount = 1;
                         dsource.Insert(0, ProductFromApi.entity);
                         await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Продукт получен", Duration = 1500 });
                     }

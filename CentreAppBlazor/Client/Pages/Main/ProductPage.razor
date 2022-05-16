@@ -105,19 +105,25 @@
             </EditTemplate>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn Width="100px" TItem="Products" Property="@nameof(Products.RemainCount)" Title="Остаток" TextAlign="TextAlign.Center">
-            <Template Context="vdata">
-                <span class="text-wrap @(vdata.RemainCount <= vdata.Limit ? "text-danger" : "")">@vdata.RemainCount</span>
-            </Template>
-        </RadzenDataGridColumn>
-
-        <RadzenDataGridColumn Width="80px" TItem="Products" Property="@nameof(Products.Volume)" Title="Остаток м³" TextAlign="TextAlign.Center">
+          <RadzenDataGridColumn Width="80px" TItem="Products" Property="@nameof(Products.Volume)" Title="Объем(M³)за.ед" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Volume</span>
             </Template>
             <EditTemplate Context="vdata">
                 <RadzenNumeric @bind-Value="vdata.Volume" Style="width:100%" />
             </EditTemplate>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn Width="100px" TItem="Products" Property="@nameof(Products.RemainCount)" Title="Остаток(M³)" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                <span class="text-wrap @(vdata.RemainCount <= vdata.Limit ? "text-danger" : "")">@vdata.RemainCount</span>
+            </Template>
+        </RadzenDataGridColumn>
+
+          <RadzenDataGridColumn Width="100px" TItem="Products" Property="@nameof(Products.Amount)" Title="Остаток" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                  <span class="text-wrap">@vdata.Amount</span>
+            </Template>
         </RadzenDataGridColumn>
 
          <RadzenDataGridColumn Width="80px" TItem="Products" Property="@nameof(Products.Limit)" Title="Лимит" TextAlign="TextAlign.Center">

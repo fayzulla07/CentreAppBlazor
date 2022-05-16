@@ -32,7 +32,7 @@
 
         <RadzenDataGridColumn Width="150px" TItem="ReturnView" Property="@nameof(ReturnView.ReturnCost)" Title="Сумма возврата">
             <Template Context="vdata">
-                <span class="text-wrap">@vdata.ReturnCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
+                <span class="text-wrap">@vdata.ReturnCost.ToString("C0", new CultureInfo("en-US"))</span>
             </Template>
         </RadzenDataGridColumn>
 

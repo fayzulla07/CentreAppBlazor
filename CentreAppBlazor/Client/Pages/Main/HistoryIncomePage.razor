@@ -44,7 +44,7 @@
 
         <RadzenDataGridColumn Width="110px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.IncomeCost)" Title="Цена Прихода" TextAlign="TextAlign.Center">
             <Template Context="vdata">
-                <span class="text-wrap">@vdata.IncomeCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
+                <span class="text-wrap">@vdata.IncomeCost.ToString("C0", new CultureInfo("en-US"))</span>
             </Template>
             <EditTemplate Context="vdata">
                 <RadzenNumeric Min="0" @bind-Value="vdata.IncomeCost" Style="width:100%" />
@@ -53,13 +53,13 @@
 
         <RadzenDataGridColumn Width="110px" TItem="ProductIncoms" Title="Сумма Прихода" TextAlign="TextAlign.Center">
             <Template Context="vdata">
-                <span class="text-wrap">@(((vdata.IncomeCost * (decimal)@vdata.Amount)).ToString("C0", new CultureInfo("kk-KZ")))</span>
+                <span class="text-wrap">@(((vdata.IncomeCost * (decimal)@vdata.Amount)).ToString("C0", new CultureInfo("en-US")))</span>
             </Template>
         </RadzenDataGridColumn>
 
         <RadzenDataGridColumn Width="110px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.SaleCost)" Title="Цена продажи" TextAlign="TextAlign.Center">
             <Template Context="vdata">
-                <span class="text-wrap">@vdata.SaleCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
+                <span class="text-wrap">@vdata.SaleCost.ToString("C0", new CultureInfo("en-US"))</span>
             </Template>
             <EditTemplate Context="vdata">
                 <RadzenNumeric Min="0" @bind-Value="vdata.SaleCost" Style="width:100%" />

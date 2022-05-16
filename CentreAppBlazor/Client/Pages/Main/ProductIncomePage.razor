@@ -47,12 +47,12 @@
                     <RadzenNumeric AutoComplete="false" Min="0" Style="width:100%" Name="@nameof(ProductIncoms.SaleCost)" @bind-Value="dataform.SaleCost" />
                     <br />
                 </div>
-                @*<div class="col-md-4">
-                    <RadzenLabel Text="Оптовая цена (приход + %)" />
+                <div class="col-md-4">
+                    <RadzenLabel Text="Курс($)" />
                     <br />
-                    <RadzenNumeric Min="0" Style="width:100%" Name="@nameof(ProductIncoms.OptCost)" @bind-Value="dataform.OptCost" />
+                    <RadzenNumeric Min="0" Style="width:100%" Name="@nameof(ProductIncoms.Kurs)" @bind-Value="dataform.Kurs" />
                     <br />
-                </div>*@
+                </div>
             </div>
 
         </div>
@@ -84,34 +84,34 @@
 
         <RadzenDataGridColumn Width="120px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.IncomeCost)" Title="Цена прихода" TextAlign="TextAlign.Center">
             <Template Context="vdata">
-                <span class="text-wrap">@vdata.IncomeCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
+                <span class="text-wrap">@vdata.IncomeCost.ToString("C0", new CultureInfo("en-US"))</span>
             </Template>
             <EditTemplate Context="vdata">
                 <RadzenNumeric Min="0" @bind-Value="vdata.IncomeCost" Style="width:100%" />
             </EditTemplate>
             <FooterTemplate>
-                <span class="text-wrap">@dsource.Sum(x => x.IncomeCost).ToString("C0", new CultureInfo("kk-KZ"))</span>
+                <span class="text-wrap">@dsource.Sum(x => x.IncomeCost).ToString("C0", new CultureInfo("en-US"))</span>
             </FooterTemplate>
         </RadzenDataGridColumn>
 
         <RadzenDataGridColumn Width="110px" TItem="ProductIncoms" Title="Сумма Прихода" TextAlign="TextAlign.Center">
             <Template Context="vdata">
-                <span class="text-wrap">@(((vdata.IncomeCost * (decimal)@vdata.Amount)).ToString("C0", new CultureInfo("kk-KZ")))</span>
+                <span class="text-wrap">@(((vdata.IncomeCost * (decimal)@vdata.Amount)).ToString("C0", new CultureInfo("en-US")))</span>
             </Template>
             <FooterTemplate>
-                <span class="text-wrap" style="color:red">@dsource.Sum(x => (x.IncomeCost * (decimal)x.Amount)).ToString("C0", new CultureInfo("kk-KZ"))</span>
+                <span class="text-wrap" style="color:red">@dsource.Sum(x => (x.IncomeCost * (decimal)x.Amount)).ToString("C0", new CultureInfo("en-US"))</span>
             </FooterTemplate>
         </RadzenDataGridColumn>
 
         <RadzenDataGridColumn Width="120px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.IncomeCost)" Title="Розн цена" TextAlign="TextAlign.Center">
             <Template Context="vdata">
-                <span class="text-wrap">@vdata.SaleCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
+                <span class="text-wrap">@vdata.SaleCost.ToString("C0", new CultureInfo("en-US"))</span>
             </Template>
             <EditTemplate Context="vdata">
                 <RadzenNumeric Min="0" @bind-Value="vdata.SaleCost" Style="width:100%" />
             </EditTemplate>
             <FooterTemplate>
-                <span class="text-wrap">@dsource.Sum(x => x.SaleCost).ToString("C0", new CultureInfo("kk-KZ"))</span>
+                <span class="text-wrap">@dsource.Sum(x => x.SaleCost).ToString("C0", new CultureInfo("en-US"))</span>
             </FooterTemplate>
         </RadzenDataGridColumn>
 

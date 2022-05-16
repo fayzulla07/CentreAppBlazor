@@ -21,19 +21,17 @@ namespace CentreAppBlazor.Shared.Dto
         // For operations
         public string Comments { get; set; }
         public bool IsOptCost { get; set; } = false;
-        public double Amount { get; set; } = 1;
+        public double Amount { get; set; }
+        public double Volume { get; set; }
 
      
-        public decimal? Total 
+        public double? Total 
         {
             get 
             {
-                return IsOptCost == true ? OptCost * (decimal)Amount : SaleCost * (decimal)Amount;
+                return IsOptCost == true ? Convert.ToDouble(OptCost) * Amount : Convert.ToDouble(SaleCost) * Amount;
             }
-            set 
-            {
-               
-            }
+            set { }
         }
         public decimal? OneTotal
         {
@@ -46,6 +44,24 @@ namespace CentreAppBlazor.Shared.Dto
             {
                 if (IsOptCost)  OptCost = value;
                 else  SaleCost = value;
+            }
+        }
+
+        public double VolumeTotal
+        {
+            set
+            {
+                if(value == 0)
+                {
+                    Amount = 0;
+                    return;
+                }
+                Amount = value / Volume;
+            }
+            get
+            {
+                if (Volume == 0) return 0;
+                return Volume * Amount;
             }
         }
     }
