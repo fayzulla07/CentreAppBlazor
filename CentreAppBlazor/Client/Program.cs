@@ -54,18 +54,18 @@ namespace CentreAppBlazor.Client
 
             builder.Services.AddSingleton<LoadingService>();
 
-            string fileName = "CentreAppBlazor.Client.Settings.json";
-            var stream = Assembly.GetExecutingAssembly()
-                                 .GetManifestResourceStream(fileName);
+            //string fileName = "CentreAppBlazor.Client.Settings.json";
+            //var stream = Assembly.GetExecutingAssembly()
+            //                     .GetManifestResourceStream(fileName);
 
-            var config = new ConfigurationBuilder()
-                    .AddJsonStream(stream)
-                    .Build();
+            //var config = new ConfigurationBuilder()
+            //        .AddJsonStream(stream)
+            //        .Build();
 
-            builder.Services.AddTransient(_ =>
-            {
-                return config.GetSection("Settings").Get<Settings>();
-            });
+            //builder.Services.AddTransient(_ =>
+            //{
+            //    return config.GetSection("Settings").Get<Settings>();
+            //});
 
         }
     }

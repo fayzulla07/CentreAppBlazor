@@ -2,7 +2,7 @@
 @layout EmptyLayout
 @inject AuthService authService
 @inject NavigationManager navigationManager
-@inject Settings sett
+
 <section class="material-half-bg">
     <div class="cover"></div>
 </section>
@@ -16,7 +16,7 @@
             <div class="d-flex">
                 <div class="flex-grow-1">
                     <h3 class="login-head"><i class="fa fa-lg fa-fw fa-user"></i>Авторизация</h3>
-                </div> 
+                </div>
                 <div>
                     <div style="height:30px;width:30px;">
                         <LoadingCircleComponent IsActive="IsActive" />
@@ -50,47 +50,57 @@
                 <button type="submit" class="btn btn-primary btn-block">Войти</button>
             </div>
         </EditForm>
-      
+
     </div>
 </section>
+@inject HttpClient http
+@using System.Net.Http.Json
+    @code {
+        [Inject]
+        public AuthenticationStateProvider provider { get; set; }
 
-@code {
-    [Inject]
-    public AuthenticationStateProvider provider { get; set; }
+        LoginViewModel model = new LoginViewModel();
+        string message = String.Empty;
+        UserResponse userInfo;
+        bool IsActive = false;
 
-    LoginViewModel model = new LoginViewModel();
-    string message = String.Empty;
-    UserResponse userInfo;
-    bool IsActive = false;
-
-    private async Task LoginSubmit()
-    {
-        try
+        Settings sett = new Settings();
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            IsActive = true;
-            userInfo = await authService.LoginUserAsync(model);
-        }
-        catch (SimpleHttpResponseException ex)
-        {
-            if(ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            if (firstRender)
             {
-                message = "Логин или пароль неверно!";
+                sett = await http.GetFromJsonAsync<Settings>("Settings.json");
+                StateHasChanged();
             }
-            Console.WriteLine("IN LoginUserAsync: " + ex.StatusCode);
-            Console.WriteLine("IN LoginUserAsync: " + ex.Message);
         }
-        finally
+        private async Task LoginSubmit()
         {
-            IsActive = false;
-        }
+            try
+            {
+                IsActive = true;
+                userInfo = await authService.LoginUserAsync(model);
+            }
+            catch (SimpleHttpResponseException ex)
+            {
+                if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    message = "Логин или пароль неверно!";
+                }
+                Console.WriteLine("IN LoginUserAsync: " + ex.StatusCode);
+                Console.WriteLine("IN LoginUserAsync: " + ex.Message);
+            }
+            finally
+            {
+                IsActive = false;
+            }
 
-        if (userInfo != null)
-        {
-            LocalStorageAuthProvider Auth = (LocalStorageAuthProvider)provider;
-            await Auth.SetItemAsync(userInfo);
-            await Auth.GetAuthenticationStateAsync();
-            navigationManager.NavigateTo($"/");
-        }
+            if (userInfo != null)
+            {
+                LocalStorageAuthProvider Auth = (LocalStorageAuthProvider)provider;
+                await Auth.SetItemAsync(userInfo);
+                await Auth.GetAuthenticationStateAsync();
+                navigationManager.NavigateTo($"/");
+            }
 
+        }
     }
-}
