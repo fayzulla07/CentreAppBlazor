@@ -8,6 +8,9 @@ using CentreAppBlazor.Client.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Globalization;
 using Radzen;
+using Microsoft.Extensions.Configuration;
+using System.Reflection;
+using System.Net.Http.Json;
 
 namespace CentreAppBlazor.Client
 {
@@ -18,7 +21,7 @@ namespace CentreAppBlazor.Client
             //Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Mjc5NzQzQDMxMzgyZTMxMmUzMG11bXVjN0xyYmprdUxKOCsvUjJvVCtxSXJ4MXNyb014SlBjRURnbVpMTGc9");
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
-           
+         
             builder.Services.AddTransient(sp => new HttpClient 
             { 
                 BaseAddress = new Uri(builder.HostEnvironment.BaseAddress),
@@ -50,6 +53,24 @@ namespace CentreAppBlazor.Client
             builder.Services.AddScoped<AuthenticationStateProvider, LocalStorageAuthProvider>();
 
             builder.Services.AddSingleton<LoadingService>();
+
+            //var Sett= await http.GetFromJsonAsync<Settings>("Settings.json");
+
+            /*string fileName = "CentreAppBlazor.Client.Settings.json";
+            var stream = Assembly.GetExecutingAssembly()
+                                 .GetManifestResourceStream(fileName);
+
+            var config = new ConfigurationBuilder()
+                    .AddJsonStream(stream)
+                    .Build();*/
+           
+            //builder.Services.AddSingleton(_ =>
+            //{
+            //    HttpClient http = new HttpClient();
+            //    http.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+            //    Settings settings = http.GetFromJsonAsync<Settings>("Settings.json").Result;
+            //    return settings;
+            //});
         }
     }
 }

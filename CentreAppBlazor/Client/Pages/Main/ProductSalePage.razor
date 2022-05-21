@@ -58,9 +58,8 @@
     </div>
 </div>
 
-
 <RadzenDataGrid @ref="Grid" Count="count" AllowFiltering="true" AllowColumnResize="true" AllowPaging="true" PageSize="20"  FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-            AllowSorting="true" Data="@dsource" TItem="ProductWithCostsDto" RowUpdate="@OnUpdateRow" FilterMode="FilterMode.Simple">
+         RowDoubleClick="(args=>DblClick(args.Data))"   AllowSorting="true" Data="@dsource" TItem="ProductWithCostsDto" RowUpdate="@OnUpdateRow" FilterMode="FilterMode.Simple">
     <Columns>
         <RadzenDataGridColumn TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.Id)" Visible="false" />
 
@@ -173,6 +172,7 @@
     </Columns>
 
 </RadzenDataGrid>
+
 <div class="row mt-3">
     <div class="col col-md-2">
         <RadzenButton Click="CloseConfirmation" ButtonStyle="ButtonStyle.Secondary" Text="Закрыть" />
@@ -264,7 +264,7 @@ async Task CloseConfirmation() => await DialogService.OpenAsync("Подтвер�
         var value = kurs;
         foreach(var item in dsource)
         {
-           // item.
+            // item.
         }
         await InvokeAsync(StateHasChanged);
     }
@@ -296,16 +296,16 @@ async Task CloseConfirmation() => await DialogService.OpenAsync("Подтвер�
                 {
                     if(ProductFromApi.entity == null)
                     {
-                    await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Не найдено", Detail = "Возможно нет в наличии!", Duration = 2000 });
+                        await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Не найдено", Detail = "Возможно нет в наличии!", Duration = 2000 });
 
                         return;
                     }
-                        count++;
-                        ProductFromApi.entity.Amount = 1;
-                        dsource.Insert(0, ProductFromApi.entity);
-                        await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Продукт получен", Duration = 1500 });
-                    }
+                    count++;
+                    ProductFromApi.entity.Amount = 1;
+                    dsource.Insert(0, ProductFromApi.entity);
+                    await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Продукт получен", Duration = 1500 });
                 }
+            }
         }
         catch (Exception)
         {
@@ -382,6 +382,10 @@ async Task CloseConfirmation() => await DialogService.OpenAsync("Подтвер�
     protected override Task UpdateData(ProductWithCostsDto item)
     {
         return Task.CompletedTask;
+    }
+    void DblClick(ProductWithCostsDto item)
+    {
+        this.EditRow(item);
     }
     protected override Task DeleteData(int Id)
     {

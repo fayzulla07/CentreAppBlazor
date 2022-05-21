@@ -1,38 +1,48 @@
-﻿    <!-- Navbar-->
-    <header class="app-header">
-        <a class="app-header__logo" href="">Energosoft</a>
-         <a class="sidetoggle btn border-0 m-1 shadow-none" @onclick:preventDefault @onclick="OnClick"><i class="fas fa-bars fa-2x" style="color:white;" ></i></a>
+﻿<!-- Navbar-->
+<header class="app-header">
+    <a class="app-header__logo" href="">@(sett.SiteTitle)</a>
+    <a class="sidetoggle btn border-0 m-1 shadow-none" @onclick:preventDefault @onclick="OnClick"><i class="fas fa-bars fa-2x" style="color:white;"></i></a>
 
 
-        <ul class="app-nav">
-            <li class="mt-2 mr-2">
-               <CentreAppBlazor.Client.Pages.LoadingComponent ></CentreAppBlazor.Client.Pages.LoadingComponent>
-            </li>
-            <li class="mt-2">
-                <!-- BEGIN KURS.KZ INFORMER --><a href="https://www.kurs.kz" target="_blank"><img src="https://kurs.kz/informers/informer_graphmin.php?city=235" width="88" height="31" border="0"></a><!-- END KURS.KZ INFORMER -->
-            </li>
-            <!-- User Menu-->
-            <li class="dropdown @UserDropDown">
-                <a class="app-nav__item" href="" data-toggle="dropdown" @onclick="UserClicked" @onclick:preventDefault aria-label="Open Profile Menu"><i class="fa fa-user fa-lg"></i></a>
-                <ul class="dropdown-menu settings-menu dropdown-menu-right  @UserDropDown">
-                    <li><a class="dropdown-item" style="cursor: pointer;" @onclick:preventDefault @onclick="Profile"><i class="fa fa-user" aria-hidden="true"></i> Профиль</a></li>
-                    <li><a class="dropdown-item" style="cursor: pointer;" @onclick:preventDefault @onclick="Logout"><i class="fa fa-sign-out-alt" aria-hidden="true"></i> Выйти</a></li>
-                </ul>
-            </li>
-        </ul>
-    </header>
+    <ul class="app-nav">
+        <li class="mt-2 mr-2">
+            <CentreAppBlazor.Client.Pages.LoadingComponent></CentreAppBlazor.Client.Pages.LoadingComponent>
+        </li>
+        <li class="mt-2">
+            <!-- BEGIN KURS.KZ INFORMER --><a href="https://www.kurs.kz" target="_blank"><img src="https://kurs.kz/informers/informer_graphmin.php?city=235" width="88" height="31" border="0"></a><!-- END KURS.KZ INFORMER -->
+        </li>
+        <!-- User Menu-->
+        <li class="dropdown @UserDropDown">
+            <a class="app-nav__item" href="" data-toggle="dropdown" @onclick="UserClicked" @onclick:preventDefault aria-label="Open Profile Menu"><i class="fa fa-user fa-lg"></i></a>
+            <ul class="dropdown-menu settings-menu dropdown-menu-right  @UserDropDown">
+                <li><a class="dropdown-item" style="cursor: pointer;" @onclick:preventDefault @onclick="Profile"><i class="fa fa-user" aria-hidden="true"></i> Профиль</a></li>
+                <li><a class="dropdown-item" style="cursor: pointer;" @onclick:preventDefault @onclick="Logout"><i class="fa fa-sign-out-alt" aria-hidden="true"></i> Выйти</a></li>
+            </ul>
+        </li>
+    </ul>
+</header>
 @inject AuthenticationStateProvider authenticationStateProvider
 @inject NavigationManager navigationManager
+@inject HttpClient http
+@using System.Net.Http.Json
 @code {
-
-
-    [Parameter] public EventCallback OnClick { get; set; }
+        [Parameter] public EventCallback OnClick { get; set; }
 
     public string UserDropDown = string.Empty;
     private void UserClicked()
     {
         UserDropDown = UserDropDown == "show" ? "" : "show";
     }
+    Settings sett = new Settings();
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender) {
+            sett = await http.GetFromJsonAsync<Settings>("Settings.json");
+            StateHasChanged();
+        } 
+    }
+
+
     private void Profile()
     {
         var localStateProvider = (LocalStorageAuthProvider)authenticationStateProvider;

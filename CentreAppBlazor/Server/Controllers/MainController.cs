@@ -52,6 +52,7 @@ namespace CentreAppBlazor.Server.Controllers
                 return BadRequest();
             
             int executed = 0;
+            var num = await GetLastOrderNumber();
             foreach (var item in entity)
             {
                 var n = new 
@@ -65,7 +66,7 @@ namespace CentreAppBlazor.Server.Controllers
                     UserID = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
                     Comments = item.Comments,
                     IncomeCost = item.IncomeCost,
-                    OrderNumber = await GetLastOrderNumber(),
+                    OrderNumber = num,
                     IsBank = item.IsBank 
                 };
                     executed += await _dappercontext.ExecuteAsync("SP_AddProductSale", n, CommandType: System.Data.CommandType.StoredProcedure);

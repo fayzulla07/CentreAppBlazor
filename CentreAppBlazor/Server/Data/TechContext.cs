@@ -37,6 +37,7 @@ namespace CentreAppBlazor.Server.Data
         public virtual DbSet<Suppliers> Suppliers { get; set; }
         public virtual DbSet<Units> Units { get; set; }
         public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<Reports> Reports { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

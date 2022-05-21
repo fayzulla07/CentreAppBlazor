@@ -9,14 +9,14 @@
 <section class="login-content">
 
     <div class="logo">
-        <h1>Energosoft</h1>
+        <h1>@sett.LoginPageTitle</h1>
     </div>
     <div class="login-box" style="height:450px">
         <EditForm class="login-form" Model="model" OnValidSubmit="LoginSubmit">
             <div class="d-flex">
                 <div class="flex-grow-1">
                     <h3 class="login-head"><i class="fa fa-lg fa-fw fa-user"></i>Авторизация</h3>
-                </div> 
+                </div>
                 <div>
                     <div style="height:30px;width:30px;">
                         <LoadingCircleComponent IsActive="IsActive" />
@@ -50,10 +50,11 @@
                 <button type="submit" class="btn btn-primary btn-block">Войти</button>
             </div>
         </EditForm>
-      
+
     </div>
 </section>
-
+@inject HttpClient http
+@using System.Net.Http.Json
 @code {
     [Inject]
     public AuthenticationStateProvider provider { get; set; }
@@ -62,7 +63,17 @@
     string message = String.Empty;
     UserResponse userInfo;
     bool IsActive = false;
-
+    //@inject HttpClient http
+    //@using System.Net.Http.Json
+    Settings sett = new Settings();
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            sett = await http.GetFromJsonAsync<Settings>("Settings.json");
+            StateHasChanged();
+        }
+    }
     private async Task LoginSubmit()
     {
         try
@@ -72,7 +83,7 @@
         }
         catch (SimpleHttpResponseException ex)
         {
-            if(ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 message = "Логин или пароль неверно!";
             }
