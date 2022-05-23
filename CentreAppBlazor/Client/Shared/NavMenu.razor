@@ -51,7 +51,7 @@
             <AuthorizeView Roles="admin, manager">
                 <Authorized>
                     <li class="treeview @IsExpanded">
-                        <a class="app-menu__item fayzulla" @onclick:preventDefault @onclick="ToggleTree" href="" data-toggle="treeview"><i class="app-menu__icon fa fa-laptop"></i><span class="app-menu__label">Настройки</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                        <a class="app-menu__item fayzulla" @onclick:preventDefault @onclick="ToggleTree" href="" data-toggle="treeview"><i class="app-menu__icon fa fa-laptop"></i><span class="app-menu__label">Справочники</span><i class="treeview-indicator fa fa-angle-right"></i></a>
                         <ul class="treeview-menu">
                             @if (context.User.IsInRole("admin"))
                             {
