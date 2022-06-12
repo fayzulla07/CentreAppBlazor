@@ -163,5 +163,7 @@ namespace CentreAppBlazor.Server.Controllers
         {
             return _context.ProductIncoms.Any(e => e.Id == id);
         }
+
+        
     }
 }

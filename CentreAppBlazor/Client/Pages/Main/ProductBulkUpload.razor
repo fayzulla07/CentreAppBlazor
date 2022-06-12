@@ -1,0 +1,136 @@
+﻿@page "/test1"
+@using System.Net.Http.Json
+@inject HttpClient http
+@inject IAppService appService
+<h3>Импорт из накладного</h3>
+
+<RadzenLabel Text="цена продажи=цена прихода+%" Component="SalePercent" />
+<RadzenNumeric Name="SalePercent" @bind-Value="SalePercent" />
+
+<RadzenLabel Text="Курс $" Component="Kurs" />
+<RadzenNumeric Min="1" Name="Kurs" @bind-Value="Kurs" />
+<RadzenCheckBox TriState="false" Name="AddIncomes" @bind-Value="AddIncomes" Placeholder="Добавить в приход?" />
+<RadzenLabel text="добавить в приход?" component="addincomes" />
+<InputFile OnChange="((args)=>Upload1Cfile(args))" accept=".xlsx"></InputFile>
+
+<RadzenDataGrid @ref="Grid" AllowFiltering="true" FilterMode="FilterMode.Simple"
+                AllowColumnResize="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                AllowSorting="true" Data="@Data1" TItem="ProductTypes">
+    <Columns>
+        <RadzenDataGridColumn TItem="ProductTypes" Property="@nameof(ProductTypes.Id)" Visible="false" />
+        <RadzenDataGridColumn TItem="ProductTypes" Property="@nameof(ProductTypes.Name)" Title="Имя">
+            <Template Context="vdata">
+                @vdata.Name
+            </Template>
+            <FooterTemplate>
+                <b>колич:   </b>@(Data1 != null ? Data1.Count():string.Empty)
+            </FooterTemplate>
+        </RadzenDataGridColumn>
+    </Columns>
+    <Template Context="data">
+        @*<RadzenTabs>
+            <Tabs>
+                <RadzenTabsItem Text="Products">*@
+        <RadzenDataGrid Data="data.Products" TItem="Products" AllowColumnResize="true">
+            <Columns>
+                <RadzenDataGridColumn TItem="Products" Property="Code" Title="Code">
+                    <Template Context="vdata">
+                        @vdata.Code
+                    </Template>
+                    <FooterTemplate>
+                        <b>колич: </b> @(data.Products.Count())
+                    </FooterTemplate>
+                </RadzenDataGridColumn>
+
+                <RadzenDataGridColumn TItem="Products" Property="Volume" Title="Volume">
+                    <Template Context="vdata">
+                        @vdata.Volume
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Products" Property="Amount" Title="Amount">
+                    <Template Context="vdata">
+                        @vdata.Amount
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Products" Property="Name" Title="Name">
+                    <Template Context="vdata">
+                        @vdata.Name
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Products" Property="Description" Title="Description">
+                    <Template Context="vdata">
+                        @vdata.Description
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Products" Property="IncomeCost" Title="Цена приходная">
+                    <Template Context="vdata">
+                        @vdata.ProductIncoms.First().IncomeCost
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Products" Property="Kurs" Title="Курс">
+                    <Template Context="vdata">
+                        @vdata.ProductIncoms.First().Kurs
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Products" Property="SaleCost" Title="цена продажи">
+                    <Template Context="vdata">
+                        @vdata.ProductIncoms.First().SaleCost
+                    </Template>
+                </RadzenDataGridColumn>
+                
+            </Columns>
+        </RadzenDataGrid>
+
+        @*</RadzenTabsItem>
+                </Tabs>
+            </RadzenTabs>*@
+    </Template>
+
+</RadzenDataGrid>
+
+<RadzenButton BusyText="Загрузка данных..." Click="SaveToDb" Text="Импорт в базу данных"></RadzenButton>
+
+@code {
+    RadzenDataGrid<ProductTypes> Grid;
+    List<ProductTypes> data = new List<ProductTypes>();
+    public List<ProductTypes> Data1 { get; set; }
+    public double Kurs { get; set; } = 1;
+    public bool AddIncomes { get; set; } = true;
+    public decimal SalePercent { get; set; } = 10;
+    public decimal OptPercent { get; set; }
+
+    void SaveToDb()
+    {
+        if(Data1.Count()>0)
+        {
+            SaveProductTypes();
+            SaveProducts();
+            if
+        }
+    }
+
+    void SaveProductTypes()
+    {
+
+    }
+    void SaveProducts()
+    {
+
+    }
+    bool SaveIncomes()
+    {
+        return true;
+    }
+
+    async Task Upload1Cfile(InputFileChangeEventArgs args)
+    {
+        var content = new byte[args.File.Size];
+        using var stream = args.File.OpenReadStream(args.File.Size);
+        await stream.ReadAsync(content);
+
+        //var data1 = await appService.PostAsync<List<ProductTypes>>(content, $"api/main/Upload1C/");
+        Helper helper = new Helper();
+        Data1 = helper.Read1CExcel(content, AddIncomes, Kurs, SalePercent);
+        StateHasChanged();
+    }
+}

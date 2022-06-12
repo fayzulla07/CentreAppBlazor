@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
@@ -150,6 +151,17 @@ namespace CentreAppBlazor.Server.Controllers
                 }
             }
             return new ResponseMessage<int>() { entity = executed, IsSuccessCode = true };
+        }
+
+
+        [AllowAnonymous]
+        [HttpPost(@"Upload1C")]
+        public ActionResult<List<ProductTypes>> ReadIncomes(byte[] file)
+        {
+            Services.Main.MainService mainService = new Services.Main.MainService();
+            var res = mainService.Read1CExcel(file);
+            return res;
+            //return new ResponseMessage<List<ProductTypes>>() { entity = res, IsSuccessCode = true };
         }
     }
 }
