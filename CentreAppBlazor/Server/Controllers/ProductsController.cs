@@ -63,6 +63,12 @@ namespace CentreAppBlazor.Server.Controllers
             return new ResponseMessage<IEnumerable<Products>>() { entity = await result.ToListAsync(), TCount = _context.Products.Count() };
         }
 
+        [HttpGet("getproducts")]
+        public async Task<ActionResult<List<Products>>> GetProducts()
+        {
+            return _context.Products.ToList();
+        }
+
         // GET: api/Products/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Products>> GetProducts(int id)

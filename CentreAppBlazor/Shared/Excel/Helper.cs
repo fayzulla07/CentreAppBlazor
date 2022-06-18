@@ -30,7 +30,6 @@ namespace CentreAppBlazor.Shared.Excel
                 if (ws.Cells[i, 2].Style.Font.Bold)
                 {
                     ProductName = ws.Cells[i, 2].Value.ToString();
-                    Console.WriteLine(ProductName);
                     pt.Name = ProductName;
                     ptList.Add(pt);
                     names.Add(ProductName);
@@ -47,40 +46,33 @@ namespace CentreAppBlazor.Shared.Excel
                     p.Name = $"{model} {color} {size}";
                     p.Description = $"{ProductName} {model} {color} {size}";
                     p.Limit = 1; p.UnitId = 1; p.RemainCount = 0;
-                    string kv = ws.Cells[i, 9].Value.ToString();
-                    p.Volume = Convert.ToDouble(kv);
+                    double col = Convert.ToDouble(ws.Cells[i, 11].Value);
+                    double kv = Convert.ToDouble(ws.Cells[i, 9].Value);
+                    double sumKv = Convert.ToDouble(ws.Cells[i, 12].Value);
+                    p.Volume = sumKv/col;
                     //pt.Products.Add(p);
                     ptList.Where(x => x.Name.Equals(ProductName)).Select(p => p.Products).First().Add(p);
-                    
-                    //p.ProductTypeId = 1; // get from pt or look at the ef core functions
 
                     // create the product incomes
                     if (addIncomes)
                     {
                         ProductIncoms pi = new ProductIncoms();
-                        
-                        string col = ws.Cells[i, 11].Value.ToString();
-                        string sumKv = ws.Cells[i, 12].Value.ToString();
-                        string cost = ws.Cells[i, 13].Value.ToString();
-                        string sumCost = ws.Cells[i, 15].Value.ToString();
+
+                        decimal cost = Convert.ToDecimal(ws.Cells[i, 13].Value);
+                        decimal sumCost = Convert.ToDecimal(ws.Cells[i, 15].Value);
 
                         pi.Product = p;
                         pi.Kurs = kurs;
                         //pi.IncomeNumber = 0; // get the latest+1 will be added during insert to db
-                        pi.IncomeCost = Convert.ToDecimal(cost); // cost for kv
-                        pi.SaleCost = pi.IncomeCost * saleCostPercentAdd / 100; // get from param
+                        pi.IncomeCost = cost; // cost for kv
+                        pi.SaleCost = (pi.IncomeCost * saleCostPercentAdd / 100)+pi.IncomeCost;
                         pi.OptCost = pi.SaleCost;
+                        pi.Amount = col; // if you will be use the SP, otherwise use the sumKv variable
                         ptList.Where(x => x.Name.Equals(ProductName))
-                            .Select(p => p.Products.Where(p => p.Code.Equals(code))).First()
-                            .Select(f => f.ProductIncoms).First().Add(pi);
+                              .Select(p => p.Products.Where(p => p.Code.Equals(code))).First()
+                              .Select(f => f.ProductIncoms).First().Add(pi);
                     }
-                    //pt.Products.Add(p); //add to pt
-                    //ptList.Where(x => x.Name.Equals(ProductName)).Select(p => p.Products).First().Add(p);
                 }
-            }
-            foreach (var item in ptList)
-            {
-                Console.WriteLine($"{item.Name}-{item.Products.Count()}");
             }
             return ptList;
            //}

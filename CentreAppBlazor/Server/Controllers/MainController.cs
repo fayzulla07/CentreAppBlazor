@@ -113,6 +113,11 @@ namespace CentreAppBlazor.Server.Controllers
                 return 1;
             return LastOrder;
         }
+        [HttpGet("GetLastIncomeNumber")]
+        public async Task<ActionResult<int>> GetLastIncomeNumber2()
+        {
+            return await GetLastIncomeNumber();
+        }
 
         [HttpPost(@"CloseIncomeOrder")]
         public async Task<ActionResult<ResponseMessage<int>>> CloseIncomeOrder([FromBody] ProductIncoms[] entity)
@@ -137,7 +142,7 @@ namespace CentreAppBlazor.Server.Controllers
                     UserID = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
                     Comments = item.Comments,
                     IncomeCost = item.IncomeCost,
-                    IncomeNumber = num
+                    IncomeNumber = item.IncomeNumber == null ? num : item.IncomeNumber
                 };
                 try
                 {

@@ -86,13 +86,13 @@
                 <span class="text-wrap">@vdata.VolumeTotal</span>
             </Template>
             <EditTemplate Context="vdata">
-                <RadzenNumeric Min="0" @bind-Value="vdata.VolumeTotal" Style="width:100%" />
+                <RadzenNumeric Min="0" TValue="double" @bind-Value="vdata.VolumeTotal" Style="width:100%" />
             </EditTemplate>
         </RadzenDataGridColumn>
 
         <RadzenDataGridColumn Width="120px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.OneTotal)" Title="Цена за ед($)">
             <Template Context="vdata">
-                <span class="text-wrap"> @vdata.OneTotal.Value.ToString("C0", new CultureInfo("en-US")) </span>
+                <span class="text-wrap"> @vdata.OneTotal.Value.ToString("C2", new CultureInfo("en-US")) </span>
             </Template>
             <EditTemplate Context="vdata">
                 <RadzenNumeric Min="0" @bind-Value="vdata.OneTotal" Style="width:100%" />
@@ -101,32 +101,32 @@
 
         <RadzenDataGridColumn Width="120px" TItem="ProductWithCostsDto" TextAlign="TextAlign.Center" Title="Цена за общ($)" Property="@nameof(ProductWithCostsDto.Total)">
             <Template Context="vdata">
-                <span class="text-wrap">@vdata.Total.Value.ToString("C0", new CultureInfo("en-US"))</span>
+                <span class="text-wrap">@vdata.Total.Value.ToString("C2", new CultureInfo("en-US"))</span>
             </Template>
             <FooterTemplate>
-                <span class="text-wrap" style="color:blue;">@dsource.Sum(x => x.Total)?.ToString("C0", new CultureInfo("en-US"))</span>
+                <span class="text-wrap" style="color:blue;">@dsource.Sum(x => x.Total)?.ToString("C2", new CultureInfo("en-US"))</span>
             </FooterTemplate>
         </RadzenDataGridColumn>
 
           <RadzenDataGridColumn Width="120px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Title="Цена за ед(тг)">
             <Template Context="vdata">
-                <span class="text-wrap"> @((vdata.OneTotal * (decimal)kurs ).Value.ToString("C0", new CultureInfo("kk-KZ")))   </span>
+                <span class="text-wrap"> @((vdata.OneTotal * (decimal)kurs ).Value.ToString("C2", new CultureInfo("kk-KZ")))   </span>
             </Template>
         </RadzenDataGridColumn>
 
         <RadzenDataGridColumn Width="120px" TItem="ProductWithCostsDto" TextAlign="TextAlign.Center" Title="Цена за общ(тг)" >
             <Template Context="vdata">
-                <span class="text-wrap"> @((vdata.Total * kurs ).Value.ToString("C0", new CultureInfo("kk-KZ")))   </span>
+                <span class="text-wrap"> @((vdata.Total * kurs ).Value.ToString("C2", new CultureInfo("kk-KZ")))   </span>
             </Template>
              <FooterTemplate>
-                <span class="text-wrap" style="color:blue;">@dsource.Sum(x => x.Total * kurs)?.ToString("C0", new CultureInfo("kk-KZ"))</span>
+                <span class="text-wrap" style="color:blue;">@dsource.Sum(x => x.Total * kurs)?.ToString("C2", new CultureInfo("kk-KZ"))</span>
             </FooterTemplate>
         </RadzenDataGridColumn>
 
 
          <RadzenDataGridColumn Width="120px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.Volume)" Title="За ед-м3">
             <Template Context="vdata">
-                <span class="text-wrap"> @vdata.Volume.ToString("C0", new CultureInfo("en-US")) </span>
+                <span class="text-wrap"> @vdata.Volume.ToString("C2", new CultureInfo("en-US")) </span>
             </Template>
         </RadzenDataGridColumn>
 
