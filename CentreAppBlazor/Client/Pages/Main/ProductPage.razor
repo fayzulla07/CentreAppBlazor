@@ -1,4 +1,5 @@
 ﻿@page "/ProductPage"
+@using System.IO
 @inherits BaseCrud<Products>
 @attribute [Authorize]
 
@@ -133,6 +134,15 @@
             </EditTemplate>
         </RadzenDataGridColumn>
 
+         <RadzenDataGridColumn Width="100px" TItem="Products" Property="@nameof(Products.UnitId)" Title="Фото" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+               <RadzenImage Path="@($"data:image/{vdata.Extension.Replace(".", "")};base64, {Convert.ToBase64String(vdata.Photo)}" )" Style="cursor:pointer; width:100px;height:80px;" Click="async(e)=>{ await ShowImage(vdata);}"></RadzenImage>
+            </Template>
+            <EditTemplate Context="vdata">
+               <InputFile OnChange="async(e)=>{await UpdateImage(vdata,e);}"></InputFile>
+            </EditTemplate>
+        </RadzenDataGridColumn>
+
         <RadzenDataGridColumn TItem="Products" Context="dsource"  Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
             <Template Context="dsource">
                 <RadzenButton Icon="edit" Size="ButtonSize.Medium" Click="@(args => EditRow(dsource))">
@@ -174,7 +184,8 @@
                 <RadzenButton Text="Отмена" Click="CancelDialog" ButtonStyle="ButtonStyle.Secondary" Style="margin-bottom: 10px; width: 150px" />
             </div>
         </div>
-    </RadzenCard>);
+    </RadzenCard>
+    );
 
     IEnumerable<ProductTypes> producttype = new List<ProductTypes>();
     IEnumerable<Units> unit = new List<Units>();
@@ -213,8 +224,36 @@
     {
         await serv.DeleteAsync(Id, ApiUrl);
         DataSource = DataSource.Where(x => x.Id != Id).ToList();
-
     }
+    async Task UpdateImage(Products product, InputFileChangeEventArgs e)
+    {
+        const int maxImageSize = 2048000;
+        if(e.File.Size >= maxImageSize)
+        {
+             await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Warning, 
+                 Summary = "Размер файла больше чем 2мб", 
+             Detail = "", Duration = 2500 });
+            return;
+        }
+        using var file = e.File.OpenReadStream(maxImageSize);
+        var fileArray = await ReadFully(file);
+        product.Photo = fileArray;
+        product.Extension = Path.GetExtension(e.File.Name);
+    }
+      public async Task<byte[]> ReadFully(Stream input)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                await input.CopyToAsync(ms);
+                return ms.ToArray();
+            }
+        }
+    async Task ShowImage(Products dat) => await DialogService.OpenAsync("Изображение", ds =>
+    @<RadzenCard Style="padding: 0px;">
+        <RadzenImage Path="@($"/api/ProductPhoto/{dat.Id}/0")"></RadzenImage>
+         <RadzenButton Text="Закрыть" Click="() => ds.Close(false)" Style="margin:10px;" ButtonStyle="ButtonStyle.Secondary"/>
+    </RadzenCard>
+    );
 }
 
 

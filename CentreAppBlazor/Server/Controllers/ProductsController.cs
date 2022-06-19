@@ -11,6 +11,7 @@ using CentreAppBlazor.Shared.Dto;
 using Radzen;
 using System.Linq.Dynamic.Core;
 using Microsoft.AspNetCore.Authorization;
+using static CentreAppBlazor.Server.Extensions.ImageHelper;
 
 namespace CentreAppBlazor.Server.Controllers
 {
@@ -51,7 +52,9 @@ namespace CentreAppBlazor.Server.Controllers
             {
                 result = result.Take(query.Top.Value);
             }
-            return new ResponseMessage<IEnumerable<Products>>() { entity = await result.ToListAsync(), TCount = _context.Products.Count() };
+             var value = await result.ToListAsync();
+             value.ForEach(x => x.Photo = GetReducedImage(100, 80, x.Photo));
+            return new ResponseMessage<IEnumerable<Products>>() { entity = value, TCount = _context.Products.Count() };
         }
 
         // GET: api/Products/5
@@ -59,7 +62,7 @@ namespace CentreAppBlazor.Server.Controllers
         public async Task<ActionResult<Products>> GetProducts(int id)
         {
             var products = await _context.Products.FindAsync(id);
-
+            products.Photo = GetReducedImage(100, 80, products.Photo);
             if (products == null)
             {
                 return NotFound();

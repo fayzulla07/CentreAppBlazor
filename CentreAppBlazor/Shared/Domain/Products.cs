@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CentreAppBlazor.Shared.Domain
 {
@@ -23,9 +24,13 @@ namespace CentreAppBlazor.Shared.Domain
         public int? UnitId { get; set; }
         public int Limit { get; set; }
 
+        public byte[] Photo { get; set; }
+        public string Extension { get; set; }
+
         public virtual ProductTypes ProductType { get; set; }
         public virtual Units Unit { get; set; }
         public virtual ICollection<ProductIncoms> ProductIncoms { get; set; }
         public virtual ICollection<ProductSales> ProductSales { get; set; }
+
     }
 }

@@ -253,6 +253,9 @@ namespace CentreAppBlazor.Server.Data
                     .HasForeignKey(d => d.UnitId)
                     .OnDelete(DeleteBehavior.SetNull)
                     .HasConstraintName("FK_Products_Units");
+
+                entity.Property(e => e.Photo);
+                entity.Property(e => e.Extension);
             });
 
             modelBuilder.Entity<ReturnTotalByDayView>(entity =>
