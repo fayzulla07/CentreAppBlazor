@@ -56,6 +56,12 @@
                         <RadzenDropDown @bind-Value="dataform.UnitId" Data="unit" Placeholder="Выберите единицу" AllowFiltering="true" AllowColumnResize="true" AllowClear="true" TextProperty="@nameof(Units.Name)" ValueProperty="@nameof(Units.Id)" Name="@nameof(Products.UnitId)" Style="width:100%" />
                         <br />
                     </div>
+                    <div class="col-md-6">
+                        <RadzenLabel Text="Фото" />
+                        <br />
+                        <InputFile OnChange="async(e)=>{await UpdateImage(dataform,e);}"></InputFile>
+                        <br />
+                    </div>
                 </div>
                 <div class="m-3 float-right">
                     <RadzenButton ButtonType="ButtonType.Submit" Text="Добавить"></RadzenButton>
