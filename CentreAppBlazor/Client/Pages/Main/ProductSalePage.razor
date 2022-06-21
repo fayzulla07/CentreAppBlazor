@@ -4,13 +4,13 @@
 
 <div class="d-flex">
     <div class="">
-        <div class="h5">Продажа </div>
+        <div class="h5">Продажа</div>
     </div>
     @*<div class="">
-        <RadzenCheckBox @bind-Value="IsResponsive" TriState="false" Name="CheckBox1" />
-        <RadzenLabel Text="Режим поиска" Component="CheckBox1" Style="margin-left: 5px;margin-bottom: 20px" />
+            <RadzenCheckBox @bind-Value="IsResponsive" TriState="false" Name="CheckBox1" />
+            <RadzenLabel Text="Режим поиска" Component="CheckBox1" Style="margin-left: 5px;margin-bottom: 20px" />
 
-    </div>*@
+        </div>*@
 </div>
 
 <div class="container-fluid">
@@ -37,6 +37,18 @@
                             <span class="text-wrap @(vdata.RemainCount <= vdata.Limit ? "text-danger" : "")">@vdata.RemainCount</span>
                         </Template>
                     </RadzenDropDownDataGridColumn>
+                    @*<RadzenDropDownDataGridColumn Property="@nameof(Products.Photo)" Title="фото" Width="60px">
+                        <Template Context="vdata">
+                            @if (vdata.Photo != null)
+                            {
+                                <RadzenImage Path="@($"data:image/{vdata.Extension.Replace(".", "")};base64, {Convert.ToBase64String(vdata.Photo)}" )" Style="cursor:pointer; width:60px;height:50px;" ></RadzenImage>
+                            }
+                            else
+                            {
+                                <p>No photo</p>
+                            }
+                        </Template>
+                    </RadzenDropDownDataGridColumn>*@
                 </Columns>
             </RadzenDropDownDataGrid>
 
@@ -49,10 +61,22 @@
 </div>
 
 
-<RadzenDataGrid @ref="Grid" Count="count" AllowFiltering="true" AllowColumnResize="true" AllowPaging="true" PageSize="20"  FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-            AllowSorting="true" Data="@dsource" TItem="ProductWithCostsDto" RowUpdate="@OnUpdateRow" FilterMode="FilterMode.Simple">
+<RadzenDataGrid @ref="Grid" Count="count" AllowFiltering="true" AllowColumnResize="true" AllowPaging="true" PageSize="20" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                AllowSorting="true" Data="@dsource" TItem="ProductWithCostsDto" RowUpdate="@OnUpdateRow" FilterMode="FilterMode.Simple">
     <Columns>
         <RadzenDataGridColumn TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.Id)" Visible="false" />
+        <RadzenDataGridColumn Width="70px" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.Photo)" Title="Фото" TextAlign="TextAlign.Center">
+            <Template Context="vdata">
+                @if (vdata.Photo != null)
+                {
+                    <RadzenImage Path="@($"data:image/{vdata.Extension.Replace(".", "")};base64, {Convert.ToBase64String(vdata.Photo)}" )" Style="cursor:pointer; width:60px;height:50px;" Click="async (e) => { await ShowImage(vdata); }"></RadzenImage>
+                }
+                else
+                {
+                    <p>No photo</p>
+                }
+            </Template>
+        </RadzenDataGridColumn>
 
         <RadzenDataGridColumn Width="250px" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.Name)" Title="Имя">
             <Template Context="vdata">
@@ -115,7 +139,7 @@
         </RadzenDataGridColumn>
 
 
-        <RadzenDataGridColumn Width="100px" TItem="ProductWithCostsDto" Filterable="false" Sortable="false"  Context="dsource" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="100px" TItem="ProductWithCostsDto" Filterable="false" Sortable="false" Context="dsource" TextAlign="TextAlign.Center">
             <Template Context="dsource">
                 <RadzenButton Icon="edit" Size="ButtonSize.Medium" Click="@(args => EditRow(dsource))">
                 </RadzenButton>
@@ -127,7 +151,7 @@
                 </RadzenButton>
             </EditTemplate>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn Width="60px" TItem="ProductWithCostsDto" Filterable="false" Sortable="false"  Context="dsource" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="60px" TItem="ProductWithCostsDto" Filterable="false" Sortable="false" Context="dsource" TextAlign="TextAlign.Center">
             <Template Context="dsource">
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
                 </RadzenButton>
@@ -154,22 +178,22 @@
 
 <AddCustomerComponent ClientAddedCallback="ClientAddedHandler"></AddCustomerComponent>
 @code {
-            private RadzenDropDownDataGrid<int> productDropDown;
-            bool IsBank;
-            int CustomerId = 1;
-            protected override string ApiUrl { get; set; } = "api/ProductSales";
-            private bool ProductTypeDisable = true;
-            IEnumerable<Products> product = new List<Products>();
-            IEnumerable<ProductTypes> productype = new List<ProductTypes>();
-            IEnumerable<Customers> customer = new List<Customers>();
+    private RadzenDropDownDataGrid<int> productDropDown;
+    bool IsBank;
+    int CustomerId = 1;
+    protected override string ApiUrl { get; set; } = "api/ProductSales";
+    private bool ProductTypeDisable = true;
+    IEnumerable<Products> product = new List<Products>();
+    IEnumerable<ProductTypes> productype = new List<ProductTypes>();
+    IEnumerable<Customers> customer = new List<Customers>();
 
-            protected async override Task GetForDropDown()
-            {
-                productype = await serv.GetAsync<IEnumerable<ProductTypes>>("api/DropDown/ProductTypes");
-                customer = await serv.GetAsync<IEnumerable<Customers>>("api/DropDown/Customers");
-            }
+    protected async override Task GetForDropDown()
+    {
+        productype = await serv.GetAsync<IEnumerable<ProductTypes>>("api/DropDown/ProductTypes");
+        customer = await serv.GetAsync<IEnumerable<Customers>>("api/DropDown/Customers");
+    }
 
-            async Task DeleteConfirmation(ProductWithCostsDto dat) => await DialogService.OpenAsync("Подтверждение", ds =>
+    async Task DeleteConfirmation(ProductWithCostsDto dat) => await DialogService.OpenAsync("Подтверждение", ds =>
     @<RadzenCard Style="padding: 20px;">
         <p Style="margin-bottom: 10px;">Вы действительно хотите удалить "@dat.Name"?</p>
         <div class="row">
@@ -191,164 +215,171 @@ async Task CloseConfirmation() => await DialogService.OpenAsync("Подтвер�
     </div>
 </RadzenCard>);
 
-    async void SelectedProductType(object _Id)
+async void SelectedProductType(object _Id)
+{
+try
+{
+loading.Visible = true;
+int Id = (int)_Id;
+if (Id != 0)
+{
+product = await serv.GetByIdAsync<IEnumerable<Products>>(Id, "api/DropDown/Products");
+ProductTypeDisable = false;
+await InvokeAsync(StateHasChanged);
+}
+else
+{
+ProductTypeDisable = true;
+await InvokeAsync(StateHasChanged);
+}
+}
+catch (Exception)
+{
+await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при получении данных", Duration = 2500 });
+}
+finally
+{
+loading.Visible = false;
+}
+
+}
+async void SelectedProduct(object _Id)
+{
+try
+{
+loading.Visible = true;
+int Id = (int)_Id;
+
+if (Id != 0)
+{
+    productDropDown.Reset();
+    var result = dsource.FirstOrDefault(x => x.Id == Id);
+    if (result != null)
     {
-        try
-        {
-            loading.Visible = true;
-            int Id = (int)_Id;
-            if (Id != 0)
-            {
-                product = await serv.GetByIdAsync<IEnumerable<Products>>(Id, "api/DropDown/Products");
-                ProductTypeDisable = false;
-                await InvokeAsync(StateHasChanged);
-            }
-            else
-            {
-                ProductTypeDisable = true;
-                await InvokeAsync(StateHasChanged);
-            }
-        }
-        catch (Exception)
-        {
-            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при получении данных", Duration = 2500 });
-        }
-        finally
-        {
-            loading.Visible = false;
-        }
-
-    }
-    async void SelectedProduct(object _Id)
-    {
-        try
-        {
-            loading.Visible = true;
-            int Id = (int)_Id;
-
-                if (Id != 0)
-                {
-                    productDropDown.Reset();
-                    var result = dsource.FirstOrDefault(x => x.Id == Id);
-                    if (result != null)
-                    {
-                        if (result.RemainCount >= (result.Amount + 1))
-                            result.Amount++;
-                        await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Продукт получен", Duration = 1500 });
-                        return;
-                    }
-
-                    var ProductFromApi = await serv.GetByIdAsync<ResponseMessage<ProductWithCostsDto>>(Id, "api/Main/GetOneProduct");
-                    if (!ProductFromApi.IsSuccessCode)
-                    {
-                        await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Инфо", Detail = ProductFromApi.ErrorMessage, Duration = 2000 });
-                    }
-                    else
-                    {
-                        count++;
-                        dsource.Insert(0, ProductFromApi.entity);
-                        await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Продукт получен", Duration = 1500 });
-                    }
-                }
-        }
-        catch (Exception)
-        {
-            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при получении данных", Duration = 2500 });
-        }
-        finally
-        {
-            loading.Visible = false;
-            await Grid.Reload();
-        }
-
+       if (result.RemainCount >= (result.Amount + 1))
+           result.Amount++;
+       await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Продукт получен", Duration = 1500 });
+       return;
     }
 
-
-
-    async void CloseOrder()
+    var ProductFromApi = await serv.GetByIdAsync<ResponseMessage<ProductWithCostsDto>>(Id, "api/Main/GetOneProduct");
+    if (!ProductFromApi.IsSuccessCode)
     {
-        try
-        {
-
-            if (dsource.Sum(x => x.Total) <= 0)
-            {
-                CancelDialog();
-                return;
-            }
-            CancelDialog();
-            loading.Visible = true;
-            List<ProductSales> sales = new List<ProductSales>();
-            foreach (var item in dsource)
-            {
-                sales.Add(new ProductSales
-                {
-                    Amount = item.Amount,
-                    IncomeCost = item.IncomeCost.Value,
-                    IsOptCost = item.IsOptCost,
-                    ProductId = item.Id,
-                    SaleCost = item.SaleCost.Value,
-                    RegDt = DateTime.Now,
-                    IsBank = IsBank,
-                    Comments = item.Comments,
-                    CustomerId = CustomerId
-                });
-            }
-            ResponseMessage<int> executed = await serv.PostAsync<ResponseMessage<int>>(sales, "api/Main/CloseOrder");
-            if (executed.IsSuccessCode)
-            {
-                await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Успешно сохранен!", Duration = 1500 });
-                dsource.Clear();
-                await Grid.Reload();
-            }
-            else
-            {
-                await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при отправки данных", Duration = 2500 });
-
-            }
-        }
-        catch (Exception)
-        {
-            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при отправки данных", Duration = 2500 });
-        }
-        finally
-        {
-            loading.Visible = false;
-            ProductTypeDisable = true;
-            await InvokeAsync(StateHasChanged);
-        }
-
+       await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Инфо", Detail = ProductFromApi.ErrorMessage, Duration = 2000 });
     }
+else
+{
+   count++;
+   dsource.Insert(0, ProductFromApi.entity);
+   await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Продукт получен", Duration = 1500 });
+}
+}
+}
+catch (Exception)
+{
+await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при получении данных", Duration = 2500 });
+}
+finally
+{
+loading.Visible = false;
+await Grid.Reload();
+}
 
-    protected override Task GetData()
-    {
-        return Task.CompletedTask;
-    }
-    protected override Task UpdateData(ProductWithCostsDto item)
-    {
-        return Task.CompletedTask;
-    }
-    protected override Task DeleteData(int Id)
-    {
-        return Task.CompletedTask;
-    }
+}
 
-    async void ClientAddedHandler(object obj)
-    {
-        try
-        {
-            loading.Visible = true;
-            customer = await serv.GetAsync<IEnumerable<Customers>>("api/DropDown/Customers");
-        }
-        catch (Exception)
-        {
-            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при получении данных", Duration = 2500 });
-        }
-        finally
-        {
-            loading.Visible = false;
-            await InvokeAsync(StateHasChanged);
-        }
-    }
+
+
+async void CloseOrder()
+{
+try
+{
+
+if (dsource.Sum(x => x.Total) <= 0)
+{
+CancelDialog();
+return;
+}
+CancelDialog();
+loading.Visible = true;
+List<ProductSales> sales = new List<ProductSales>();
+foreach (var item in dsource)
+{
+sales.Add(new ProductSales
+{
+   Amount = item.Amount,
+   IncomeCost = item.IncomeCost.Value,
+   IsOptCost = item.IsOptCost,
+   ProductId = item.Id,
+   SaleCost = item.SaleCost.Value,
+   RegDt = DateTime.Now,
+   IsBank = IsBank,
+   Comments = item.Comments,
+   CustomerId = CustomerId
+});
+}
+ResponseMessage<int> executed = await serv.PostAsync<ResponseMessage<int>>(sales, "api/Main/CloseOrder");
+if (executed.IsSuccessCode)
+{
+await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Успешно сохранен!", Duration = 1500 });
+dsource.Clear();
+await Grid.Reload();
+}
+else
+{
+await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при отправки данных", Duration = 2500 });
+
+}
+}
+catch (Exception)
+{
+await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при отправки данных", Duration = 2500 });
+}
+finally
+{
+loading.Visible = false;
+ProductTypeDisable = true;
+await InvokeAsync(StateHasChanged);
+}
+
+}
+
+protected override Task GetData()
+{
+return Task.CompletedTask;
+}
+protected override Task UpdateData(ProductWithCostsDto item)
+{
+return Task.CompletedTask;
+}
+protected override Task DeleteData(int Id)
+{
+return Task.CompletedTask;
+}
+
+async void ClientAddedHandler(object obj)
+{
+try
+{
+loading.Visible = true;
+customer = await serv.GetAsync<IEnumerable<Customers>>("api/DropDown/Customers");
+}
+catch (Exception)
+{
+await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при получении данных", Duration = 2500 });
+}
+finally
+{
+loading.Visible = false;
+await InvokeAsync(StateHasChanged);
+}
+}
+
+async Task ShowImage(ProductWithCostsDto dat) => await DialogService.OpenAsync("Изображение", ds =>
+@<RadzenCard Style="padding: 0px;">
+    <RadzenImage Path="@($"/api/ProductPhoto/{dat.Id}/0")"></RadzenImage>
+    <RadzenButton Text="Закрыть" Click="() => ds.Close(false)" Style="margin:10px;" ButtonStyle="ButtonStyle.Secondary" />
+</RadzenCard>
+);
 }
 
 

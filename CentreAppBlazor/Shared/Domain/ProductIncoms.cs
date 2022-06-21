@@ -33,5 +33,7 @@ namespace CentreAppBlazor.Shared.Domain
         public virtual Products Product { get; set; }
         public virtual Suppliers Supplier { get; set; }
         public virtual Users User { get; set; }
+
+        
     }
 }

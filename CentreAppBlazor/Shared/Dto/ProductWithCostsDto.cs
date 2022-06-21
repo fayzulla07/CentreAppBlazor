@@ -13,6 +13,8 @@ namespace CentreAppBlazor.Shared.Dto
         public double RemainCount { get; set; }
         public string UnitName { get; set; }
 
+        public byte[] Photo { get; set; }
+        public string Extension { get; set; }
 
         public double? IncomeCost { get; set; }
         public double? OptCost { get; set; }

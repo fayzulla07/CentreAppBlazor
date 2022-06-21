@@ -32,7 +32,7 @@ namespace CentreAppBlazor.Server.Controllers
             {
                 return BadRequest();
             }
-           var product = await _dappercontext.QueryAsync<ProductWithCostsDto>("select p.Id, p.[Name], p.RemainCount, p.Code, av.IncomeCost, av.OptCost, av.SaleCost, u.[Name] as UnitName " +
+           var product = await _dappercontext.QueryAsync<ProductWithCostsDto>("select p.Id, p.[Name], p.RemainCount, p.Code,p.Photo,p.Extension, av.IncomeCost, av.OptCost, av.SaleCost, u.[Name] as UnitName " +
                "from Products as p INNER JOIN AvCurrentCosts as av on p.Id = av.ProductId LEFT OUTER JOIN Units as u on p.UnitId = u.Id WHERE p.[Id] = @_ProductId  AND p.RemainCount > 0; ", new { _ProductId = ProductId });
             if(product == null)
             {

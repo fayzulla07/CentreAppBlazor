@@ -23,7 +23,7 @@
                         <br />
                         <RadzenTextBox Style="width:100%" Name="Name" @bind-Value="dataform.Name" />
                         <br />
-                        <RadzenRequiredValidator Component="@nameof(Products.Name)" Popup="false" Text="Значение должно быть заполнено!" />
+                        <RadzenRequiredValidator Component="@nameof(Products.Name)" Popup="true" Text="Значение должно быть заполнено!" />
                         <RadzenRegexValidator Component="@nameof(Products.Name)" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
                     </div>
                     <div class="col-md-6">
@@ -49,12 +49,14 @@
                         <br />
                         <RadzenDropDown @bind-Value="dataform.ProductTypeId" Data="producttype" Placeholder="Выберите Тип Продукта" AllowFiltering="true" AllowColumnResize="true" AllowClear="true" TextProperty="@nameof(ProductTypes.Name)" ValueProperty="@nameof(ProductTypes.Id)" Name="@nameof(Products.ProductTypeId)" Style="width:100%" />
                         <br />
+                        <RadzenRequiredValidator Component="@nameof(Products.ProductTypeId)" Popup="true" Text="Значение должно быть заполнено!" />
                     </div>
                     <div class="col-md-6">
                         <RadzenLabel Text="Единица измерения" />
                         <br />
                         <RadzenDropDown @bind-Value="dataform.UnitId" Data="unit" Placeholder="Выберите единицу" AllowFiltering="true" AllowColumnResize="true" AllowClear="true" TextProperty="@nameof(Units.Name)" ValueProperty="@nameof(Units.Id)" Name="@nameof(Products.UnitId)" Style="width:100%" />
                         <br />
+                        <RadzenRequiredValidator Component="@nameof(Products.UnitId)" Popup="true" Text="Значение должно быть заполнено!" />
                     </div>
                     <div class="col-md-6">
                         <RadzenLabel Text="Фото" />
@@ -140,10 +142,17 @@
             </EditTemplate>
         </RadzenDataGridColumn>
 
-         <RadzenDataGridColumn Width="100px" TItem="Products" Property="@nameof(Products.UnitId)" Title="Фото" TextAlign="TextAlign.Center">
-            <Template Context="vdata">
-               <RadzenImage Path="@($"data:image/{vdata.Extension.Replace(".", "")};base64, {Convert.ToBase64String(vdata.Photo)}" )" Style="cursor:pointer; width:100px;height:80px;" Click="async(e)=>{ await ShowImage(vdata);}"></RadzenImage>
-            </Template>
+         <RadzenDataGridColumn Width="100px" TItem="Products" Property="@nameof(Products.Photo)" Title="Фото" TextAlign="TextAlign.Center">
+             <Template Context="vdata">
+                 @if (vdata.Photo != null)
+                 {
+                     <RadzenImage Path="@($"data:image/{vdata.Extension.Replace(".", "")};base64, {Convert.ToBase64String(vdata.Photo)}" )" Style="cursor:pointer; width:100px;height:80px;" Click="async (e) => { await ShowImage(vdata); }"></RadzenImage>
+                 }
+                 else
+                 {
+                     <p>No photo</p>
+                 }
+             </Template>
             <EditTemplate Context="vdata">
                <InputFile OnChange="async(e)=>{await UpdateImage(vdata,e);}"></InputFile>
             </EditTemplate>

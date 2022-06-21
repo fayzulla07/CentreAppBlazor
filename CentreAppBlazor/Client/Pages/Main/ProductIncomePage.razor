@@ -25,8 +25,37 @@
                 <div class="col-md-4">
                     <RadzenLabel Text="Продукт" />
                     <br />
-                    <RadzenDropDown  @ref="productDropDown" Disabled="ProductTypeDisable" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" TValue="int" Change="SelectedProduct" @bind-Value="dataform.ProductId" Data="product" Placeholder="Выберите Продукт" AllowFiltering="true" AllowClear="true" TextProperty="@nameof(Products.Name)" ValueProperty="@nameof(Products.Id)" Style="width:100%" />
-
+                    <RadzenDropDown @ref="productDropDown" Disabled="ProductTypeDisable" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                    TValue="int" Change="SelectedProduct" @bind-Value="dataform.ProductId" Data="product" Placeholder="Выберите Продукт"
+                                    AllowFiltering="true" AllowClear="true" TextProperty="@nameof(Products.Name)"
+                                    ValueProperty="@nameof(Products.Id)" Style="width:100%" />
+                    @*<RadzenDropDownDataGrid @ref="productDropDown" EmptyText="Продукт нет в наличии" TValue="int" Name="prct" ValueChanged="@((args) => SelectedProduct(args))" Disabled="ProductTypeDisable" Placeholder="Выберите продукт" Data="product" AllowClear="true" AllowFiltering="true" AllowColumnResize="true" ValueProperty="@nameof(Products.Id)" TextProperty="@nameof(Products.Name)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Style="width:100%">
+                        <Columns>
+                            <RadzenDropDownDataGridColumn Property="@nameof(Products.Id)" Visible="false" />
+                            <RadzenDropDownDataGridColumn Property="@nameof(Products.Name)" Title="Имя" Width="230px">
+                                <Template Context="vdata">
+                                    <span class="text-wrap">@vdata.Name</span>
+                                </Template>
+                            </RadzenDropDownDataGridColumn>
+                            <RadzenDropDownDataGridColumn Property="@nameof(Products.RemainCount)" Title="Остаток" Width="80px">
+                                <Template Context="vdata">
+                                    <span class="text-wrap @(vdata.RemainCount <= vdata.Limit ? "text-danger" : "")">@vdata.RemainCount</span>
+                                </Template>
+                            </RadzenDropDownDataGridColumn>
+                            <RadzenDropDownDataGridColumn Property="@nameof(Products.Photo)" Title="фото" Width="60px">
+                                <Template Context="vdata">
+                                    @if (vdata.Photo != null)
+                                    {
+                                        <RadzenImage Path="@($"data:image/{vdata.Extension.Replace(".", "")};base64, {Convert.ToBase64String(vdata.Photo)}" )" Style="cursor:pointer; width:60px;height:50px;" ></RadzenImage>
+                                    }
+                                    else
+                                    {
+                                        <p>No photo</p>
+                                    }
+                                </Template>
+                            </RadzenDropDownDataGridColumn>
+                        </Columns>
+                    </RadzenDropDownDataGrid>*@
                     <br />
                 </div>
                 <div class="col-md-4">
@@ -99,7 +128,7 @@
                 <span class="text-wrap">@(((vdata.IncomeCost * @vdata.Amount)).ToString("C0", new CultureInfo("kk-KZ")))</span>
             </Template>
             <FooterTemplate>
-                <span class="text-wrap" style="color:red">@dsource.Sum(x => (x.IncomeCost*x.Amount)).ToString("C0", new CultureInfo("kk-KZ"))</span>
+                <span class="text-wrap" style="color:red">@dsource.Sum(x => (x.IncomeCost * x.Amount)).ToString("C0", new CultureInfo("kk-KZ"))</span>
             </FooterTemplate>
         </RadzenDataGridColumn>
 
