@@ -140,7 +140,7 @@ async Task Conf(HistorySaleView dat) => await DialogService.OpenAsync("Возв�
                 <div class="col-md-6">
                     <RadzenLabel Text="Комментарии" />
                     <br />
-                    <RadzenTextBox Name="Comments" Style="width:100%" @bind-Value="dataform.Comments" />
+                    <RadzenTextBox AutoComplete="false"  Name="Comments" Style="width:100%" @bind-Value="dataform.Comments" />
                     <br />
 
                 </div>

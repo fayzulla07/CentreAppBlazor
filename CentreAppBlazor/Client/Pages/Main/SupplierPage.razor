@@ -20,7 +20,7 @@
                     <div class="col-md-6">
                         <RadzenLabel Text="Имя" />
                         <br />
-                        <RadzenTextBox Style="width:100%" Name="Name" @bind-Value="dataform.Name" />
+                        <RadzenTextBox AutoComplete="false"  Style="width:100%" Name="Name" @bind-Value="dataform.Name" />
                         <br />
                         <RadzenRequiredValidator Component="Name" Popup="false" Text="Значение должно быть заполнено!" />
                         <RadzenRegexValidator Component="Name" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
@@ -28,19 +28,19 @@
                     <div class="col-md-6">
                         <RadzenLabel Text="Описание" />
                         <br />
-                        <RadzenTextBox Name="@nameof(Suppliers.Description)" Style="width:100%" @bind-Value="dataform.Description" />
+                        <RadzenTextBox AutoComplete="false"  Name="@nameof(Suppliers.Description)" Style="width:100%" @bind-Value="dataform.Description" />
                         <br />
                     </div>
                     <div class="col-md-6">
                         <RadzenLabel Text="Почта" />
                         <br />
-                        <RadzenTextBox Name="@nameof(Suppliers.Email)" Style="width:100%" @bind-Value="dataform.Email" />
+                        <RadzenTextBox AutoComplete="false"  Name="@nameof(Suppliers.Email)" Style="width:100%" @bind-Value="dataform.Email" />
                         <br />
                     </div>
                     <div class="col-md-6">
                         <RadzenLabel Text="Номер" />
                         <br />
-                        <RadzenTextBox Name="@nameof(Suppliers.PhoneNumber)" Style="width:100%" @bind-Value="dataform.PhoneNumber" />
+                        <RadzenTextBox AutoComplete="false"  Name="@nameof(Suppliers.PhoneNumber)" Style="width:100%" @bind-Value="dataform.PhoneNumber" />
                         <br />
                     </div>
                     <div class="col-md-6">
@@ -74,7 +74,7 @@
                 <span class="text-wrap">@vdata.Name</span>
             </Template>
             <EditTemplate Context="vdata">
-                <RadzenTextBox @bind-Value="vdata.Name" Name="Name" Style="width:100%" />
+                <RadzenTextBox AutoComplete="false"  @bind-Value="vdata.Name" Name="Name" Style="width:100%" />
                 <br />
                 <RadzenRequiredValidator Component="Name" Text="Заполните поле" />
                 <RadzenRegexValidator Component="Name" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
@@ -87,7 +87,7 @@
                 <span class="text-wrap">@vdata.Description</span>
             </Template>
             <EditTemplate Context="vdata">
-                <RadzenTextBox @bind-Value="vdata.Description" Style="width:100%" />
+                <RadzenTextBox AutoComplete="false"  @bind-Value="vdata.Description" Style="width:100%" />
             </EditTemplate>
         </RadzenDataGridColumn>
 
@@ -96,7 +96,7 @@
                 <span class="text-wrap">@vdata.PhoneNumber</span>
             </Template>
             <EditTemplate Context="vdata">
-                <RadzenTextBox @bind-Value="vdata.PhoneNumber" Style="width:100%" />
+                <RadzenTextBox AutoComplete="false"  @bind-Value="vdata.PhoneNumber" Style="width:100%" />
             </EditTemplate>
         </RadzenDataGridColumn>
 
@@ -105,7 +105,7 @@
                 <span class="text-wrap">@vdata.Email</span>
             </Template>
             <EditTemplate Context="vdata">
-                <RadzenTextBox @bind-Value="vdata.Email" Style="width:100%" />
+                <RadzenTextBox AutoComplete="false"  @bind-Value="vdata.Email" Style="width:100%" />
             </EditTemplate>
         </RadzenDataGridColumn>
 

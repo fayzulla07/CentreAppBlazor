@@ -45,7 +45,7 @@
                 <span class="text-wrap">@vdata.Name</span>
             </Template>
             <EditTemplate Context="vdata">
-                <RadzenTextBox @bind-Value="vdata.Name" Name="Name" Style="width:100%" />
+                <RadzenTextBox AutoComplete="false"  @bind-Value="vdata.Name" Name="Name" Style="width:100%" />
                 <br />
                 <RadzenRequiredValidator Component="Name" Text="Заполните поле" />
                 <RadzenRegexValidator Component="Name" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />

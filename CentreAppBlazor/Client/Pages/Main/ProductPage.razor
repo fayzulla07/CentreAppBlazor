@@ -21,7 +21,7 @@
                     <div class="col-md-6">
                         <RadzenLabel Text="Имя" />
                         <br />
-                        <RadzenTextBox Style="width:100%" Name="Name" @bind-Value="dataform.Name" />
+                        <RadzenTextBox AutoComplete="false"  Style="width:100%" Name="Name" @bind-Value="dataform.Name" />
                         <br />
                         <RadzenRequiredValidator Component="@nameof(Products.Name)" Popup="true" Text="Значение должно быть заполнено!" />
                         <RadzenRegexValidator Component="@nameof(Products.Name)" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
@@ -29,13 +29,13 @@
                     <div class="col-md-6">
                         <RadzenLabel Text="Описание" />
                         <br />
-                        <RadzenTextBox Name="@nameof(Products.Description)" Style="width:100%" @bind-Value="dataform.Description" />
+                        <RadzenTextBox AutoComplete="false"  Name="@nameof(Products.Description)" Style="width:100%" @bind-Value="dataform.Description" />
                         <br />
                     </div>
                     <div class="col-md-6">
                         <RadzenLabel Text="Код" />
                         <br />
-                        <RadzenTextBox Name="@nameof(Products.Code)" Style="width:100%" @bind-Value="dataform.Code" />
+                        <RadzenTextBox AutoComplete="false"  Name="@nameof(Products.Code)" Style="width:100%" @bind-Value="dataform.Code" />
                         <br />
                     </div>
                     <div class="col-md-6">
@@ -83,7 +83,7 @@
                 <span class="text-wrap">@vdata.Name</span>
             </Template>
             <EditTemplate Context="vdata">
-                <RadzenTextBox @bind-Value="vdata.Name" Name="Name" Style="width:100%" />
+                <RadzenTextBox AutoComplete="false"  @bind-Value="vdata.Name" Name="Name" Style="width:100%" />
                 <br />
                 <RadzenRequiredValidator Component="Name" Text="Заполните поле" />
                 <RadzenRegexValidator Component="Name" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
@@ -96,7 +96,7 @@
                 <span class="text-wrap">@vdata.Description</span>
             </Template>
             <EditTemplate Context="vdata">
-                <RadzenTextBox @bind-Value="vdata.Description" Style="width:100%" />
+                <RadzenTextBox AutoComplete="false"  @bind-Value="vdata.Description" Style="width:100%" />
             </EditTemplate>
         </RadzenDataGridColumn>
 
@@ -105,7 +105,7 @@
                 <span class="text-wrap">@vdata.Code</span>
             </Template>
             <EditTemplate Context="vdata">
-                <RadzenTextBox @bind-Value="vdata.Code" Style="width:100%" />
+                <RadzenTextBox AutoComplete="false"  @bind-Value="vdata.Code" Style="width:100%" />
             </EditTemplate>
         </RadzenDataGridColumn>
 
@@ -242,27 +242,29 @@
     }
     async Task UpdateImage(Products product, InputFileChangeEventArgs e)
     {
-        const int maxImageSize = 2048000;
+        const int maxImageSize = 262144; // 2048000;
         if(e.File.Size >= maxImageSize)
         {
-             await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Warning, 
-                 Summary = "Размер файла больше чем 2мб", 
-             Detail = "", Duration = 2500 });
+
+            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Warning,
+                Summary = "Размер файла больше чем 256kb",
+                Detail = "", Duration = 4000 });
             return;
+
         }
         using var file = e.File.OpenReadStream(maxImageSize);
         var fileArray = await ReadFully(file);
         product.Photo = fileArray;
         product.Extension = Path.GetExtension(e.File.Name);
     }
-      public async Task<byte[]> ReadFully(Stream input)
+    public async Task<byte[]> ReadFully(Stream input)
+    {
+        using (MemoryStream ms = new MemoryStream())
         {
-            using (MemoryStream ms = new MemoryStream())
-            {
-                await input.CopyToAsync(ms);
-                return ms.ToArray();
-            }
+            await input.CopyToAsync(ms);
+            return ms.ToArray();
         }
+    }
     async Task ShowImage(Products dat) => await DialogService.OpenAsync("Изображение", ds =>
     @<RadzenCard Style="padding: 0px;">
         <RadzenImage Path="@($"/api/ProductPhoto/{dat.Id}/0")"></RadzenImage>

@@ -170,7 +170,7 @@
                 <span class="text-wrap">@vdata.Comments</span>
             </Template>
             <EditTemplate Context="vdata">
-                <RadzenTextBox @bind-Value="vdata.Comments" Style="width:100%" />
+                <RadzenTextBox AutoComplete="false"  @bind-Value="vdata.Comments" Style="width:100%" />
             </EditTemplate>
         </RadzenDataGridColumn>
 

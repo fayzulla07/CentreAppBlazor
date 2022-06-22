@@ -20,7 +20,7 @@
                     <div class="col-md-6">
                         <RadzenLabel Text="Имя" />
                         <br />
-                        <RadzenTextBox Style="width:100%" Name="@nameof(Units.Name)" @bind-Value="dataform.Name" />
+                        <RadzenTextBox AutoComplete="false"  Style="width:100%" Name="@nameof(Units.Name)" @bind-Value="dataform.Name" />
                         <br />
                         <RadzenRequiredValidator Component="@nameof(Units.Name)" Popup="false" Text="Значение должно быть заполнено!" />
                         <RadzenRegexValidator Component="@nameof(Units.Name)" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
@@ -28,7 +28,7 @@
                     <div class="col-md-6">
                         <RadzenLabel Text="Описание" />
                         <br />
-                        <RadzenTextBox Name="Description" Style="width:100%" @bind-Value="dataform.Description" />
+                        <RadzenTextBox AutoComplete="false"  Name="Description" Style="width:100%" @bind-Value="dataform.Description" />
                         <br />
 
                     </div>
@@ -51,7 +51,7 @@
                 <span class="text-wrap">@vdata.Name</span>
             </Template>
             <EditTemplate Context="vdata">
-                <RadzenTextBox @bind-Value="vdata.Name" Name="Name" Style="width:100%" />
+                <RadzenTextBox AutoComplete="false"  @bind-Value="vdata.Name" Name="Name" Style="width:100%" />
                 <br />
                 <RadzenRequiredValidator Component="Name" Text="Заполните поле" />
                 <RadzenRegexValidator Component="Name" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
@@ -64,7 +64,7 @@
                 <span class="text-wrap">@vdata.Description</span>
             </Template>
             <EditTemplate Context="vdata">
-                <RadzenTextBox @bind-Value="vdata.Description" Style="width:100%" />
+                <RadzenTextBox AutoComplete="false"  @bind-Value="vdata.Description" Style="width:100%" />
             </EditTemplate>
         </RadzenDataGridColumn>
 

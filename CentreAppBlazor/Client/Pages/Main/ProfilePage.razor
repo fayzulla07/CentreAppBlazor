@@ -18,7 +18,7 @@
                 <span class="text-wrap">@vdata.Name</span>
             </Template>
             <EditTemplate Context="vdata">
-                <RadzenTextBox @bind-Value="vdata.Name" Name="Name" Style="width:100%" />
+                <RadzenTextBox AutoComplete="false"  @bind-Value="vdata.Name" Name="Name" Style="width:100%" />
                 <br />
                 <RadzenRequiredValidator Component="Name" Text="Заполните поле" />
                 <RadzenRegexValidator Component="Name" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
@@ -30,7 +30,7 @@
                 <span class="text-wrap">@vdata.Description</span>
             </Template>
             <EditTemplate Context="vdata">
-                <RadzenTextBox @bind-Value="vdata.Description" Style="width:100%" />
+                <RadzenTextBox AutoComplete="false"  @bind-Value="vdata.Description" Style="width:100%" />
             </EditTemplate>
         </RadzenDataGridColumn>
 
@@ -39,7 +39,7 @@
                 <span class="text-wrap">@vdata.LoginName</span>
             </Template>
             <EditTemplate Context="vdata">
-                <RadzenTextBox @bind-Value="vdata.LoginName" Name="@nameof(Users.LoginName)" Style="width:100%" />
+                <RadzenTextBox AutoComplete="false"  @bind-Value="vdata.LoginName" Name="@nameof(Users.LoginName)" Style="width:100%" />
                 <br />
                 <RadzenRequiredValidator Component="@nameof(Users.LoginName)" Text="Заполните поле" />
                 <RadzenRegexValidator Component="@nameof(Users.LoginName)" Text="Есть пробел в начале" Pattern="@(@"(^\S+[\s\S]*)+$")" />
