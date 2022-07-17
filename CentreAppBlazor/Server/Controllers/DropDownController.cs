@@ -50,7 +50,7 @@ namespace CentreAppBlazor.Server.Controllers
         [HttpGet(@"Products/{ProductTypeId}")]
         public async Task<ActionResult<IEnumerable<Products>>> GetProducts(int ProductTypeId)
         {
-            return await _dappercontext.QueryAsync<Products>("select Id, [Name], RemainCount, Limit from Products as p WHERE p.ProductTypeId = @ProductTypeId AND p.RemainCount > 0", new { ProductTypeId });
+            return await _dappercontext.QueryAsync<Products>("select Id, [Name], Amount as RemainCount, Limit from Products as p WHERE p.ProductTypeId = @ProductTypeId AND p.RemainCount > 0", new { ProductTypeId });
             // return await _context.Products.Where(x => x.ProductTypeId == ProductTypeId && x.RemainCount > 0).AsNoTracking().ToListAsync();
         }
 

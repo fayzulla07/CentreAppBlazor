@@ -14,18 +14,25 @@ namespace CentreAppBlazor.Shared.Dto
         public string UnitName { get; set; }
 
 
-        public decimal? IncomeCost { get; set; }
-        public decimal? OptCost { get; set; }
-        public decimal? SaleCost {get; set; }
-
+        public decimal IncomeCost { get; set; }
+        public decimal OptCost { get; set; }
+        public decimal SaleCost {get; set; }
+        public decimal Kurs { get; set; } = 1;
         // For operations
         public string Comments { get; set; }
         public bool IsOptCost { get; set; } = false;
         public double Amount { get; set; }
+        public double AmountLeft { get; set; }
         public double Volume { get; set; }
 
-     
-        public double? Total 
+        private decimal costTemp;
+        public decimal CostTemp
+        {
+            get { return costTemp=costTemp==0?SaleCost*Kurs:costTemp; }
+            set { costTemp = value; SaleCost = value / Kurs; }
+        }
+
+        public double Total 
         {
             get 
             {
@@ -33,7 +40,7 @@ namespace CentreAppBlazor.Shared.Dto
             }
             set { }
         }
-        public decimal? OneTotal
+        public decimal OneTotal
         {
             get 
             {

@@ -1,17 +1,17 @@
-﻿@page "/ProductSalePage"
+﻿
 @inherits BaseCrud<ProductWithCostsDto>
 @attribute [Authorize]
-
-<div class="d-flex">
-    <div class="">
-        <div class="h5">Продажа </div>
+@*
+        <div class="d-flex">
+            <div class="">
+                <div class="h5">Продажа </div>
+            </div>
+            <div class="">
+            <RadzenCheckBox @bind-Value="IsResponsive" TriState="false" Name="CheckBox1" />
+            <RadzenLabel Text="Режим поиска" Component="CheckBox1" Style="margin-left: 5px;margin-bottom: 20px" />
+        </div>
     </div>
-    @*<div class="">
-        <RadzenCheckBox @bind-Value="IsResponsive" TriState="false" Name="CheckBox1" />
-        <RadzenLabel Text="Режим поиска" Component="CheckBox1" Style="margin-left: 5px;margin-bottom: 20px" />
-    </div>*@
-</div>
-
+*@
 <div class="container-fluid">
     <div class="row">
         <div class="col col-md-4 col-sm-12 col-12">
@@ -44,96 +44,101 @@
             <RadzenLabel Text="Клиент" Component="clnt" />
             <RadzenDropDown TValue="int" @bind-Value="CustomerId" Name="clnt" Placeholder="Выберите Клиента" Data="customer" AllowFiltering="true" AllowColumnResize="true" ValueProperty="@nameof(Customers.Id)" TextProperty="@nameof(Customers.Name)" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Style="width:100%" />
         </div>
-         <div class="col col-md-4 col-sm-12 col-12" style="margin-bottom:15px;">
-           
+        <div class="col col-md-4 col-sm-12 col-12" style="margin-bottom:15px;">
+
         </div>
         <div class="col col-md-4 col-sm-12 col-12" style="margin-bottom:15px;">
             <RadzenLabel Text="Код продукта" Component="сde" />
             <RadzenTextBox Name="сde" Placeholder="" Style="width:100%" Change="ChangeCode" />
         </div>
-         <div class="col col-md-4 col-sm-12 col-12" style="margin-bottom:15px;">
+        <div class="col col-md-4 col-sm-12 col-12" style="margin-bottom:15px;">
             <RadzenLabel Text="Курс($)" Component="kurs" />
             <RadzenNumeric Min=0 Name="kurs" @bind-Value="kurs" TValue="double" Placeholder="" Style="width:100%" Change="ChangeList" />
         </div>
     </div>
 </div>
 
-<RadzenDataGrid @ref="Grid" Count="count" AllowFiltering="true" AllowColumnResize="true" AllowPaging="true" PageSize="20"  FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-         RowDoubleClick="(args=>DblClick(args.Data))"   AllowSorting="true" Data="@dsource" TItem="ProductWithCostsDto" RowUpdate="@OnUpdateRow" FilterMode="FilterMode.Simple">
+<RadzenDataGrid @ref="Grid" Count="count" AllowColumnResize="true"
+                RowDoubleClick="(args=>DblClick(args.Data))" AllowSorting="true" Data="@dsource" TItem="ProductWithCostsDto" RowUpdate="@OnUpdateRow">
     <Columns>
         <RadzenDataGridColumn TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.Id)" Visible="false" />
 
-        <RadzenDataGridColumn Width="250px" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.Name)" Title="Имя">
+        <RadzenDataGridColumn Width="270px" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.Name)" Title="Наименование">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Name</span>
             </Template>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn Width="100px" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.Amount)" Title="Количество" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="90px" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.Amount)" Title="Кол-во" TextAlign="TextAlign.Center">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.Amount @vdata.UnitName</span>
             </Template>
             <EditTemplate Context="vdata">
-                <RadzenNumeric Min="0" TValue="double" @bind-Value="vdata.Amount" Name="@nameof(ProductWithCostsDto.Amount)" Style="width:100%" />
+                <RadzenNumeric @onkeypress="@((args)=>(KeyPressed(args,vdata)))" Min="1" TValue="double" @bind-Value="vdata.Amount" Name="@nameof(ProductWithCostsDto.Amount)" Style="width:100%" />
                 <br />
                 <RadzenRequiredValidator Component="@nameof(ProductWithCostsDto.Amount)" Text="Заполните поле" />
-                <RadzenCompareValidator Component="@nameof(ProductWithCostsDto.Amount)" Value="vdata.RemainCount" Operator="CompareOperator.LessThanEqual" Text="Остаток меньше введенный" />
+                <RadzenCompareValidator Component="@nameof(ProductWithCostsDto.Amount)" Value=@(vdata.RemainCount/vdata.Volume) Operator="CompareOperator.LessThanEqual" Text="Остаток меньше введенный" />
             </EditTemplate>
         </RadzenDataGridColumn>
 
-         <RadzenDataGridColumn Width="120px" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.VolumeTotal)" Title="Кол.общ-м²">
+        <RadzenDataGridColumn Width="90px" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.VolumeTotal)" Title="общ.м²">
             <Template Context="vdata">
                 <span class="text-wrap">@vdata.VolumeTotal</span>
             </Template>
             <EditTemplate Context="vdata">
-                <RadzenNumeric Min="0" TValue="double" @bind-Value="vdata.VolumeTotal" Style="width:100%" />
+                <RadzenNumeric @onkeypress="@((args)=>(KeyPressed(args,vdata)))" Min="1" TValue="double" @bind-Value="vdata.VolumeTotal" Style="width:100%" />
             </EditTemplate>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn Width="120px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.OneTotal)" Title="Цена за ед($)">
+        <RadzenDataGridColumn Width="110px" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.CostTemp)" Title="Цена за ед(тг)">
             <Template Context="vdata">
-                <span class="text-wrap"> @vdata.OneTotal.Value.ToString("C2", new CultureInfo("en-US")) </span>
+                <span class="text-wrap"> @((vdata.CostTemp).ToString("C0", new CultureInfo("kk-KZ"))) </span>
             </Template>
             <EditTemplate Context="vdata">
-                <RadzenNumeric Min="0" @bind-Value="vdata.OneTotal" Style="width:100%" />
+                <RadzenNumeric @onkeypress="@((args)=>(KeyPressed(args,vdata)))" Min="1" TValue="decimal" @bind-Value="vdata.CostTemp" Change=@(args=>OnCostChange(args)) Style="width:100%" />
             </EditTemplate>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn Width="120px" TItem="ProductWithCostsDto" TextAlign="TextAlign.Center" Title="Цена за общ(тг)">
+            <Template Context="vdata">
+                <span class="text-wrap"> @(((decimal)vdata.Total * vdata.Kurs).ToString("C0", new CultureInfo("kk-KZ")))   </span>
+            </Template>
+            <FooterTemplate>
+                <span class="text-wrap" style="color:blue;">@dsource.Sum(x => (decimal)x.Total * x.Kurs).ToString("C0", new CultureInfo("kk-KZ"))</span>
+            </FooterTemplate>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn Width="100px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.OneTotal)" Title="Цена за ед($)">
+            <Template Context="vdata">
+                <span class="text-wrap"> @vdata.OneTotal.ToString("C2", new CultureInfo("en-US")) </span>
+            </Template>
         </RadzenDataGridColumn>
 
         <RadzenDataGridColumn Width="120px" TItem="ProductWithCostsDto" TextAlign="TextAlign.Center" Title="Цена за общ($)" Property="@nameof(ProductWithCostsDto.Total)">
             <Template Context="vdata">
-                <span class="text-wrap">@vdata.Total.Value.ToString("C2", new CultureInfo("en-US"))</span>
+                <span class="text-wrap">@vdata.Total.ToString("C2", new CultureInfo("en-US"))</span>
             </Template>
             <FooterTemplate>
-                <span class="text-wrap" style="color:blue;">@dsource.Sum(x => x.Total)?.ToString("C2", new CultureInfo("en-US"))</span>
+                <span class="text-wrap" style="color:blue;">@dsource.Sum(x => x.Total).ToString("C2", new CultureInfo("en-US"))</span>
             </FooterTemplate>
         </RadzenDataGridColumn>
 
-          <RadzenDataGridColumn Width="120px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Title="Цена за ед(тг)">
+        <RadzenDataGridColumn Width="90px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.Volume)" Title="размер-м²">
             <Template Context="vdata">
-                <span class="text-wrap"> @((vdata.OneTotal * (decimal)kurs ).Value.ToString("C2", new CultureInfo("kk-KZ")))   </span>
-            </Template>
-        </RadzenDataGridColumn>
-
-        <RadzenDataGridColumn Width="120px" TItem="ProductWithCostsDto" TextAlign="TextAlign.Center" Title="Цена за общ(тг)" >
-            <Template Context="vdata">
-                <span class="text-wrap"> @((vdata.Total * kurs ).Value.ToString("C2", new CultureInfo("kk-KZ")))   </span>
-            </Template>
-             <FooterTemplate>
-                <span class="text-wrap" style="color:blue;">@dsource.Sum(x => x.Total * kurs)?.ToString("C2", new CultureInfo("kk-KZ"))</span>
-            </FooterTemplate>
-        </RadzenDataGridColumn>
-
-
-         <RadzenDataGridColumn Width="120px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.Volume)" Title="За ед-м3">
-            <Template Context="vdata">
-                <span class="text-wrap"> @vdata.Volume.ToString("C2", new CultureInfo("en-US")) </span>
+                <span class="text-wrap"> @vdata.Volume.ToString() </span>
             </Template>
         </RadzenDataGridColumn>
 
 
-        <RadzenDataGridColumn Width="100px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.RemainCount)" Title="Остаток">
+        <RadzenDataGridColumn Width="80px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.RemainCount)" Title="Остаток">
             <Template Context="vdata">
-                <span class="text-wrap ">@vdata.RemainCount @vdata.UnitName</span>
+                <span class="text-wrap ">@(Math.Round(vdata.RemainCount/vdata.Volume,2))@(vdata.UnitName)</span>
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn Width="60px" TextAlign="TextAlign.Center" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.Kurs)" Title="Курс">
+            <Template Context="vdata">
+                <span class="text-wrap"> @vdata.Kurs </span>
             </Template>
         </RadzenDataGridColumn>
 
@@ -146,8 +151,7 @@
             </EditTemplate>
         </RadzenDataGridColumn>
 
-
-        <RadzenDataGridColumn Width="100px" TItem="ProductWithCostsDto" Filterable="false" Sortable="false"  Context="dsource" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="100px" TItem="ProductWithCostsDto" Filterable="false" Sortable="false" Context="dsource" TextAlign="TextAlign.Center">
             <Template Context="dsource">
                 <RadzenButton Icon="edit" Size="ButtonSize.Medium" Click="@(args => EditRow(dsource))">
                 </RadzenButton>
@@ -159,7 +163,7 @@
                 </RadzenButton>
             </EditTemplate>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn Width="60px" TItem="ProductWithCostsDto" Filterable="false" Sortable="false"  Context="dsource" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn Width="60px" TItem="ProductWithCostsDto" Filterable="false" Sortable="false" Context="dsource" TextAlign="TextAlign.Center">
             <Template Context="dsource">
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
                 </RadzenButton>
@@ -177,238 +181,273 @@
     <div class="col col-md-2">
         <RadzenButton Click="CloseConfirmation" ButtonStyle="ButtonStyle.Secondary" Text="Закрыть" />
     </div>
-    <div class="col col-md-10">
+    <div class="col col-md-5">
         <div style="align-content:end">
             <RadzenCheckBox TValue="bool" TriState="false" @bind-Value="IsBank" Name="IsBank" />
             <RadzenLabel Text="Банк" Component="IsBank" Style="margin-left: 5px;margin-bottom: 20px" />
         </div>
     </div>
+    @*<div class="col col-md-5">
+            <div>
+                <RadzenLabel Text="Цена со скидкой" Component="TotalWithDiscount" />
+                <RadzenNumeric Min="0" Change="OnChangeDiscount" TValue="decimal" @bind-Value="Summa" Name="TotalWithDiscount" Style="width:100%" />
+                <RadzenCompareValidator Component="TotalWithDiscount" Value=@(dsource.Select(p=>p.Kurs*p.SaleCost*(decimal)p.Amount)) Operator="CompareOperator.LessThanEqual" Text="Нельзя продать на минус!" />
+            </div>
+        </div>*@
 </div>
 
-<AddCustomerComponent ClientAddedCallback="ClientAddedHandler"></AddCustomerComponent>
+@*<AddCustomerComponent ClientAddedCallback="ClientAddedHandler"></AddCustomerComponent>*@
+<style>
+    .rz-tabview-panel {
+        padding: 0.25rem;
+    }
+</style>
+
+
 @code {
-            private RadzenDropDownDataGrid<int> productDropDown;
-            bool IsBank;
-            int CustomerId = 1;
-            double kurs = 1;
-            protected override string ApiUrl { get; set; } = "api/ProductSales";
-            private bool ProductTypeDisable = true;
-            IEnumerable<Products> product = new List<Products>();
-            IEnumerable<ProductTypes> productype = new List<ProductTypes>();
-            IEnumerable<Customers> customer = new List<Customers>();
+    private RadzenDropDownDataGrid<int> productDropDown;
+    bool IsBank;
+    int CustomerId = 1;
+    double kurs = 0;
+    protected override string ApiUrl { get; set; } = "api/ProductSales";
+    private bool ProductTypeDisable = true;
+    IEnumerable<Products> product = new List<Products>();
+    IEnumerable<ProductTypes> productype = new List<ProductTypes>();
+    IEnumerable<Customers> customer = new List<Customers>();
+    decimal Summa;
+    protected async override Task GetForDropDown()
+    {
+        productype = await serv.GetAsync<IEnumerable<ProductTypes>>("api/DropDown/ProductTypes");
+        customer = await serv.GetAsync<IEnumerable<Customers>>("api/DropDown/Customers");
+    }
 
-            protected async override Task GetForDropDown()
-            {
-                productype = await serv.GetAsync<IEnumerable<ProductTypes>>("api/DropDown/ProductTypes");
-                customer = await serv.GetAsync<IEnumerable<Customers>>("api/DropDown/Customers");
-            }
-
-            async Task DeleteConfirmation(ProductWithCostsDto dat) => await DialogService.OpenAsync("Подтверждение", ds =>
-            @<RadzenCard Style="padding: 20px;">
-                <p Style="margin-bottom: 10px;">Вы действительно хотите удалить "@dat.Name"?</p>
-                <div class="row">
-                    <div class="col-md-8">
-                        <RadzenButton Text="Да" Click="args => OkDialog(dat)" Style="margin-bottom: 10px; width: 150px" />
-                        <RadzenButton Text="Отмена" Click="CancelDialog" ButtonStyle="ButtonStyle.Secondary" Style="margin-bottom: 10px; width: 150px" />
-                    </div>
-                </div>
-            </RadzenCard>);
+    async Task DeleteConfirmation(ProductWithCostsDto dat) => await DialogService.OpenAsync("Подтверждение", ds =>
+    @<RadzenCard Style="padding: 20px;">
+        <p Style="margin-bottom: 10px;">Вы действительно хотите удалить "@dat.Name"?</p>
+        <div class="row">
+            <div class="col-md-8">
+                <RadzenButton Text="Да" Click="args => OkDialog(dat)" Style="margin-bottom: 10px; width: 150px" />
+                <RadzenButton Text="Отмена" Click="CancelDialog" ButtonStyle="ButtonStyle.Secondary" Style="margin-bottom: 10px; width: 150px" />
+            </div>
+        </div>
+    </RadzenCard>);
 
 async Task CloseConfirmation() => await DialogService.OpenAsync("Подтверждение", ds =>
 @<RadzenCard Style="padding: 20px;">
-    <p Style="margin-bottom: 10px;">Вы действительно хотите закрыть <br /> заказ на сумму : "@dsource.Sum(x => x.Total)?.ToString("C0", new CultureInfo("kk-KZ"))"?</p>
+    <p Style="margin-bottom: 10px;">Вы действительно хотите закрыть <br /> заказ на сумму : "@dsource.Sum(x => (decimal)x.Total * x.Kurs).ToString("C0", new CultureInfo("kk-KZ"))"?</p>
+    <RadzenLabel Component="Summa" Text="Цена со скидкой" />
+    <RadzenNumeric Name="Summa" Min="1" TValue="decimal" @bind-Value="Summa" />
     <div class="row">
         <div class="col-md-8">
             <RadzenButton Text="Да" Click="args => CloseOrder()" Style="margin-bottom: 10px; width: 150px" />
             <RadzenButton Text="Отмена" Click="CancelDialog" ButtonStyle="ButtonStyle.Secondary" Style="margin-bottom: 10px; width: 150px" />
         </div>
     </div>
-    </RadzenCard>
-        );
+</RadzenCard>
+);
 
-    async void SelectedProductType(object _Id)
+
+async void OnCostChange(decimal d)
+{
+    Console.WriteLine(d);
+}
+
+
+async void SelectedProductType(object _Id)
+{
+    try
     {
-        try
+        loading.Visible = true;
+        int Id = (int)_Id;
+        if (Id != 0)
         {
-            loading.Visible = true;
-            int Id = (int)_Id;
-            if (Id != 0)
-            {
-                product = await serv.GetByIdAsync<IEnumerable<Products>>(Id, "api/DropDown/Products");
-                ProductTypeDisable = false;
-                await InvokeAsync(StateHasChanged);
-            }
-            else
-            {
-                ProductTypeDisable = true;
-                await InvokeAsync(StateHasChanged);
-            }
+            product = await serv.GetByIdAsync<IEnumerable<Products>>(Id, "api/DropDown/Products");
+            ProductTypeDisable = false;
+            await InvokeAsync(StateHasChanged);
         }
-        catch (Exception)
+        else
         {
-            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при получении данных", Duration = 2500 });
-        }
-        finally
-        {
-            loading.Visible = false;
-        }
-
-    }
-    async Task ChangeCode(string value)
-    {
-        await SelectedProduct(0, value);
-        await InvokeAsync(StateHasChanged);
-    }
-    async Task ChangeList(double d)
-    {
-        var value = kurs;
-        foreach(var item in dsource)
-        {
-            // item.
-        }
-        await InvokeAsync(StateHasChanged);
-    }
-    async Task SelectedProduct(object _Id, string code = null)
-    {
-        try
-        {
-            loading.Visible = true;
-            int Id = (int)_Id;
-
-            if (Id != 0 || code != null)
-            {
-                productDropDown.Reset();
-                var result = dsource.FirstOrDefault(x => x.Id == Id);
-                if (result != null)
-                {
-                    if (result.RemainCount >= (result.Amount + 1))
-                        result.Amount++;
-                    await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Продукт получен", Duration = 1500 });
-                    return;
-                }
-                code = code != null ? $"?code={code}" : "";
-                var ProductFromApi = await serv.GetJustAsync<ResponseMessage<ProductWithCostsDto>>($"api/Main/GetOneProduct/{Id}" + code);
-                if (!ProductFromApi.IsSuccessCode)
-                {
-                    await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Инфо", Detail = ProductFromApi.ErrorMessage, Duration = 2000 });
-                }
-                else
-                {
-                    if(ProductFromApi.entity == null)
-                    {
-                        await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Не найдено", Detail = "Возможно нет в наличии!", Duration = 2000 });
-
-                        return;
-                    }
-                    count++;
-                    ProductFromApi.entity.Amount = 1;
-                    dsource.Insert(0, ProductFromApi.entity);
-                    await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Продукт получен", Duration = 1500 });
-                }
-            }
-        }
-        catch (Exception)
-        {
-            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при получении данных", Duration = 2500 });
-        }
-        finally
-        {
-            loading.Visible = false;
-            await Grid.Reload();
-        }
-
-    }
-
-
-
-    async void CloseOrder()
-    {
-        try
-        {
-
-            if (dsource.Sum(x => x.Total) <= 0)
-            {
-                CancelDialog();
-                return;
-            }
-            CancelDialog();
-            loading.Visible = true;
-            List<ProductSales> sales = new List<ProductSales>();
-            foreach (var item in dsource)
-            {
-                sales.Add(new ProductSales
-                {
-                    Amount = item.Amount,
-                    IncomeCost = item.IncomeCost.Value,
-                    IsOptCost = item.IsOptCost,
-                    ProductId = item.Id,
-                    SaleCost = item.SaleCost.Value,
-                    RegDt = DateTime.Now,
-                    IsBank = IsBank,
-                    Comments = item.Comments,
-                    CustomerId = CustomerId
-                });
-            }
-            ResponseMessage<int> executed = await serv.PostAsync<ResponseMessage<int>>(sales, "api/Main/CloseOrder");
-            if (executed.IsSuccessCode)
-            {
-                await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Успешно сохранен!", Duration = 1500 });
-                dsource.Clear();
-                await Grid.Reload();
-            }
-            else
-            {
-                await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при отправки данных", Duration = 2500 });
-
-            }
-        }
-        catch (Exception)
-        {
-            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при отправки данных", Duration = 2500 });
-        }
-        finally
-        {
-            loading.Visible = false;
             ProductTypeDisable = true;
             await InvokeAsync(StateHasChanged);
         }
-
     }
-
-    protected override Task GetData()
+    catch (Exception)
     {
-        return Task.CompletedTask;
+        await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при получении данных", Duration = 2500 });
     }
-    protected override Task UpdateData(ProductWithCostsDto item)
+    finally
     {
-        return Task.CompletedTask;
-    }
-    void DblClick(ProductWithCostsDto item)
-    {
-        this.EditRow(item);
-    }
-    protected override Task DeleteData(int Id)
-    {
-        return Task.CompletedTask;
+        loading.Visible = false;
     }
 
-    async void ClientAddedHandler(object obj)
+}
+async Task ChangeCode(string value)
+{
+    await SelectedProduct(0, value);
+    await InvokeAsync(StateHasChanged);
+}
+async Task ChangeList(double d)
+{
+    var value = kurs;
+    if (d > 0)
+        foreach (var item in dsource)
+        {
+            item.Kurs = (decimal)d;
+        }
+    await InvokeAsync(StateHasChanged);
+}
+async Task SelectedProduct(object _Id, string code = null)
+{
+    try
     {
-        try
+        loading.Visible = true;
+        int Id = (int)_Id;
+
+        if (Id != 0 || code != null)
         {
-            loading.Visible = true;
-            customer = await serv.GetAsync<IEnumerable<Customers>>("api/DropDown/Customers");
-        }
-        catch (Exception)
-        {
-            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при получении данных", Duration = 2500 });
-        }
-        finally
-        {
-            loading.Visible = false;
-            await InvokeAsync(StateHasChanged);
+            productDropDown.Reset();
+            var result = dsource.FirstOrDefault(x => x.Id == Id);
+            if (result != null)
+            {
+                if ((result.RemainCount / result.Volume) >= (result.Amount + 1))
+                    result.Amount++;
+                await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Продукт получен", Duration = 1500 });
+                return;
+            }
+            code = code != null ? $"?code={code}" : "";
+            var ProductFromApi = await serv.GetJustAsync<ResponseMessage<ProductWithCostsDto>>($"api/Main/GetOneProduct/{Id}" + code);
+            if (!ProductFromApi.IsSuccessCode)
+            {
+                await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Инфо", Detail = ProductFromApi.ErrorMessage, Duration = 2000 });
+            }
+            else
+            {
+                if (ProductFromApi.entity == null)
+                {
+                    await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Не найдено", Detail = "Возможно нет в наличии!", Duration = 2000 });
+
+                    return;
+                }
+                count++;
+                ProductFromApi.entity.Amount = 1;
+                //ProductFromApi.entity.CostTemp = ProductFromApi.entity.SaleCost.Value*(decimal)ProductFromApi.entity.Kurs;
+                //ProductFromApi.entity.Kurs = (decimal)kurs;
+                dsource.Insert(0, ProductFromApi.entity);
+                await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Продукт получен", Duration = 1500 });
+            }
         }
     }
+    catch (Exception)
+    {
+        await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при получении данных", Duration = 2500 });
+    }
+    finally
+    {
+        loading.Visible = false;
+        await Grid.Reload();
+    }
+
+}
+
+async void CloseOrder()
+{
+    try
+    {
+
+        if (dsource.Sum(x => x.Total) <= 0)
+        {
+            CancelDialog();
+            return;
+        }
+        CancelDialog();
+        loading.Visible = true;
+        List<ProductSales> sales = new List<ProductSales>();
+        foreach (var item in dsource)
+        {
+            sales.Add(new ProductSales
+            {
+                Amount = item.Amount,
+                IncomeCost = item.IncomeCost,
+                IsOptCost = item.IsOptCost,
+                ProductId = item.Id,
+                SaleCost = item.SaleCost,
+                RegDt = DateTime.Now,
+                IsBank = IsBank,
+                Comments = item.Comments,
+                CustomerId = CustomerId
+            });
+        }
+        ResponseMessage<int> executed = await serv.PostAsync<ResponseMessage<int>>(sales, "api/Main/CloseOrder");
+        if (executed.IsSuccessCode)
+        {
+            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Успешно сохранен!", Duration = 1500 });
+            dsource.Clear();
+            await Grid.Reload();
+            Summa = 0;
+        }
+        else
+        {
+            await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при отправки данных", Duration = 2500 });
+
+        }
+    }
+    catch (Exception)
+    {
+        await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при отправки данных", Duration = 2500 });
+    }
+    finally
+    {
+        loading.Visible = false;
+        ProductTypeDisable = true;
+        await InvokeAsync(StateHasChanged);
+    }
+
+}
+
+protected override Task GetData()
+{
+    return Task.CompletedTask;
+}
+protected override Task UpdateData(ProductWithCostsDto item)
+{
+    return Task.CompletedTask;
+}
+void DblClick(ProductWithCostsDto item)
+{
+    this.EditRow(item);
+}
+protected override Task DeleteData(int Id)
+{
+    return Task.CompletedTask;
+}
+
+async void ClientAddedHandler(object obj)
+{
+    try
+    {
+        loading.Visible = true;
+        customer = await serv.GetAsync<IEnumerable<Customers>>("api/DropDown/Customers");
+    }
+    catch (Exception)
+    {
+        await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Ошибка", Detail = "Ошибка при получении данных", Duration = 2500 });
+    }
+    finally
+    {
+        loading.Visible = false;
+        await InvokeAsync(StateHasChanged);
+    }
+}
+
+async Task KeyPressed(KeyboardEventArgs e, ProductWithCostsDto obj)
+{
+    //await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = e.Code, Detail = "", Duration = 4500 });
+    if (e.Key == "Enter" && obj != null)
+        this.SaveRow(obj);
+    if (e.Key == "Escape")
+        this.CancelEdit(obj);
+
+}
 }
 
 

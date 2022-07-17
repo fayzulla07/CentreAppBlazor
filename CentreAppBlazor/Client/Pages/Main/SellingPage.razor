@@ -1,0 +1,11 @@
+﻿@page "/SellingPage"
+@attribute [Authorize]
+
+<RadzenTabs>
+    <Tabs>
+        <RadzenTabsItem Text="Продажа"><ProductSalePage /></RadzenTabsItem>
+        <RadzenTabsItem Text="Клиенты" Icon=""><CustomerPage /></RadzenTabsItem>
+        <RadzenTabsItem Text="История продажи"><HistorySalePage></HistorySalePage></RadzenTabsItem>
+        <RadzenTabsItem Text="История возврата"><HistoryReturnPage></HistoryReturnPage></RadzenTabsItem>
+    </Tabs>
+</RadzenTabs>

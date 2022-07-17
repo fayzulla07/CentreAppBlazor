@@ -1,177 +1,197 @@
 ﻿@page "/ProductIncomePage"
 @inherits BaseCrud<ProductIncoms>
 @attribute [Authorize(Roles = "admin, manager")]
+<RadzenTabs>
+    <Tabs>
+        <RadzenTabsItem Text="Приход" Icon="">
+            <div class="d-flex">
+                <div class="">
+                    <div class="h5">Приход </div>
+                </div>
+                @*<div class="">
+                    <RadzenCheckBox @bind-Value="IsResponsive" TriState="false" Name="CheckBox1" />
+                    <RadzenLabel Text="Режим поиска" Component="CheckBox1" Style="margin-left: 5px;margin-bottom: 20px" />
 
-<div class="d-flex">
-    <div class="">
-        <div class="h5">Приход </div>
-    </div>
-    @*<div class="">
-        <RadzenCheckBox @bind-Value="IsResponsive" TriState="false" Name="CheckBox1" />
-        <RadzenLabel Text="Режим поиска" Component="CheckBox1" Style="margin-left: 5px;margin-bottom: 20px" />
-
-    </div>*@
-</div>
-<RadzenPanel AllowCollapse="true" Collapsed="false">
-    <ChildContent>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-4">
-                    <RadzenLabel Text="Тип Продукта" />
-                    <br />
-                    <RadzenDropDown  TValue="int" Change="SelectedProductType" Data="prtype" Placeholder="Выберите Тип Продукта" AllowFiltering="true" AllowClear="true" TextProperty="@nameof(ProductTypes.Name)" ValueProperty="@nameof(ProductTypes.Id)" Style="width:100%" />
-                    <br />
-                </div>
-                <div class="col-md-4">
-                    <RadzenLabel Text="Продукт" />
-                    <br />
-                    <RadzenDropDown  @ref="productDropDown" Disabled="ProductTypeDisable" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" TValue="int" Change="SelectedProduct" @bind-Value="dataform.ProductId" Data="product" Placeholder="Выберите Продукт" AllowFiltering="true" AllowClear="true" TextProperty="@nameof(Products.Name)" ValueProperty="@nameof(Products.Id)" Style="width:100%" />
-
-                    <br />
-                </div>
-                <div class="col-md-4">
-                    <RadzenLabel Text="Поставщик" />
-                    <br />
-                    <RadzenDropDown @bind-Value="CustomerId" Data="supplier" Placeholder="Поставщик" AllowFiltering="true" AllowClear="false" TextProperty="@nameof(Suppliers.Name)" ValueProperty="@nameof(Suppliers.Id)" Style="width:100%" />
-                    <br />
-                </div>
-                <div class="col-md-4">
-                    <RadzenLabel Text="Цена прихода" />
-                    <br />
-                    <RadzenNumeric AutoComplete="false" Min="0" Style="width:100%" Name="@nameof(ProductIncoms.IncomeCost)" @bind-Value="dataform.IncomeCost" />
-                    <br />
-                </div>
-                <div class="col-md-4">
-                    <RadzenLabel Text="Цена продажи" />
-                    <br />
-                    <RadzenNumeric AutoComplete="false" Min="0" Style="width:100%" Name="@nameof(ProductIncoms.SaleCost)" @bind-Value="dataform.SaleCost" />
-                    <br />
-                </div>
-                <div class="col-md-4">
-                    <RadzenLabel Text="Курс($)" />
-                    <br />
-                    <RadzenNumeric Min="0" Style="width:100%" Name="@nameof(ProductIncoms.Kurs)" @bind-Value="dataform.Kurs" />
-                    <br />
-                </div>
+                </div>*@
             </div>
 
-        </div>
-    </ChildContent>
-</RadzenPanel>
+            <RadzenPanel AllowCollapse="true" Collapsed="false">
+                <ChildContent>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <RadzenLabel Text="Тип Продукта" />
+                                <br />
+                                <RadzenDropDown TValue="int" Change="SelectedProductType" Data="prtype" Placeholder="Выберите Тип Продукта" AllowFiltering="true" AllowClear="true" TextProperty="@nameof(ProductTypes.Name)" ValueProperty="@nameof(ProductTypes.Id)" Style="width:100%" />
+                                <br />
+                            </div>
+                            <div class="col-md-4">
+                                <RadzenLabel Text="Продукт" />
+                                <br />
+                                <RadzenDropDown @ref="productDropDown" Disabled="ProductTypeDisable" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" TValue="int" Change="SelectedProduct" @bind-Value="dataform.ProductId" Data="product" Placeholder="Выберите Продукт" AllowFiltering="true" AllowClear="true" TextProperty="@nameof(Products.Name)" ValueProperty="@nameof(Products.Id)" Style="width:100%" />
+
+                                <br />
+                            </div>
+                            <div class="col-md-4">
+                                <RadzenLabel Text="Поставщик" />
+                                <br />
+                                <RadzenDropDown @bind-Value="CustomerId" Data="supplier" Placeholder="Поставщик" AllowFiltering="true" AllowClear="false" TextProperty="@nameof(Suppliers.Name)" ValueProperty="@nameof(Suppliers.Id)" Style="width:100%" />
+                                <br />
+                            </div>
+                            <div class="col-md-4">
+                                <RadzenLabel Text="Цена прихода" />
+                                <br />
+                                <RadzenNumeric AutoComplete="false" Min="0" Style="width:100%" Name="@nameof(ProductIncoms.IncomeCost)" @bind-Value="dataform.IncomeCost" />
+                                <br />
+                            </div>
+                            <div class="col-md-4">
+                                <RadzenLabel Text="Цена продажи" />
+                                <br />
+                                <RadzenNumeric AutoComplete="false" Min="0" Style="width:100%" Name="@nameof(ProductIncoms.SaleCost)" @bind-Value="dataform.SaleCost" />
+                                <br />
+                            </div>
+                            <div class="col-md-4">
+                                <RadzenLabel Text="Курс($)" />
+                                <br />
+                                <RadzenNumeric Min="0" Style="width:100%" Name="@nameof(ProductIncoms.Kurs)" @bind-Value="dataform.Kurs" />
+                                <br />
+                            </div>
+                        </div>
+
+                    </div>
+                </ChildContent>
+            </RadzenPanel>
+
+            <RadzenDataGrid @ref="Grid" AllowFiltering="true" AllowColumnResize="true" AllowPaging="true" PageSize="20" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                            AllowSorting="true" Data="@dsource" TItem="ProductIncoms" ColumnWidth="200px" RowUpdate="@OnUpdateRow" FilterMode="FilterMode.Simple">
+                <Columns>
+                    <RadzenDataGridColumn TItem="ProductIncoms" Property="@nameof(ProductIncoms.Id)" Visible="false" />
+                    <RadzenDataGridColumn Width="250px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.Product.Name)" Title="Имя">
+                        <Template Context="vdata">
+                            <span class="text-wrap">@vdata.Product.Name</span>
+                        </Template>
+                    </RadzenDataGridColumn>
+
+                    <RadzenDataGridColumn Width="110px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.Amount)" Title="Количество" TextAlign="TextAlign.Center">
+                        <Template Context="vdata">
+                            <span class="text-wrap">@vdata.Amount</span>
+                        </Template>
+                        <EditTemplate Context="vdata">
+                            <RadzenNumeric @bind-Value="vdata.Amount" Style="width:100%" />
+                        </EditTemplate>
+                        <FooterTemplate>
+                            <span class="text-wrap">@dsource.Sum(x => x.Amount)</span>
+                        </FooterTemplate>
+                    </RadzenDataGridColumn>
+
+                    <RadzenDataGridColumn Width="120px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.IncomeCost)" Title="Цена прихода" TextAlign="TextAlign.Center">
+                        <Template Context="vdata">
+                            <span class="text-wrap">@vdata.IncomeCost.ToString("C0", new CultureInfo("en-US"))</span>
+                        </Template>
+                        <EditTemplate Context="vdata">
+                            <RadzenNumeric Min="0" @bind-Value="vdata.IncomeCost" Style="width:100%" />
+                        </EditTemplate>
+                        <FooterTemplate>
+                            <span class="text-wrap">@dsource.Sum(x => x.IncomeCost).ToString("C0", new CultureInfo("en-US"))</span>
+                        </FooterTemplate>
+                    </RadzenDataGridColumn>
+
+                    <RadzenDataGridColumn Width="110px" TItem="ProductIncoms" Title="Сумма Прихода" TextAlign="TextAlign.Center">
+                        <Template Context="vdata">
+                            <span class="text-wrap">@(((vdata.IncomeCost * (decimal)@vdata.Amount)).ToString("C0", new CultureInfo("en-US")))</span>
+                        </Template>
+                        <FooterTemplate>
+                            <span class="text-wrap" style="color:red">@dsource.Sum(x => (x.IncomeCost * (decimal)x.Amount)).ToString("C0", new CultureInfo("en-US"))</span>
+                        </FooterTemplate>
+                    </RadzenDataGridColumn>
+
+                    <RadzenDataGridColumn Width="120px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.IncomeCost)" Title="Розн цена" TextAlign="TextAlign.Center">
+                        <Template Context="vdata">
+                            <span class="text-wrap">@vdata.SaleCost.ToString("C0", new CultureInfo("en-US"))</span>
+                        </Template>
+                        <EditTemplate Context="vdata">
+                            <RadzenNumeric Min="0" @bind-Value="vdata.SaleCost" Style="width:100%" />
+                        </EditTemplate>
+                        <FooterTemplate>
+                            <span class="text-wrap">@dsource.Sum(x => x.SaleCost).ToString("C0", new CultureInfo("en-US"))</span>
+                        </FooterTemplate>
+                    </RadzenDataGridColumn>
+
+                    @*<RadzenDataGridColumn Width="120px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.OptCost)" Title="Оптовая цена" TextAlign="TextAlign.Center">
+                        <Template Context="vdata">
+                            <span class="text-wrap">@vdata.OptCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
+                        </Template>
+                        <EditTemplate Context="vdata">
+                            <RadzenNumeric Min="0" @bind-Value="vdata.OptCost" Style="width:100%" />
+                        </EditTemplate>
+                        <FooterTemplate>
+                            <span class="text-wrap">@dsource.Sum(x => x.OptCost).ToString("C0", new CultureInfo("kk-KZ"))</span>
+                        </FooterTemplate>
+                    </RadzenDataGridColumn>*@
+
+                    <RadzenDataGridColumn Width="150px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.SupplierId)" Title="Поставщик" TextAlign="TextAlign.Center">
+                        <Template Context="vdata">
+                            <span class="text-wrap">@supplier.FirstOrDefault(x => x.Id == vdata.SupplierId)?.Name</span>
+                        </Template>
+                        <EditTemplate Context="vdata">
+                            <RadzenDropDown @bind-Value="vdata.SupplierId" Data="supplier" Placeholder="Выберите Клиент" AllowFiltering="true" AllowColumnResize="true" AllowClear="true" TextProperty="@nameof(Products.Name)" ValueProperty="@nameof(Products.Id)" Style="width:100%" />
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
+
+                    <RadzenDataGridColumn Width="200px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.Comments)" Title="Комментарии">
+                        <Template Context="vdata">
+                            <span class="text-wrap">@vdata.Comments</span>
+                        </Template>
+                        <EditTemplate Context="vdata">
+                            <RadzenTextBox @bind-Value="vdata.Comments" Style="width:100%" />
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
+
+                    <RadzenDataGridColumn TItem="ProductIncoms" Context="dsource" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+                        <Template Context="dsource">
+                            <RadzenButton Icon="edit" Size="ButtonSize.Medium" Click="@(args => EditRow(dsource))">
+                            </RadzenButton>
+                        </Template>
+                        <EditTemplate Context="dsource">
+                            <RadzenButton Icon="save" Size="ButtonSize.Medium" Click="@((args) => SaveRow(dsource))">
+                            </RadzenButton>
+                            <RadzenButton Icon="cancel" Size="ButtonSize.Medium" ButtonStyle="ButtonStyle.Secondary" Click="@((args) => CancelEdit(dsource))">
+                            </RadzenButton>
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="ProductIncoms" Context="dsource" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
+                        <Template Context="dsource">
+                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
+                            </RadzenButton>
+                        </Template>
+                        <EditTemplate Context="dsource">
+                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
+                            </RadzenButton>
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
+                </Columns>
+
+            </RadzenDataGrid>
+
+            <RadzenButton Style="float:left; margin-top:20px;" Text="Импорт из Excel" ButtonStyle="ButtonStyle.Secondary" Click="GoToImportPage" />
+            <RadzenButton Style="float:right; margin-top:20px;" Text="Закрыть" ButtonStyle="ButtonStyle.Success" Click="CloseOrder" />
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="История прихода">
+            <HistoryIncomePage/>
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="Импорт из файла">
+            <ProductBulkUpload />
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="Поставщики">
+            <SupplierPage/>
+        </RadzenTabsItem>
+    </Tabs>
+
+</RadzenTabs>
 
 
-<RadzenDataGrid @ref="Grid" AllowFiltering="true" AllowColumnResize="true" AllowPaging="true" PageSize="20"  FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-            AllowSorting="true" Data="@dsource" TItem="ProductIncoms" ColumnWidth="200px" RowUpdate="@OnUpdateRow" FilterMode="FilterMode.Simple">
-    <Columns>
-        <RadzenDataGridColumn TItem="ProductIncoms" Property="@nameof(ProductIncoms.Id)" Visible="false" />
-        <RadzenDataGridColumn Width="250px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.Product.Name)" Title="Имя">
-            <Template Context="vdata">
-                <span class="text-wrap">@vdata.Product.Name</span>
-            </Template>
-        </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn Width="110px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.Amount)" Title="Количество" TextAlign="TextAlign.Center">
-            <Template Context="vdata">
-                <span class="text-wrap">@vdata.Amount</span>
-            </Template>
-            <EditTemplate Context="vdata">
-                <RadzenNumeric @bind-Value="vdata.Amount" Style="width:100%" />
-            </EditTemplate>
-            <FooterTemplate>
-                <span class="text-wrap">@dsource.Sum(x => x.Amount)</span>
-            </FooterTemplate>
-        </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn Width="120px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.IncomeCost)" Title="Цена прихода" TextAlign="TextAlign.Center">
-            <Template Context="vdata">
-                <span class="text-wrap">@vdata.IncomeCost.ToString("C0", new CultureInfo("en-US"))</span>
-            </Template>
-            <EditTemplate Context="vdata">
-                <RadzenNumeric Min="0" @bind-Value="vdata.IncomeCost" Style="width:100%" />
-            </EditTemplate>
-            <FooterTemplate>
-                <span class="text-wrap">@dsource.Sum(x => x.IncomeCost).ToString("C0", new CultureInfo("en-US"))</span>
-            </FooterTemplate>
-        </RadzenDataGridColumn>
-
-        <RadzenDataGridColumn Width="110px" TItem="ProductIncoms" Title="Сумма Прихода" TextAlign="TextAlign.Center">
-            <Template Context="vdata">
-                <span class="text-wrap">@(((vdata.IncomeCost * (decimal)@vdata.Amount)).ToString("C0", new CultureInfo("en-US")))</span>
-            </Template>
-            <FooterTemplate>
-                <span class="text-wrap" style="color:red">@dsource.Sum(x => (x.IncomeCost * (decimal)x.Amount)).ToString("C0", new CultureInfo("en-US"))</span>
-            </FooterTemplate>
-        </RadzenDataGridColumn>
-
-        <RadzenDataGridColumn Width="120px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.IncomeCost)" Title="Розн цена" TextAlign="TextAlign.Center">
-            <Template Context="vdata">
-                <span class="text-wrap">@vdata.SaleCost.ToString("C0", new CultureInfo("en-US"))</span>
-            </Template>
-            <EditTemplate Context="vdata">
-                <RadzenNumeric Min="0" @bind-Value="vdata.SaleCost" Style="width:100%" />
-            </EditTemplate>
-            <FooterTemplate>
-                <span class="text-wrap">@dsource.Sum(x => x.SaleCost).ToString("C0", new CultureInfo("en-US"))</span>
-            </FooterTemplate>
-        </RadzenDataGridColumn>
-
-        @*<RadzenDataGridColumn Width="120px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.OptCost)" Title="Оптовая цена" TextAlign="TextAlign.Center">
-            <Template Context="vdata">
-                <span class="text-wrap">@vdata.OptCost.ToString("C0", new CultureInfo("kk-KZ"))</span>
-            </Template>
-            <EditTemplate Context="vdata">
-                <RadzenNumeric Min="0" @bind-Value="vdata.OptCost" Style="width:100%" />
-            </EditTemplate>
-            <FooterTemplate>
-                <span class="text-wrap">@dsource.Sum(x => x.OptCost).ToString("C0", new CultureInfo("kk-KZ"))</span>
-            </FooterTemplate>
-        </RadzenDataGridColumn>*@
-
-        <RadzenDataGridColumn Width="150px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.SupplierId)" Title="Поставщик" TextAlign="TextAlign.Center">
-            <Template Context="vdata">
-                <span class="text-wrap">@supplier.FirstOrDefault(x => x.Id == vdata.SupplierId)?.Name</span>
-            </Template>
-            <EditTemplate Context="vdata">
-                <RadzenDropDown @bind-Value="vdata.SupplierId" Data="supplier" Placeholder="Выберите Клиент" AllowFiltering="true" AllowColumnResize="true" AllowClear="true" TextProperty="@nameof(Products.Name)" ValueProperty="@nameof(Products.Id)" Style="width:100%" />
-            </EditTemplate>
-        </RadzenDataGridColumn>
-
-        <RadzenDataGridColumn Width="200px" TItem="ProductIncoms" Property="@nameof(ProductIncoms.Comments)" Title="Комментарии">
-            <Template Context="vdata">
-                <span class="text-wrap">@vdata.Comments</span>
-            </Template>
-            <EditTemplate Context="vdata">
-                <RadzenTextBox @bind-Value="vdata.Comments" Style="width:100%" />
-            </EditTemplate>
-        </RadzenDataGridColumn>
-
-        <RadzenDataGridColumn TItem="ProductIncoms" Context="dsource" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
-            <Template Context="dsource">
-                <RadzenButton Icon="edit" Size="ButtonSize.Medium" Click="@(args => EditRow(dsource))">
-                </RadzenButton>
-            </Template>
-            <EditTemplate Context="dsource">
-                <RadzenButton Icon="save" Size="ButtonSize.Medium" Click="@((args) => SaveRow(dsource))">
-                </RadzenButton>
-                <RadzenButton Icon="cancel" Size="ButtonSize.Medium" ButtonStyle="ButtonStyle.Secondary" Click="@((args) => CancelEdit(dsource))">
-                </RadzenButton>
-            </EditTemplate>
-        </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="ProductIncoms" Context="dsource" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
-            <Template Context="dsource">
-                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
-                </RadzenButton>
-            </Template>
-            <EditTemplate Context="dsource">
-                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Medium" Click="@(args => DeleteConfirmation(dsource))">
-                </RadzenButton>
-            </EditTemplate>
-        </RadzenDataGridColumn>
-    </Columns>
-
-</RadzenDataGrid>
-
-<RadzenButton Style="float:right; margin-top:20px;" Text="Закрыть" ButtonStyle="ButtonStyle.Success" Click="CloseOrder" />
 
 @code {
     private RadzenDropDown<int> productDropDown;
@@ -195,7 +215,7 @@
     {
         try
         {
-            if(dsource.Count <= 0)
+            if (dsource.Count <= 0)
             {
                 await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Инфо", Detail = "Список пуст!", Duration = 1500 });
                 return;
@@ -251,7 +271,7 @@
             loading.Visible = true;
             var val = await serv.CallAsync(@"api/Main/GetIncomeExcel");
 
-            await JS.InvokeVoidAsync("saveasFile", "Invoice"+DateTime.Now.ToString("yyyy-MM-dd-H-m-s")+".xlsx", Convert.ToBase64String(await val.Content.ReadAsByteArrayAsync()));
+            await JS.InvokeVoidAsync("saveasFile", "Invoice" + DateTime.Now.ToString("yyyy-MM-dd-H-m-s") + ".xlsx", Convert.ToBase64String(await val.Content.ReadAsByteArrayAsync()));
         }
         catch (Exception ex)
         {
@@ -339,7 +359,7 @@
                             Id = ProductFromApi.entity.Id,
                             Amount = 1,
                             IncomeCost = dataform.IncomeCost,
-                            
+
                             SaleCost = Math.Round(dataform.SaleCost, 2),
                             //OptCost =Math.Round(dataform.IncomeCost + ((dataform.OptCost * dataform.IncomeCost) / 100), 2),
                             SupplierId = CustomerId,
@@ -377,6 +397,12 @@
     protected override Task DeleteData(int Id)
     {
         return Task.CompletedTask;
+    }
+    [Inject]
+    public NavigationManager Nav { get; set; }
+    void GoToImportPage()
+    {
+        Nav.NavigateTo("ProductBulkUpload");
     }
 }
 

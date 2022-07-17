@@ -29,8 +29,8 @@ namespace CentreAppBlazor.Server.Controllers
         [HttpGet(@"GetOneProduct/{ProductId}")]
         public async Task<ActionResult<ResponseMessage<ProductWithCostsDto>>> GetOneProduct(int ProductId, [FromQuery]string code)
         {
-           var product = await _dappercontext.QueryAsync<ProductWithCostsDto>("select p.Id, p.[Name], p.RemainCount, p.Code, av.IncomeCost, av.OptCost, av.SaleCost, u.[Name] as UnitName, p.Volume as Volume " +
-               "from Products as p INNER JOIN AvCurrentCosts as av on p.Id = av.ProductId LEFT OUTER JOIN Units as u on p.UnitId = u.Id WHERE (p.[Id] = @_ProductId or p.[code] = @code)  AND p.RemainCount > 0; ", new { _ProductId = ProductId, code });
+           var product = await _dappercontext.QueryAsync<ProductWithCostsDto>("select p.Id, p.[Name], p.RemainCount, Round(Amount,2) as AmountLeft, p.Code, av.IncomeCost, av.Kurs, av.OptCost, av.SaleCost, u.[Name] as UnitName, p.Volume as Volume " +
+               "from Products as p INNER JOIN AvCurrentCostsWithKurs as av on p.Id = av.ProductId LEFT OUTER JOIN Units as u on p.UnitId = u.Id WHERE (p.[Id] = @_ProductId or p.[code] = @code)  AND p.RemainCount > 0; ", new { _ProductId = ProductId, code });
             if(product == null)
             {
                 return new ResponseMessage<ProductWithCostsDto>() { IsSuccessCode = false, ErrorMessage = "Продукт не найден!" };

@@ -19,6 +19,13 @@
                 </Authorized>
             </AuthorizeView>
         </RadzenTabsItem>
+        <RadzenTabsItem Text="Д.Отчеты">
+            <AuthorizeView Roles="admin">
+                <Authorized>
+                    <ReportsConfigPage/>
+                </Authorized>
+            </AuthorizeView>
+        </RadzenTabsItem>
     </Tabs>
 </RadzenTabs>
 

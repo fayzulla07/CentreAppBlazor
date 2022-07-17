@@ -30,6 +30,7 @@ namespace CentreAppBlazor.Shared.Domain
         public int? OrderNumber { get; set; }
         public bool? IsBank { get; set; }
         public double Kurs { get; set; }
+        public decimal TotalSaleCost { get; set; }
 
         public virtual Customers Customer { get; set; }
         public virtual Products Product { get; set; }

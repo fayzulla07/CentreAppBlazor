@@ -27,7 +27,7 @@ namespace CentreAppBlazor.Client.Services.Main
         private NotificationService notificationService{ get; set; }
 
         protected RadzenDataGrid<T> Grid { get; set; }
-        private T temp;
+        public T temp;
         protected T dataform;
         protected List<T> dsource = new List<T>();
         protected override void OnInitialized()
@@ -114,6 +114,7 @@ namespace CentreAppBlazor.Client.Services.Main
             int Id = (int)ReflectionExten.GetPropValue(item, "Id");
             var value = dsource.FindIndex(x => (int)ReflectionExten.GetPropValue(x, "Id") == Id);
             dsource[value] = temp;
+            StateHasChanged();
         }
 
         protected async void DeleteRow(T item)
