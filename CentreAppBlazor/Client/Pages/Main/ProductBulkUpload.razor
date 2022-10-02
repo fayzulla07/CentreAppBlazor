@@ -33,10 +33,10 @@
         <Columns>
             <RadzenDataGridColumn TItem="ProductTypes" Property="@nameof(ProductTypes.Name)" Title="Имя">
                 <Template Context="vdata">
-                    @vdata.Name
+                    @vdata.Name (@(vdata.Products.Count()) шт.)
                 </Template>
                 <FooterTemplate>
-                    <b>колич:   </b>@(Data1 != null ? Data1.Count():string.Empty)
+                    <b>колич:   </b>@( TotalCount )
                 </FooterTemplate>
             </RadzenDataGridColumn>
         </Columns>
@@ -44,14 +44,14 @@
             @*<RadzenTabs>
                 <Tabs>
                     <RadzenTabsItem Text="Products">*@
-            <RadzenDataGrid Data="data.Products" TItem="Products" AllowColumnResize="true">
+            <RadzenDataGrid Data="data.Products" TItem="Products" AllowColumnResize="true" >
                 <Columns>
                     <RadzenDataGridColumn TItem="Products" Property="Code" Title="Code">
                         <Template Context="vdata">
                             @vdata.Code
                         </Template>
                         <FooterTemplate>
-                            <b>колич: </b> @(data.Products.Count())
+                            <b>колич группы: </b> @(data.Products.Select(p=>p.Id).Count())
                         </FooterTemplate>
                     </RadzenDataGridColumn>
 
@@ -60,11 +60,11 @@
                             @vdata.Volume
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="Products" Property="Amount" Title="Amount">
+                    @*<RadzenDataGridColumn TItem="Products" Property="Amount" Title="Amount">
                         <Template Context="vdata">
                             @vdata.Amount
                         </Template>
-                    </RadzenDataGridColumn>
+                    </RadzenDataGridColumn>*@
                     <RadzenDataGridColumn TItem="Products" Property="Name" Title="Name">
                         <Template Context="vdata">
                             @vdata.Name
@@ -239,6 +239,13 @@
 
             Helper helper = new Helper();
             Data1 = helper.Read1CExcel(content, AddIncomes, Kurs, SalePercent);
+            int s = 0;
+            foreach (var item in Data1)
+            {
+                s = s + item.Products.Count();
+            }
+            TotalCount = s;
             StateHasChanged();
         }
+        public int TotalCount { get; set; }
     }

@@ -1,5 +1,4 @@
-﻿
-@inherits BaseCrud<ProductWithCostsDto>
+﻿@inherits BaseCrud<ProductWithCostsDto>
 @attribute [Authorize]
 @*
         <div class="d-flex">
@@ -92,7 +91,7 @@
 
         <RadzenDataGridColumn Width="110px" TItem="ProductWithCostsDto" Property="@nameof(ProductWithCostsDto.CostTemp)" Title="Цена за ед(тг)">
             <Template Context="vdata">
-                <span class="text-wrap"> @((vdata.CostTemp).ToString("C0", new CultureInfo("kk-KZ"))) </span>
+                <span class="text-wrap"> @((vdata.CostTemp).ToString("C2", new CultureInfo("kk-KZ"))) </span>
             </Template>
             <EditTemplate Context="vdata">
                 <RadzenNumeric @onkeypress="@((args)=>(KeyPressed(args,vdata)))" Min="1" TValue="decimal" @bind-Value="vdata.CostTemp" Change=@(args=>OnCostChange(args)) Style="width:100%" />
@@ -330,9 +329,9 @@ async Task SelectedProduct(object _Id, string code = null)
                 }
                 count++;
                 ProductFromApi.entity.Amount = 1;
-                //ProductFromApi.entity.CostTemp = ProductFromApi.entity.SaleCost.Value*(decimal)ProductFromApi.entity.Kurs;
-                //ProductFromApi.entity.Kurs = (decimal)kurs;
-                dsource.Insert(0, ProductFromApi.entity);
+                //ProductFromApi.entity.CostTemp = ProductFromApi.entity.SaleCost*(decimal)ProductFromApi.entity.Kurs;
+                ProductFromApi.entity.Kurs = (decimal)kurs;
+                dsource.Insert(0, ProductFromApi.entity);   
                 await ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Успешно", Detail = "Продукт получен", Duration = 1500 });
             }
         }
@@ -374,7 +373,8 @@ async void CloseOrder()
                 RegDt = DateTime.Now,
                 IsBank = IsBank,
                 Comments = item.Comments,
-                CustomerId = CustomerId
+                CustomerId = CustomerId,
+                Kurs=kurs
             });
         }
         ResponseMessage<int> executed = await serv.PostAsync<ResponseMessage<int>>(sales, "api/Main/CloseOrder");

@@ -10,13 +10,64 @@ namespace ConsoleApp1
 {
     class Program
     {
+        
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            byte[] file = File.ReadAllBytes("C:\\temp\\test.xlsx");
-            ReadExcel();
+            SomeClass sm = new SomeClass();
+            sm.ToDo2();
+
+            string[] students = new string[10];
+            //Init
+            Console.WriteLine("Initilization=>");
+            for (int i = 0; i < 10; i++)
+            {
+                Console.Write("Enter student " + (i + 1) + "=");
+                students[i] = Console.ReadLine();
+            }
+            Console.WriteLine();
+            // search value
+            string filterValue;
+            Console.Write("enter value for search:");
+            filterValue = Console.ReadLine();
+            Console.WriteLine();
+
+            // search
+
+            foreach (var item in students)
+            {
+                if(item==filterValue)
+                    Console.WriteLine("found:"+item);
+                //else
+                //    Console.WriteLine("not found");
+            }
+
+
+
+            Console.ReadKey();
         }
+
+
+        string[] Init()
+        {
+            string[] tempStudent = new string[10];
+
+            for (int i = 0; i < 10; i++)
+            {
+                Console.Write("Enter student "+(i+1)+"=");
+                tempStudent[i] = Console.ReadLine();
+                //Console.WriteLine();
+            }
+            return null;
+        }
+
+        #region temp
+        void RUn()
+        {
+            //ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            //byte[] file = File.ReadAllBytes("C:\\temp\\test.xlsx");
+            //ReadExcel();
+        }
+
         public static void ReadExcel(byte[] file)
         {
             ExcelPackage pck = new ExcelPackage();
@@ -95,6 +146,20 @@ namespace ConsoleApp1
                 }
             }
             return dtTable;
+        }
+        #endregion
+    }
+
+    class SomeClass
+    {
+        private void ToDo()
+        {
+            Console.WriteLine("to do");
+        }
+        public void ToDo2()
+        {
+            ToDo();
+            Console.WriteLine("to do");
         }
     }
 }

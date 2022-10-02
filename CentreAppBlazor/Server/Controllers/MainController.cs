@@ -29,8 +29,8 @@ namespace CentreAppBlazor.Server.Controllers
         [HttpGet(@"GetOneProduct/{ProductId}")]
         public async Task<ActionResult<ResponseMessage<ProductWithCostsDto>>> GetOneProduct(int ProductId, [FromQuery]string code)
         {
-           var product = await _dappercontext.QueryAsync<ProductWithCostsDto>("select p.Id, p.[Name], p.RemainCount, Round(Amount,2) as AmountLeft, p.Code, av.IncomeCost, av.Kurs, av.OptCost, av.SaleCost, u.[Name] as UnitName, p.Volume as Volume " +
-               "from Products as p INNER JOIN AvCurrentCostsWithKurs as av on p.Id = av.ProductId LEFT OUTER JOIN Units as u on p.UnitId = u.Id WHERE (p.[Id] = @_ProductId or p.[code] = @code)  AND p.RemainCount > 0; ", new { _ProductId = ProductId, code });
+           var product = await _dappercontext.QueryAsync<ProductWithCostsDto>("select p.Id, Concat(pg.Name,' ', p.[Name]) as Name, p.RemainCount, Round(Amount,2) as AmountLeft, p.Code, av.IncomeCost, av.Kurs, av.OptCost, av.SaleCost, u.[Name] as UnitName, p.Volume as Volume " +
+               "from Products as p INNER JOIN AvCurrentCostsWithKurs as av on p.Id = av.ProductId LEFT OUTER JOIN Units as u on p.UnitId = u.Id inner join ProductTypes pg on p.ProductTypeId=pg.id WHERE (p.[Id] = @_ProductId or p.[code] = @code)  AND p.RemainCount > 0; ", new { _ProductId = ProductId, code });
             if(product == null)
             {
                 return new ResponseMessage<ProductWithCostsDto>() { IsSuccessCode = false, ErrorMessage = "Продукт не найден!" };
@@ -68,7 +68,8 @@ namespace CentreAppBlazor.Server.Controllers
                     Comments = item.Comments,
                     IncomeCost = item.IncomeCost,
                     OrderNumber = num,
-                    IsBank = item.IsBank 
+                    IsBank = item.IsBank,
+                    Kurs=item.Kurs
                 };
                     executed += await _dappercontext.ExecuteAsync("SP_AddProductSale", n, CommandType: System.Data.CommandType.StoredProcedure);
             }
@@ -85,7 +86,7 @@ namespace CentreAppBlazor.Server.Controllers
             {
                 return BadRequest();
             }
-            var product = await _dappercontext.QueryAsync<Products>("Select * from Products where Id = @_ProductId;", new { _ProductId = ProductId });
+            var product = await _dappercontext.QueryAsync<Products>("Select p.Id,pt.Name+' '+p.Name as Name, p.Code,p.Description,p.ProductTypeId,p.RemainCount,p.UnitId,p.Limit,p.Volume, p.Amount from Products p left join ProductTypes pt on p.ProductTypeId=pt.Id where p.Id = @_ProductId;", new { _ProductId = ProductId });
             if (product == null)
             {
                 return new ResponseMessage<Products>() { IsSuccessCode = false, ErrorMessage = "Продукт не найдено!" };

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CentreAppBlazor.Shared.Domain
 {
@@ -30,6 +31,7 @@ namespace CentreAppBlazor.Shared.Domain
         public int? OrderNumber { get; set; }
         public bool? IsBank { get; set; }
         public double Kurs { get; set; }
+        [NotMapped]
         public decimal TotalSaleCost { get; set; }
 
         public virtual Customers Customer { get; set; }

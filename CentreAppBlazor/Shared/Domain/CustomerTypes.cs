@@ -16,6 +16,7 @@ namespace CentreAppBlazor.Shared.Domain
         [Required]
         public string Name { get; set; }
         public string Description { get; set; }
+        public int? Discount { get; set; } // discount in percent
 
         public virtual ICollection<Customers> Customers { get; set; }
     }

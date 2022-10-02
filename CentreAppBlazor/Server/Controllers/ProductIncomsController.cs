@@ -66,7 +66,7 @@ namespace CentreAppBlazor.Server.Controllers
                 OptCost = x.OptCost,
                 IncomeCost = x.IncomeCost,
                 ProductId = x.ProductId,
-                Product = new Products { Id = x.Id, Name = x.Product.Name},
+                Product = new Products { Id = x.Id, Name = x.Product.ProductType.Name+" "+x.Product.Name},
                 IncomeNumber = x.IncomeNumber
             });
             return new ResponseMessage<IEnumerable<ProductIncoms>>() { entity = await result.ToListAsync(), TCount = _context.ProductIncoms.Count() };
