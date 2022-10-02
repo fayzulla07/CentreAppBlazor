@@ -1,0 +1,2 @@
+﻿Select p.Id,pt.Name+' '+p.Name as Name, p.Code,p.Description,p.ProductTypeId,p.RemainCount,p.UnitId,p.Limit,p.Volume, p.Amount 
+from Products p left join ProductTypes pt on p.ProductTypeId=pt.Id --where Id = @_ProductId;
